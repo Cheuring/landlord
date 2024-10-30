@@ -3,6 +3,8 @@ package buaa.oop.landlords.client;
 import buaa.oop.landlords.common.handler.ClientHandler;
 import buaa.oop.landlords.common.handler.MsgCodec;
 import buaa.oop.landlords.common.handler.ProtocolFrameDecoder;
+import buaa.oop.landlords.common.print.SimperWriter;
+import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,6 +21,13 @@ public class SimpleClient {
     public static void main(String[] args) {
         NioEventLoopGroup group = new NioEventLoopGroup();
         try {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//                log.info("Client shutdown");
+                SimplePrinter.ServerLog("Client shutdown");
+
+                group.shutdownGracefully();
+            }));
+
             new Bootstrap()
                     .group(group)
                     .channel(NioSocketChannel.class)
@@ -29,7 +38,7 @@ public class SimpleClient {
                                     .addLast(new ProtocolFrameDecoder())
                                     .addLast(new LoggingHandler())
                                     .addLast(new MsgCodec())
-                                    .addLast(new IdleStateHandler(0, 4, 0, TimeUnit.SECONDS))
+//                                    .addLast(new IdleStateHandler(0, 8, 0, TimeUnit.SECONDS))
                                     .addLast(new ClientHandler());
                         }
                     })

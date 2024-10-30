@@ -34,11 +34,16 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if(cause instanceof java.io.IOException) {
-            clientOfflineEvent(ctx.channel());
+//            clientOfflineEvent(ctx.channel());
         }else{
             log.error("Server error: {}", cause.getMessage());
             cause.printStackTrace();
         }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        clientOfflineEvent(ctx.channel());
     }
 
     @Override
@@ -64,7 +69,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
         new Thread(() -> {
             try {
                 Thread.sleep(1000L);
-                ChannelUtil.pushToClient(ctx.channel(), ClientEventCode.CODE_CLIENT_CONNECT, null);
+                ChannelUtil.pushToClient(ctx.channel(), ClientEventCode.CODE_CLIENT_CONNECT, String.valueOf(client.getId()));
                 ChannelUtil.pushToClient(ctx.channel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, null);
             } catch (InterruptedException ignored) {
             }
@@ -84,7 +89,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
         int clientId = getId(channel);
         ClientEnd client = ServerContainer.CLIENT_END_MAP.get(clientId);
         if (client != null) {
-            log.info("Client {} | {} offline", client.getId(), client.getNickName());
+//            log.info("Client {} | {} offline", client.getId(), client.getNickName());
             ServerEventListener.get(ServerEventCode.CODE_CLIENT_OFFLINE).call(client, null);
         }
     }

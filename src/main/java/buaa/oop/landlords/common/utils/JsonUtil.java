@@ -1,15 +1,53 @@
 package buaa.oop.landlords.common.utils;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public class JsonUtil {
-    private static final Gson gson = new Gson();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String toJson(Object obj) {
-        return gson.toJson(obj);
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    /**
+     * convert json string to object
+     * make sure the class has a no-args constructor
+     * @param json  json string
+     * @param clazz class of object
+     * @return object
+     * @param <T> type of object
+     */
     public static <T> T fromJson(String json, Class<T> clazz) {
-        return gson.fromJson(json, clazz);
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * convert json string to object
+     * make sure the class has a no-args constructor
+     * @param json  json string
+     * @param type class of object
+     * @return object
+     * @param <T> type of object
+     */
+    public static <T> T fromJson(String json, TypeReference<T> type) {
+        try {
+            return objectMapper.readValue(json, type);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
