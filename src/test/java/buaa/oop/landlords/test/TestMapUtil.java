@@ -3,9 +3,6 @@ package buaa.oop.landlords.test;
 import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,29 +52,29 @@ public class TestMapUtil implements Serializable{
 
     }
 
-    @Test
-    public void testMapUtil2() {
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-
-        // Create a map with different types of values
-        Map<String, Object> map = new HashMap<>();
-        map.put("key1", "value");
-        map.put("key2", 10);
-        map.put("key3", new TestClass("name", 10));
-
-        // Serialize the map to JSON
-        String json = gson.toJson(map);
-        System.out.println("Serialized JSON: " + json);
-
-        // Deserialize the JSON back to a map
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> deserializedMap = gson.fromJson(json, type);
-        System.out.println("Deserialized Map: " + deserializedMap);
-
-        System.out.println(deserializedMap.get("key1").getClass());
-        System.out.println(deserializedMap.get("key2").getClass());
-        System.out.println(deserializedMap.get("key3").getClass());
-    }
+//    @Test
+//    public void testMapUtil2() {
+//        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+//
+//        // Create a map with different types of values
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("key1", "value");
+//        map.put("key2", 10);
+//        map.put("key3", new TestClass("name", 10));
+//
+//        // Serialize the map to JSON
+//        String json = gson.toJson(map);
+//        System.out.println("Serialized JSON: " + json);
+//
+//        // Deserialize the JSON back to a map
+//        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+//        Map<String, Object> deserializedMap = gson.fromJson(json, type);
+//        System.out.println("Deserialized Map: " + deserializedMap);
+//
+//        System.out.println(deserializedMap.get("key1").getClass());
+//        System.out.println(deserializedMap.get("key2").getClass());
+//        System.out.println(deserializedMap.get("key3").getClass());
+//    }
 
     @Test
     public void testMapUtil3() {
