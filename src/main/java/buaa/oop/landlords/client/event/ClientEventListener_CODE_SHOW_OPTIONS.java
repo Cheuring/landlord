@@ -6,9 +6,11 @@ import io.netty.channel.Channel;
 import java.util.Scanner;
 
 /**
- * 参考client_pvp
- * 下个状态CODE_ROOM_CREATE CODE_GET_ROOMS
- * 以及CODE_ROOM_JOIN
+ * 根据输入进入
+ *   ServerEventListener_CODE_ROOM_CREATE
+ *   ServerEventListener_CODE_ROOM_GETALL
+ *   ServerEventListener_CODE_ROOM_JOIN
+ *   ServerEventListener_CODE_CLIENT_OFFLINE
  */
 public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
 

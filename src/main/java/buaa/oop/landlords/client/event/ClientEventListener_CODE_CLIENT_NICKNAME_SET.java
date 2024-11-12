@@ -6,6 +6,9 @@ import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 
+/**
+ * 下一个状态为：ServerEventListener_CODE_CLIENT_NICKNAME_SET
+ */
 public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventListener {
 
     @Override

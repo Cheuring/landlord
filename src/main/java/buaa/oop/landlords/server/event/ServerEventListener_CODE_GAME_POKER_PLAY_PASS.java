@@ -4,10 +4,10 @@ import buaa.oop.landlords.common.entities.ClientEnd;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *下一个状态为ClientEventListener_CODE_ROOM_CREATE_SUCCESS
+ *所有客户端 ClientEvenListener_CODE_GAME_POKER_PLAY_PASS
  */
 @Slf4j
-public class ServerEventListener_CODE_ROOM_CREATE extends ServerEventListener{
+public class ServerEventListener_CODE_GAME_POKER_PLAY_PASS extends ServerEventListener{
     @Override
     public void call(ClientEnd event, String data) {
 
