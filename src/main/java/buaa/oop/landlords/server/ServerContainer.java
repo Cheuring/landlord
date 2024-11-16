@@ -16,9 +16,14 @@ public class ServerContainer {
     public final static Map<String, Integer> CHANNEL_ID_MAP = new ConcurrentHashMap<>();
 
     private final static AtomicInteger CLIENT_ATOMIC_ID = new AtomicInteger(1);
+    private final static AtomicInteger ROOM_ATOMIC_ID = new AtomicInteger(1);
 
-    public static int getClientId() {
+    public static int getNewClientId() {
         return CLIENT_ATOMIC_ID.getAndIncrement();
+    }
+
+    public static int getNewRoomId() {
+        return ROOM_ATOMIC_ID.getAndIncrement();
     }
 
     public static Map<Integer, Room> getRoomMap() {
@@ -31,5 +36,13 @@ public class ServerContainer {
 
     public static void addRoom(Room room) {
         ROOM_MAP.put(room.getId(), room);
+    }
+
+    public static Room getRoom(int id) {
+        return ROOM_MAP.get(id);
+    }
+
+    public static boolean containsRoom(int id) {
+        return ROOM_MAP.containsKey(id);
     }
 }

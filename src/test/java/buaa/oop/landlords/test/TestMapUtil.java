@@ -6,13 +6,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -100,6 +97,39 @@ public class TestMapUtil implements Serializable{
         ArrayList<TestClass> key4 = JsonUtil.fromJson((String) map.get("key4"), new TypeReference<ArrayList<TestClass>>() {
         });
         System.out.println(key4);
+    }
+
+    /**
+     * test SHOW_ROOMS JSON format
+     */
+    @Test
+    public void testMapUtil4() {
+        List<Map<String, Object>> roomList = new ArrayList<>();
+        roomList.add(MapUtil.newInstance()
+                .put("roomId", 1)
+                .put("roomOwner", "owner1")
+                .put("roomClientCount", 2)
+                .put("roomType", "type1")
+                .map());
+        roomList.add(MapUtil.newInstance()
+                .put("roomId", 2)
+                .put("roomOwner", "owner2")
+                .put("roomClientCount", 3)
+                .put("roomType", "type2")
+                .map());
+
+        String json = JsonUtil.toJson(roomList);
+        System.out.println(json);
+
+        List<Map<String, Object>> roomList2 = JsonUtil.fromJson(json, new TypeReference<List<Map<String, Object>>>() {
+        });
+
+        for (Map<String, Object> room : roomList2) {
+            System.out.println(room.get("roomId"));
+            System.out.println(room.get("roomOwner"));
+            System.out.println(room.get("roomClientCount"));
+            System.out.println(room.get("roomType"));
+        }
     }
 
 }

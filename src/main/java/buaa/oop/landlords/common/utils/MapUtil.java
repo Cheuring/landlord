@@ -47,4 +47,8 @@ public class MapUtil {
     public String json() {
         return JsonUtil.toJson(this.data);
     }
+
+    public Map<String, Object> map() {
+        return this.data;
+    }
 }

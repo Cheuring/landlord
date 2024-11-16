@@ -79,7 +79,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     private int getId(Channel channel) {
         Integer clientId = ServerContainer.CHANNEL_ID_MAP.get(channel.id().asLongText());
         if (clientId == null) {
-            clientId = ServerContainer.getClientId();
+            clientId = ServerContainer.getNewClientId();
             ServerContainer.CHANNEL_ID_MAP.put(channel.id().asLongText(), clientId);
         }
         return clientId;

@@ -1,6 +1,7 @@
 package buaa.oop.landlords.common.entities;
 
 import buaa.oop.landlords.common.enums.RoomStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +53,8 @@ public class Room {
     @Setter
     @Getter
     private int baseScore = 3;
+
+    private final Object lock = new Object();
 
     public Room() {
     }
@@ -123,4 +126,19 @@ public class Room {
         this.clientEndMap = clientEndMap;
     }
 
+    public int addClient(ClientEnd client) {
+        synchronized (lock) {
+            if (clientEndList.size() >= 3) {
+                return -1;
+            }
+            if (!clientEndList.isEmpty()) {
+                client.setPre(clientEndList.getLast());
+                clientEndList.getLast().setNext(client);
+            }
+
+            clientEndMap.put(client.getId(), client);
+            clientEndList.add(client);
+            return clientEndList.size();
+        }
+    }
 }

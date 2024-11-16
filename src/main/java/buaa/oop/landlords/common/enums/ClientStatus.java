@@ -1,5 +1,7 @@
 package buaa.oop.landlords.common.enums;
 
 public enum ClientStatus {
-    IDLE
+    IDLE,
+    NO_READY,
+    READY,
 }

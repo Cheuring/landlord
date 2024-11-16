@@ -12,12 +12,13 @@ import io.netty.channel.Channel;
 public class ClientEventListener_CODE_ROOM_CREATE_SUCCESS extends ClientEventListener{
     @Override
     /**
-     * @param data is json ,original type is room
+     * @param data is string of room id
      */
     public void call(Channel channel, String data) {
-        Room room = JsonUtil.fromJson(data, Room.class);
+//        Room room = JsonUtil.fromJson(data, Room.class);
+        int roomId = Integer.parseInt(data);
         initLastSellInfo();
-        SimplePrinter.printNotice("You have created a room with id " + room.getId());
+        SimplePrinter.printNotice("You have created a room with id " + roomId);
         SimplePrinter.printNotice("Please wait for other players to join !");
     }
 }
