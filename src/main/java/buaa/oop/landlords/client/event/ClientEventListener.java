@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.utils.ChannelUtil;
@@ -8,6 +9,7 @@ import io.netty.channel.ChannelFuture;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class ClientEventListener {
@@ -37,7 +39,18 @@ public abstract class ClientEventListener {
         }
         return null;
     }
+    protected static List<Poker> lastPokers = null;
+    protected static String lastSellClientNickname = null;
+    protected static String lastSellClientType = null;
 
+    /**
+     * Initialize playing information
+     */
+    protected static void initLastSellInfo() {
+        lastPokers = null;
+        lastSellClientNickname = null;
+        lastSellClientType = null;
+    }
     protected ChannelFuture pushToServer(Channel channel, ServerEventCode code, String data) {
         return ChannelUtil.pushToServer(channel, code, data);
     }

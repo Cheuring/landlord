@@ -1,25 +1,44 @@
 package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.entities.User;
-import buaa.oop.landlords.common.print.SimperWriter;
+import buaa.oop.landlords.common.print.SimpleWriter;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 
 /**
  * 下一个状态为：ServerEventListener_CODE_CLIENT_NICKNAME_SET
+ * 已完成
  */
 public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventListener {
-
+    public static final int NICKNAME_MAX_LENGTH = 16;
     @Override
     public void call(Channel channel, String data) {
+        SimplePrinter.printNotice("Please set your nickname (upto " + NICKNAME_MAX_LENGTH + " characters)");
+        SimplePrinter.printNotice("English letters, numbers, and underscores are legal");
         SimplePrinter.ServerLog("Please set your nickname:");
         User user = User.INSTANCE;
-        String name = SimperWriter.write(user.getNickname(), "nickname");
+        String name = SimpleWriter.write(user.getNickname(), "nickname");
 
-        // todo: check name validity
+        if (isValidNickname(name)) {
 
-        user.setNickname(name);
-        pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
+            user.setNickname(name);
+            pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
+        }else{
+            SimplePrinter.ServerLog("Invalid nickname!");
+            call(channel, data);
+        }
+    }
+    public boolean isValidNickname(String nickname) {
+            if (nickname == null) {
+                return false;
+            }
+            if (nickname.length() > 16) {
+                return false;
+            }
+            if (!nickname.matches("[a-zA-Z0-9_]*")) {
+                return false;
+            }
+            return true;
     }
 }

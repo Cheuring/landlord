@@ -16,4 +16,15 @@ public class User {
         this.id = -1;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static User getINSTANCE() {
+        return INSTANCE;
+    }
 }

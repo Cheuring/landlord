@@ -1,6 +1,12 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.common.enums.ClientEventCode;
+import buaa.oop.landlords.common.print.SimplePrinter;
+import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
+
+import java.util.Map;
 
 /**
  *
@@ -8,6 +14,17 @@ import io.netty.channel.Channel;
 public class ClientEventListener_CODE_EXIT extends ClientEventListener{
     @Override
     public void call(Channel channel, String data) {
+        Map<String, Object> map = MapUtil.parse(data);
 
+        Integer exitClientId = (Integer) map.get("exitClientId");
+
+        String role;
+        if (exitClientId == User.getINSTANCE().getId()) {
+            role = "You";
+        } else {
+            role = String.valueOf(map.get("exitClientNickname"));
+        }
+        SimplePrinter.printNotice(role + " left the room. Room disbanded!\n");
+        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
     }
 }

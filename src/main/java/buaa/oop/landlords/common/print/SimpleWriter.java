@@ -3,7 +3,7 @@ package buaa.oop.landlords.common.print;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class SimperWriter {
+public class SimpleWriter {
     private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public static String write(String nickname, String message) {

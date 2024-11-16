@@ -3,7 +3,6 @@ package buaa.oop.landlords.client;
 import buaa.oop.landlords.common.handler.ClientHandler;
 import buaa.oop.landlords.common.handler.MsgCodec;
 import buaa.oop.landlords.common.handler.ProtocolFrameDecoder;
-import buaa.oop.landlords.common.print.SimperWriter;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -11,10 +10,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class SimpleClient {

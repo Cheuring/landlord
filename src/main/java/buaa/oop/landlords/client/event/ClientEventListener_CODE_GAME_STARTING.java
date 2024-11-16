@@ -7,6 +7,7 @@ import io.netty.channel.Channel;
  */
 public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
     @Override
+
     public void call(Channel channel, String data) {
 
     }

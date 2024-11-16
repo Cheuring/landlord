@@ -8,12 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 若名称不合法 进入 ClientEventListener_CODE_CLIENT_NICKNAME_SET
  * 否则 进入 ClientEventListener_CODE_SHOW_OPTIONS
- *
- * data 为输入的 字符串 nickname
  */
 @Slf4j
 public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventListener{
     @Override
+    /**
+     * @param data 为输入的 字符串 nickname
+     */
     public void call(ClientEnd client, String data) {
         // todo: check name validity
 
