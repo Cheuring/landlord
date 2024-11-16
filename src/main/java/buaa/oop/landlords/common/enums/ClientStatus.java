@@ -4,4 +4,7 @@ public enum ClientStatus {
     IDLE,
     NO_READY,
     READY,
+    PLAYING,
+
+    ;
 }
