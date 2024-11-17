@@ -39,11 +39,10 @@ public class ChatRoom implements Runnable{
             String[] contents = spiltContent(content);
             /*
              todo: 处理聊天内容
-             result 包含ClientTo, ClientFrom, Content
+             result 包含ClientTo, Content
              */
            if(contents!=null){
                String result = MapUtil.newInstance()
-                    .put("ClientFrom", User.getINSTANCE().getId())
                     .put("ClientTo", contents[0])
                     .put("Content", contents[1]).json();
 
