@@ -14,9 +14,12 @@ public class ChatRoom implements Runnable{
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final Object lock = new Object();
     private final Channel channel;
+    private Thread thread;
 
     public ChatRoom(Channel channel){
         this.channel = channel;
+        this.thread = new Thread(this);
+        thread.start();
     }
 
     @Override

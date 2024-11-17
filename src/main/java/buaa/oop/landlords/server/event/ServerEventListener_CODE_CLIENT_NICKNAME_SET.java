@@ -17,12 +17,12 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventLis
      * @param data 为输入的 字符串 nickname
      */
     public void call(ClientEnd client, String data) {
-        client.setNickName(data);
 
-        log.info("Client {} | {} do set nickname to {}", client.getId(), client.getNickName(), data);
         if (CLIENT_NAME_SET.contains(data)) {
-            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null, "The nickname is already in use");
+            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, null, "The nickname is already in use");
         } else {
+            log.info("Client {} | {} do set nickname to {}", client.getId(), client.getNickName(), data);
+            client.setNickName(data);
             CLIENT_NAME_SET.add(data);
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
         }
