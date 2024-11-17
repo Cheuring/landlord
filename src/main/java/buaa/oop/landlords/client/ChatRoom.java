@@ -39,11 +39,10 @@ public class ChatRoom implements Runnable{
             String[] contents = spiltContent(content);
             /*
              todo: 处理聊天内容
-             result 包含ClientTo, ClientFrom, Content
+             result 包含ClientTo, Content
              */
            if(contents!=null){
                String result = MapUtil.newInstance()
-                    .put("ClientFrom", User.getINSTANCE().getId())
                     .put("ClientTo", contents[0])
                     .put("Content", contents[1]).json();
 
@@ -62,19 +61,21 @@ public class ChatRoom implements Runnable{
     public void stop() {
         running.set(false);
     }
-    public static String[] spiltContent(String content){
-        String [] info;
-        if(content==null || content.length()==0){
-            SimplePrinter.printNotice("No information");
-        }else{
-            if(content.startsWith("@")){
-                info = content.split(" ");
-                info[0].substring(1);
-                return info;
-            }else{
-                SimplePrinter.printNotice("Your information format is incorrect");
 
+    public static String[] spiltContent(String content) {
+        String[] info=new String[2];
+        if (content == null || content.length() == 0) {
+            SimplePrinter.printNotice("No information");
+        } else {
+            if (content.startsWith("@")) {
+                int space = content.indexOf(" ");
+                if (space > 0) {
+                    info[0] = content.substring(1, space);
+                    info[1] = content.substring(space + 1);
+                    return info;
+                }
             }
+            SimplePrinter.printNotice("Your information format is incorrect");
         }
         return null;
     }

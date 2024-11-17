@@ -3,6 +3,7 @@ package buaa.oop.landlords.server.event;
 import buaa.oop.landlords.common.entities.ClientEnd;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.utils.ChannelUtil;
+import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +15,13 @@ public class ServerEventListener_CODE_CHAT extends ServerEventListener{
     @Override
     public void call(ClientEnd clientEnd, String data) {
         Map<String, Object> map = MapUtil.parse(data);
-        int clientToId = (int) map.get("ClientTo");
+        String clientToName = (String) map.get("ClientTo");
+        map.put("ClientFrom", clientEnd.getNickName());
 
-        if(!ServerContainer.containsClient(clientToId)){
+        if(!ServerContainer.containsClient(clientToName)) {
             ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT_FAIL, null, "Client not exist");
         }
 
-        ChannelUtil.pushToClient(ServerContainer.getClient(clientToId).getChannel(), ClientEventCode.CODE_CHAT, data);
+        ChannelUtil.pushToClient(ServerContainer.getClient(clientToName).getChannel(), ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));
     }
 }

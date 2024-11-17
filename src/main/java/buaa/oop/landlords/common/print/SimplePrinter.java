@@ -13,6 +13,7 @@ public class SimplePrinter {
         System.out.println(msg);
     }
 
+    public static void printChatMsg(String format ,String... msg) {System.out.printf(format, msg);}
     public static void printPokers(List<Poker> pokers)
     {
         System.out.println(PokerUtil.printPokers(pokers));
