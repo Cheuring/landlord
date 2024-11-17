@@ -3,6 +3,7 @@ package buaa.oop.landlords.client;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimpleWriter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
+import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,7 +35,8 @@ public class ChatRoom implements Runnable{
              todo: 处理聊天内容
              result 包含ClientTo, ClientFrom, Content
              */
-            String result = "";
+            String result=MapUtil.newInstance()
+                            .put("ClientFrom",)
             ChannelUtil.pushToServer(channel, ServerEventCode.CODE_CHAT, result);
         }
     }

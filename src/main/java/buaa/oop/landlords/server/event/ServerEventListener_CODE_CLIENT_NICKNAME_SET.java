@@ -4,6 +4,7 @@ import buaa.oop.landlords.common.entities.ClientEnd;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.utils.ChannelUtil;
 import lombok.extern.slf4j.Slf4j;
+import static buaa.oop.landlords.server.ServerContainer.CLIENT_NAME_SET;
 
 /**
  * 若名称不合法 进入 ClientEventListener_CODE_CLIENT_NICKNAME_SET
@@ -19,7 +20,8 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventLis
         client.setNickName(data);
 
         log.info("Client {} | {} do set nickname to {}", client.getId(), client.getNickName(), data);
-
-        ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
+        if(CLIENT_NAME_SET.contains(data)){
+            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null,"The nickname is already in use");
+        } else ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
     }
 }

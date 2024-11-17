@@ -31,7 +31,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
     public void call(Channel channel, String data) {
         Map<String, Object>roominfo= MapUtil.parse(data);
         SimplePrinter.printNotice("It's your turn to play");
-        List<Poker> pokers = JsonUtil.fromJson(JsonUtil.toJson(roominfo.get("pokers")), new TypeReference<List<Poker>>(){});
+        List<Poker> pokers = JsonUtil.fromJson((String)roominfo.get("pokers"), new TypeReference<List<Poker>>(){});
         printInfo(roominfo,pokers);
 
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "combination");
@@ -70,7 +70,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                     }
                 }
                 if(access){
-                    
+
                 } else {
                     SimplePrinter.printNotice("Invalid enter");
                     if (lastPokers != null) {

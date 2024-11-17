@@ -12,6 +12,7 @@ import buaa.oop.landlords.common.enums.ServerEventCode;
  */
 public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventListener {
     public static final int NICKNAME_MAX_LENGTH = 16;
+
     @Override
     public void call(Channel channel, String data) {
         SimplePrinter.printNotice("Please set your nickname (upto " + NICKNAME_MAX_LENGTH + " characters)");
@@ -24,14 +25,16 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
 
             user.setNickname(name);
             pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
-        }else{
+        } else {
             SimplePrinter.ServerLog("Invalid nickname!");
             call(channel, data);
         }
+
     }
+
     public boolean isValidNickname(String nickname) {
-            if (nickname == null) {
-                return false;
+        if (nickname == null) {
+            return false;
             }
             if (nickname.length() > 16) {
                 return false;

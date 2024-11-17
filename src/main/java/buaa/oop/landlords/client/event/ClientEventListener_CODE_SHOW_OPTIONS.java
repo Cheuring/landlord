@@ -27,6 +27,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("2.Get All Rooms");
         SimplePrinter.printNotice("3.Join Room");
         SimplePrinter.printNotice("4.Exit the program");
+        SimplePrinter.printNotice("5.Chat ");
 
         String userInput= SimpleWriter.write();
         if(userInput==null){
@@ -54,6 +55,9 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                     channel.close();
                     pushToServer(channel,ServerEventCode.CODE_CLIENT_OFFLINE,null);
                     break;
+                case 5:
+                    SimplePrinter.printNotice("Please enter your content in such format");
+                    SimplePrinter.printNotice("@[yourChatterId] [chatinformation]");
                 default:
                     SimplePrinter.printNotice("Invalid option, please choose again：");
                     call(channel, data);

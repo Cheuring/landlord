@@ -5,6 +5,7 @@ import buaa.oop.landlords.common.entities.Room;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerContainer {
@@ -14,7 +15,7 @@ public class ServerContainer {
     public final static Map<Integer, Room> ROOM_MAP = new ConcurrentHashMap<>();
     public final static Map<Integer, ClientEnd> CLIENT_END_MAP = new ConcurrentHashMap<>();
     public final static Map<String, Integer> CHANNEL_ID_MAP = new ConcurrentHashMap<>();
-
+    public final static ConcurrentSkipListSet<String> CLIENT_NAME_SET = new ConcurrentSkipListSet<>();
     private final static AtomicInteger CLIENT_ATOMIC_ID = new AtomicInteger(1);
     private final static AtomicInteger ROOM_ATOMIC_ID = new AtomicInteger(1);
 

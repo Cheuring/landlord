@@ -19,7 +19,7 @@ import java.util.Objects;
 public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener{
     @Override
     /**
-     * @param data include winner's id and nickname,and room id
+     * @param data include winner's id and nickname,and roomid
      */
     public void call(Channel channel, String data) {
         Map<String, Object> map = MapUtil.parse(data);
