@@ -1,11 +1,13 @@
 package buaa.oop.landlords.common.entities;
 
 import buaa.oop.landlords.common.enums.SellType;
+import buaa.oop.landlords.common.utils.PokerUtil;
 import lombok.Getter;
-
 import java.util.List;
 
 public class PokerSell {
+    @Getter
+    private int score;
 
     @Getter
     private List<Poker> pokers;
@@ -17,11 +19,9 @@ public class PokerSell {
     private int endIndex;
 
     public PokerSell(List<Poker> pokers, SellType sellType, int endIndex) {
+        this.score = PokerUtil.parseScore(sellType, endIndex);
         this.pokers = pokers;
         this.sellType = sellType;
         this.endIndex = endIndex;
-    }
-    public final List<Poker> getSellPokers() {
-        return pokers;
     }
 }

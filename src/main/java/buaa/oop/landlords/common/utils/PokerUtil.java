@@ -188,6 +188,23 @@ public class PokerUtil {
         return new PokerSell(null, SellType.ILLEGAL, -1);
     }
 
+    public static int parseScore(SellType sellType, int level) {
+        if (sellType == SellType.BOMB) {
+            return level * 4 + 999;
+        } else if (sellType == SellType.KING_BOMB) {
+            return Integer.MAX_VALUE;
+        } else if (sellType == SellType.SINGLE || sellType == SellType.DOUBLE || sellType == SellType.THREE) {
+            return level;
+        } else if (sellType == SellType.SINGLE_STRAIGHT || sellType == SellType.DOUBLE_STRAIGHT || sellType == SellType.THREE_STRAIGHT || sellType == SellType.FOUR_STRAIGHT) {
+            return level;
+        } else if (sellType == SellType.THREE_ZONES_SINGLE || sellType == SellType.THREE_STRAIGHT_WITH_SINGLE || sellType == SellType.THREE_ZONES_DOUBLE || sellType == SellType.THREE_STRAIGHT_WITH_DOUBLE) {
+            return level;
+        } else if (sellType == SellType.FOUR_ZONES_SINGLE || sellType == SellType.FOUR_STRAIGHT_WITH_SINGLE || sellType == SellType.FOUR_ZONES_DOUBLE || sellType == SellType.FOUR_STRAIGHT_WITH_DOUBLE) {
+            return level;
+        }
+        return -1;
+    }
+
     public static String printPokers(List<Poker> pokers)
     {
         sortPokers(pokers);
@@ -289,11 +306,11 @@ public class PokerUtil {
                     parseArgs(pokerSells, sell, 2, SellType.SINGLE, SellType.FOUR_ZONES_SINGLE);
                     parseArgs(pokerSells, sell, 2, SellType.DOUBLE, SellType.FOUR_ZONES_DOUBLE);
                 } else if (sell.getSellType() == SellType.THREE_STRAIGHT) {
-                    int count = sell.getSellPokers().size() / 3;
+                    int count = sell.getPokers().size() / 3;
                     parseArgs(pokerSells, sell, count, SellType.SINGLE, SellType.THREE_STRAIGHT_WITH_SINGLE);
                     parseArgs(pokerSells, sell, count, SellType.DOUBLE, SellType.THREE_STRAIGHT_WITH_DOUBLE);
                 } else if (sell.getSellType() == SellType.FOUR_STRAIGHT) {
-                    int count = (sell.getSellPokers().size() / 4) * 2;
+                    int count = (sell.getPokers().size() / 4) * 2;
                     parseArgs(pokerSells, sell, count, SellType.SINGLE, SellType.FOUR_STRAIGHT_WITH_SINGLE);
                     parseArgs(pokerSells, sell, count, SellType.DOUBLE, SellType.FOUR_STRAIGHT_WITH_DOUBLE);
                 }
@@ -354,7 +371,7 @@ public class PokerUtil {
                     increase = 1;
                 }
             }
-            sellPokers.addAll(sell.getSellPokers());
+            sellPokers.addAll(sell.getPokers());
             lastLevel = level;
         }
         addPokers(pokerSells, minLength, width, targetSellType, increase, sellPokers);
@@ -375,7 +392,7 @@ public class PokerUtil {
 
     private static void parseArgs(List<PokerSell> pokerSells, PokerSell pokerSell, int deep, SellType sellType, SellType targetSellType) {
         Set<Integer> existLevelSet = new HashSet<>();
-        for (Poker p : pokerSell.getSellPokers()) {
+        for (Poker p : pokerSell.getPokers()) {
             existLevelSet.add(p.getLevel().getLevel());
         }
         parseArgs(existLevelSet, pokerSells, new HashSet<>(), pokerSell, deep, sellType, targetSellType);
@@ -383,7 +400,7 @@ public class PokerUtil {
 
     private static void parseArgs(Set<Integer> existLevelSet, List<PokerSell> pokerSells, Set<List<Poker>> pokersList, PokerSell pokerSell, int deep, SellType sellType, SellType targetSellType) {
         if (deep == 0) {
-            List<Poker> allPokers = new ArrayList<>(pokerSell.getSellPokers());
+            List<Poker> allPokers = new ArrayList<>(pokerSell.getPokers());
             for (List<Poker> ps : pokersList) {
                 allPokers.addAll(ps);
             }
@@ -393,11 +410,11 @@ public class PokerUtil {
         for (int index = 0; index < pokerSells.size(); index++) {
             PokerSell subSell = pokerSells.get(index);
             if (subSell.getSellType() == sellType && !existLevelSet.contains(subSell.getEndIndex())) {
-                pokersList.add(subSell.getSellPokers());
+                pokersList.add(subSell.getPokers());
                 existLevelSet.add(subSell.getEndIndex());
                 parseArgs(existLevelSet, pokerSells, pokersList, pokerSell, deep - 1, sellType, targetSellType);
                 existLevelSet.remove(subSell.getEndIndex());
-                pokersList.remove(subSell.getSellPokers());
+                pokersList.remove(subSell.getPokers());
             }
         }
     }
