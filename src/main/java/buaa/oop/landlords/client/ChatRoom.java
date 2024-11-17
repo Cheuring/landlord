@@ -38,12 +38,14 @@ public class ChatRoom implements Runnable{
              todo: 处理聊天内容
              result 包含ClientTo, ClientFrom, Content
              */
-            String result = MapUtil.newInstance()
+           if(contents!=null){
+               String result = MapUtil.newInstance()
                     .put("ClientFrom", User.getINSTANCE().getId())
                     .put("ClientTo", contents[0])
                     .put("Content", contents[1]).json();
 
             ChannelUtil.pushToServer(channel, ServerEventCode.CODE_CHAT, result);
+           }
         }
     }
 
@@ -67,9 +69,10 @@ public class ChatRoom implements Runnable{
                 info[0].substring(1);
                 return info;
             }else{
-
                 SimplePrinter.printNotice("Your information format is incorrect");
+
             }
         }
+        return null;
     }
 }
