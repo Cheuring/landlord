@@ -15,7 +15,7 @@ public class ServerContainer {
     public final static Map<Integer, Room> ROOM_MAP = new ConcurrentHashMap<>();
     public final static Map<Integer, ClientEnd> CLIENT_END_MAP = new ConcurrentHashMap<>();
     public final static Map<String, Integer> CHANNEL_ID_MAP = new ConcurrentHashMap<>();
-    public final static ConcurrentSkipListSet<String> CLIENT_NAME_SET = new ConcurrentSkipListSet<>();
+    public final static Map<String, Integer> CLIENT_NAME_TO_ID = new ConcurrentHashMap<>();
     private final static AtomicInteger CLIENT_ATOMIC_ID = new AtomicInteger(1);
     private final static AtomicInteger ROOM_ATOMIC_ID = new AtomicInteger(1);
 
@@ -50,8 +50,14 @@ public class ServerContainer {
     public static boolean containsClient(int id) {
         return CLIENT_END_MAP.containsKey(id);
     }
+    public static boolean containsClient(String name) {
+        return CLIENT_NAME_TO_ID.containsKey(name);
+    }
 
     public static ClientEnd getClient(int id) {
         return CLIENT_END_MAP.get(id);
+    }
+    public static ClientEnd getClient(String name) {
+        return CLIENT_END_MAP.get(CLIENT_NAME_TO_ID.get(name));
     }
 }

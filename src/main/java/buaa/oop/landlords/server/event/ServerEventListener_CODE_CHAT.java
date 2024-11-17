@@ -14,12 +14,13 @@ public class ServerEventListener_CODE_CHAT extends ServerEventListener{
     @Override
     public void call(ClientEnd clientEnd, String data) {
         Map<String, Object> map = MapUtil.parse(data);
-        int clientToId = (int) map.get("ClientTo");
+        String clientToName = (String) map.get("ClientTo");
+        map.put("ClientFrom", clientEnd.getNickName());
 
-        if(!ServerContainer.containsClient(clientToId)){
+        if(!ServerContainer.containsClient(clientToName)) {
             ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT_FAIL, null, "Client not exist");
         }
 
-        ChannelUtil.pushToClient(ServerContainer.getClient(clientToId).getChannel(), ClientEventCode.CODE_CHAT, data);
+        ChannelUtil.pushToClient(ServerContainer.getClient(clientToName).getChannel(), ClientEventCode.CODE_CHAT, data);
     }
 }
