@@ -46,4 +46,12 @@ public class ServerContainer {
     public static boolean containsRoom(int id) {
         return ROOM_MAP.containsKey(id);
     }
+
+    public static boolean containsClient(int id) {
+        return CLIENT_END_MAP.containsKey(id);
+    }
+
+    public static ClientEnd getClient(int id) {
+        return CLIENT_END_MAP.get(id);
+    }
 }
