@@ -70,8 +70,7 @@ public class ChatRoom implements Runnable{
             if (content.startsWith("@")) {
                 int space = content.indexOf(" ");
                 if (space > 0) {
-                    info[0] = content.substring(0, space);
-                    info[0].substring(1);
+                    info[0] = content.substring(1, space);
                     info[1] = content.substring(space + 1);
                     return info;
                 }
