@@ -12,7 +12,7 @@ public class ChannelUtil {
         pushToClient(channel, code, data, null);
     }
 
-    private static void pushToClient(Channel channel, ClientEventCode code, String data, String info) {
+    public static void pushToClient(Channel channel, ClientEventCode code, String data, String info) {
         if(channel != null) {
             Msg msg = new Msg();
             msg.setCode(code.toString());
