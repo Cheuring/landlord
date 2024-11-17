@@ -11,6 +11,10 @@ import java.util.List;
 public class ClientEnd {
     private int id;
 
+    private int score;
+
+    private int scoreInc;
+
     private String nickName;
 
     private List<Poker> pokers;
@@ -35,5 +39,14 @@ public class ClientEnd {
 
     public void resetRound() {
         round = 0;
+    }
+
+    public final void addRound() {round += 1;}
+
+    public final String getNickname() { return nickName; }
+
+    public final void addScore(int score) {
+        this.score += score;
+        this.scoreInc = score;
     }
 }

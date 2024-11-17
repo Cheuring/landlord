@@ -8,9 +8,11 @@ import buaa.oop.landlords.common.enums.SellType;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.print.SimpleWriter;
+import buaa.oop.landlords.common.utils.ChannelUtil;
 import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
+import buaa.oop.landlords.server.ServerContainer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
 
@@ -47,14 +49,16 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                 pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS);
             }
             else if(userInput.equalsIgnoreCase("pass")||userInput.equalsIgnoreCase("p")){
-               //todo  judgePassVaild();
-                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS);
+                if((int)roominfo.get("lastSellClientId") != User.INSTANCE.getId()){
+                    SimplePrinter.printNotice("You played the previous card, so you can't pass.");
+                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                }
+                else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS); }
             }
             else if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
                 call(channel, userInput);
                 return;
             }else{
-                //todo judgeComibinationVaild
                 String[] strs = userInput.split(" ");
                 List<Character> options = new ArrayList<>();
                 boolean access = true;
@@ -73,6 +77,21 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                     }
                 }
                 if(access){
+                    Character[] option = new Character[options.size()];
+                    option = options.toArray(option);
+                    int[] indexes = PokerUtil.getIndexes(option, pokers);
+                    if (!PokerUtil.checkPokerIndex(indexes, pokers)){
+                        SimplePrinter.printNotice("The combination is illegal");
+
+                        if (lastPokers != null) {
+                            SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
+                            SimplePrinter.printPokers(lastPokers);
+                        }
+
+                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                        return;
+                    }
+
                     PokerSell currentPokerSell = PokerUtil.checkPokerSell(pokers);
                     if(currentPokerSell.getSellType() == SellType.ILLEGAL ) {
                         SimplePrinter.printNotice("The combination is illegal");
@@ -85,7 +104,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                         pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
                         return;
                     }
-                    PokerSell lastPokerSell = PokerUtil.checkPokerSell(pokers);
+                    PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
                     if((int)roominfo.get("lastSellClientId") != User.INSTANCE.getId() && lastPokerSell.getSellType() != SellType.ILLEGAL){
 
                         if((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB){
@@ -109,9 +128,14 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                             }
 
                             pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                            return;
                         }
 
-                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY);
+                        String result = MapUtil.newInstance()
+                                .put("poker", pokers)
+                                .put("pokerSell", currentPokerSell)
+                                .json();
+                        ChannelUtil.pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                     }
                 } else {
                     SimplePrinter.printNotice("Invalid enter");

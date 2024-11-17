@@ -253,6 +253,46 @@ public class PokerUtil {
      * 检查可以出什么牌型
      * @param pokers 牌型列表
      */
+
+    public static int[] getIndexes(Character[] options, List<Poker> pokers) {
+        List<Poker> copyList = new ArrayList<>(pokers.size());
+        copyList.addAll(pokers);
+        int[] indexes = new int[options.length];
+        for (int index = 0; index < options.length; index++) {
+            char option = options[index];
+            boolean isTarget = false;
+            for (int pi = 0; pi < copyList.size(); pi++) {
+                Poker poker = copyList.get(pi);
+                if (poker == null) {
+                    continue;
+                }
+                if (Arrays.asList(poker.getLevel().getAlias()).contains(option)) {
+                    isTarget = true;
+                    indexes[index] = pi + 1;
+                    copyList.set(pi, null);
+                    break;
+                }
+            }
+            if (!isTarget) {
+                return null;
+            }
+        }
+        Arrays.sort(indexes);
+        return indexes;
+    }
+
+    public static boolean checkPokerIndex(int[] indexes, List<Poker> pokers) {
+        if (indexes == null || indexes.length == 0) {
+            return false;
+        }
+        for (int index : indexes) {
+            if (index > pokers.size() || index < 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static List<PokerSell> parsePokerSells(List<Poker> pokers) {
         List<PokerSell> pokerSells = new ArrayList<>();
         int size = pokers.size();

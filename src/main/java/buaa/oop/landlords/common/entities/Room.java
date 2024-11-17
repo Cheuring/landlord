@@ -21,7 +21,7 @@ public class Room {
     private RoomStatus status;
 
     private Map<Integer, ClientEnd> clientEndMap;
-    
+
     @Setter
     @Getter
     private LinkedList<ClientEnd> clientEndList;
@@ -141,4 +141,5 @@ public class Room {
             return clientEndList.size();
         }
     }
+
 }
