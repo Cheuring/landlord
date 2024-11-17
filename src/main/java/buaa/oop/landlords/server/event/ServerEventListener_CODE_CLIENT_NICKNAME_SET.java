@@ -11,7 +11,7 @@ import static buaa.oop.landlords.server.ServerContainer.CLIENT_NAME_SET;
  * 否则 进入 ClientEventListener_CODE_SHOW_OPTIONS
  */
 @Slf4j
-public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventListener{
+public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventListener {
     @Override
     /**
      * @param data 为输入的 字符串 nickname
@@ -20,8 +20,11 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventLis
         client.setNickName(data);
 
         log.info("Client {} | {} do set nickname to {}", client.getId(), client.getNickName(), data);
-        if(CLIENT_NAME_SET.contains(data)){
-            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null,"The nickname is already in use");
-        } else ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
+        if (CLIENT_NAME_SET.contains(data)) {
+            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null, "The nickname is already in use");
+        } else {
+            CLIENT_NAME_SET.add(data);
+            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
+        }
     }
 }
