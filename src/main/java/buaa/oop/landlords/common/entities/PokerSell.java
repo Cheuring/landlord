@@ -6,7 +6,6 @@ import lombok.Getter;
 import java.util.List;
 
 public class PokerSell {
-    private int score;
 
     @Getter
     private List<Poker> pokers;
@@ -21,5 +20,8 @@ public class PokerSell {
         this.pokers = pokers;
         this.sellType = sellType;
         this.endIndex = endIndex;
+    }
+    public final List<Poker> getSellPokers() {
+        return pokers;
     }
 }
