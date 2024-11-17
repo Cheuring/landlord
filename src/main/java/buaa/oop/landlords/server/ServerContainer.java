@@ -60,4 +60,9 @@ public class ServerContainer {
     public static ClientEnd getClient(String name) {
         return CLIENT_END_MAP.get(CLIENT_NAME_TO_ID.get(name));
     }
+
+    public static void addClient(ClientEnd client) {
+        CLIENT_END_MAP.put(client.getId(), client);
+        CLIENT_NAME_TO_ID.put(client.getNickName(), client.getId());
+    }
 }
