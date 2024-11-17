@@ -188,9 +188,53 @@ public class PokerUtil {
         return new PokerSell(null, SellType.ILLEGAL, -1);
     }
 
+    public static String printPokers(List<Poker> pokers)
+    {
+        sortPokers(pokers);
+        return buildHandStringSharp(pokers);
+    }
+
+    private static String buildHandStringSharp(List<Poker> pokers) {
+        StringBuilder builder = new StringBuilder();
+        if (pokers != null && pokers.size() > 0) {
+
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("┌──┐");
+                } else {
+                    builder.append("──┐");
+                }
+            }
+            builder.append(System.lineSeparator());
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("│");
+                }
+                String name = pokers.get(index).getLevel().getName();
+                builder.append(name).append(name.length() == 1 ? " " : "").append("|");
+            }
+            builder.append(System.lineSeparator());
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("│");
+                }
+                builder.append(pokers.get(index).getType().getName()).append(" |");
+            }
+            builder.append(System.lineSeparator());
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("└──┘");
+                } else {
+                    builder.append("──┘");
+                }
+            }
+        }
+        return builder.toString();
+    }
+
     /**
-     * 检查牌型是否合法/判断牌型
-     * @param pokers 牌组
+     * 检查可以出什么牌型
+     * @param pokers 牌型列表
      */
     public static List<PokerSell> parsePokerSells(List<Poker> pokers) {
         List<PokerSell> pokerSells = new ArrayList<>();
