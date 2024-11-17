@@ -12,4 +12,12 @@ public class PokerUtil {
     public static List<List<Poker>> distributePokers() {
         return null;
     }
+
+    /**
+     * 排序
+     * @param pokers 牌
+     */
+    public static void sortPokers(List<Poker> pokers) {
+
+    }
 }
