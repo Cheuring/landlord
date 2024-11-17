@@ -62,19 +62,22 @@ public class ChatRoom implements Runnable{
     public void stop() {
         running.set(false);
     }
-    public static String[] spiltContent(String content){
-        String [] info;
-        if(content==null || content.length()==0){
-            SimplePrinter.printNotice("No information");
-        }else{
-            if(content.startsWith("@")){
-                info = content.split(" ");
-                info[0].substring(1);
-                return info;
-            }else{
-                SimplePrinter.printNotice("Your information format is incorrect");
 
+    public static String[] spiltContent(String content) {
+        String[] info=new String[2];
+        if (content == null || content.length() == 0) {
+            SimplePrinter.printNotice("No information");
+        } else {
+            if (content.startsWith("@")) {
+                int space = content.indexOf(" ");
+                if (space > 0) {
+                    info[0] = content.substring(0, space);
+                    info[0].substring(1);
+                    info[1] = content.substring(space + 1);
+                    return info;
+                }
             }
+            SimplePrinter.printNotice("Your information format is incorrect");
         }
         return null;
     }
