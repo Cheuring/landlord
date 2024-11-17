@@ -2,6 +2,7 @@ package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.entities.Poker;
+import buaa.oop.landlords.common.enums.PokerLevel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.print.SimpleWriter;
@@ -10,6 +11,7 @@ import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +52,34 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                 return;
             }else{
                 //todo judgeComibinationVaild
+                String[] strs = userInput.split(" ");
+                List<Character> options = new ArrayList<>();
+                boolean access = true;
+                for(int i=0;i<strs.length;i++){
+                    String str = strs[i];
+                    for(char c:str.toCharArray()){
+                        if(c == ' '|| c == '\t'){
+                        } else {
+                            if(!PokerLevel.aliasContains(c)){
+                                access = false;
+                                break;
+                            } else {
+                                options.add(c);
+                            }
+                        }
+                    }
+                }
+                if(access){
+                    
+                } else {
+                    SimplePrinter.printNotice("Invalid enter");
+                    if (lastPokers != null) {
+                        SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
+                        SimplePrinter.printPokers(lastPokers);
+                    }
 
+                    call(channel, data);
+                }
             }
         }
     }
@@ -58,7 +87,6 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         SimplePrinter.printNotice("Last cards are");
         SimplePrinter.printNotice(roominfo.containsKey("lastPokers")?roominfo.get("lastPokers").toString():"");
         SimplePrinter.printNotice("Please enter the combination you came up with (enter [exit|e] to exit current room, enter [pass|p] to jump current round, enter [view|v] to show information before)");
-        //todo printPokers
-        //SimplePrinter.printPokers(pokers);
+        SimplePrinter.printPokers(pokers);
     }
 }
