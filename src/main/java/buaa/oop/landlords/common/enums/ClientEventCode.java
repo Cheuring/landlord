@@ -16,7 +16,8 @@ public enum ClientEventCode {
     CODE_GAME_LANDLORD_CYCLE("地主一轮确认结束"),
     CODE_GAME_POKER_PLAY("出牌回合"),
     CODE_GAME_POKER_PLAY_REDIRECT("出牌重定向"),
-    CODE_GAME_POKER_PLAY_PASS("不出");
+    CODE_GAME_POKER_PLAY_PASS("不出"),
+    CODE_SHOW_POKERS("展示出牌");
     private final String msg;
 
     private ClientEventCode(String msg) {

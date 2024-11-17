@@ -31,7 +31,7 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener{
             for (Map<String, Object> score : scores) {
                 if (! Objects.equals(score.get("clientId"), User.getINSTANCE().getId())) {
                     SimplePrinter.printNotice(score.get("nickName").toString() + "'s rest poker is:");
-                    //todo SimplePrinter.printPokers(JsonUtil.toJson(score.get("pokers")), new TypeReference<List<Poker>>() {}));
+                    SimplePrinter.printPokers(JsonUtil.fromJson((String)score.get("pokers"), new TypeReference<List<Poker>>() {}));
                 }
             }
             SimplePrinter.printNotice("\n");
