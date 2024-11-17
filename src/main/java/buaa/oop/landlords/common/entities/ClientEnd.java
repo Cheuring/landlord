@@ -15,7 +15,7 @@ public class ClientEnd {
 
     private List<Poker> pokers;
 
-    private ClientRole role;
+    private ClientRole role = ClientRole.PEASANT;
 
     private ClientEnd pre, next;
 
@@ -25,9 +25,15 @@ public class ClientEnd {
 
     private int roomId;
 
+    private int round;
+
     public ClientEnd(int id, Channel channel, ClientStatus status) {
         this.id = id;
         this.channel = channel;
         this.status = status;
+    }
+
+    public void resetRound() {
+        round = 0;
     }
 }

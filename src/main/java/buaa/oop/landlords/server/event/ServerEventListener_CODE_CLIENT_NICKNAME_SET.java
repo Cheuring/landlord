@@ -16,8 +16,6 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventLis
      * @param data 为输入的 字符串 nickname
      */
     public void call(ClientEnd client, String data) {
-        // todo: check name validity
-
         client.setNickName(data);
 
         log.info("Client {} | {} do set nickname to {}", client.getId(), client.getNickName(), data);
