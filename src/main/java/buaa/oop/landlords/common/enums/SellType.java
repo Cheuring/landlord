@@ -16,7 +16,7 @@ public enum SellType {
     THREE_STRAIGHT("三顺子"),
     FOUR_STRAIGHT("四顺子"),
     THREE_STRAIGHT_WITH_SINGLE("飞机带单牌"),
-    HREE_STRAIGHT_WITH_DOUBLE("飞机带对牌"),
+    THREE_STRAIGHT_WITH_DOUBLE("飞机带对牌"),
     FOUR_STRAIGHT_WITH_SINGLE("四顺子带单"),
     FOUR_STRAIGHT_WITH_DOUBLE("四顺子带对"),
     ;
