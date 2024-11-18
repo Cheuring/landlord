@@ -61,7 +61,8 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                  用户输入 v 时，不能Map<String, Object>roominfo= MapUtil.parse(data);
                  */
 
-                call(channel, userInput);
+                printInfo(roominfo, pokers);
+                call(channel, data);
                 return;
             }else{
                 // todo: fix the bug
@@ -157,7 +158,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
     }
     public void printInfo(Map<String, Object> roominfo,List<Poker> pokers){
         SimplePrinter.printNotice("Last cards are");
-        SimplePrinter.printNotice(roominfo.containsKey("lastPokers")?roominfo.get("lastPokers").toString():"");
+        SimplePrinter.printNotice(roominfo.containsKey("lastPokers")?roominfo.get("lastPokers").toString():"no last pokers");
         SimplePrinter.printNotice("Please enter the combination you came up with (enter [exit|e] to exit current room, enter [pass|p] to jump current round, enter [view|v] to show information before)");
         SimplePrinter.printPokers(pokers);
     }
