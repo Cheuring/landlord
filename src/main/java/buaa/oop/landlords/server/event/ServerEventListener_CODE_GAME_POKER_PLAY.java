@@ -63,13 +63,14 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         clientEnd.getPokers().removeAll(currentPokers);
         MapUtil mapUtil = MapUtil.newInstance()
                 .put("clientId", clientEnd.getId())
-                .put("clientNickname", clientEnd.getNickname())
+                .put("currentPlayerNickname", clientEnd.getNickname())
                 .put("clientRole", clientEnd.getRole())
                 .put("pokers", currentPokers)
                 .put("lastSellClientId", clientEnd.getId())
                 .put("lastSellPokers", currentPokers);
         if (!clientEnd.getPokers().isEmpty()) {
-            mapUtil.put("sellClientNickname", next.getNickname());
+            mapUtil.put("nextPlayerNickname", next.getNickname());
+            mapUtil.put("nextPlayerId", next.getId());
         }
 
         String result = mapUtil.json();

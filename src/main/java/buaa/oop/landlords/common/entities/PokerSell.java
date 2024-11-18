@@ -3,8 +3,11 @@ package buaa.oop.landlords.common.entities;
 import buaa.oop.landlords.common.enums.SellType;
 import buaa.oop.landlords.common.utils.PokerUtil;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@NoArgsConstructor
 public class PokerSell {
     @Getter
     private int score;
