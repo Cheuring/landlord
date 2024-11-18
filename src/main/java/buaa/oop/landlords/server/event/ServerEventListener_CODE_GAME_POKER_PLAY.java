@@ -59,18 +59,18 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         }
 
         clientEnd.getPokers().removeAll(currentPokers);
-        MapUtil mapHelper = MapUtil.newInstance()
+        MapUtil mapUtil = MapUtil.newInstance()
                 .put("clientId", clientEnd.getId())
-                .put("clientNickname", clientEnd.getNickname())
+                .put("clientNickname", clientEnd.getNickName())
                 .put("clientRole", clientEnd.getRole())
                 .put("pokers", currentPokers)
                 .put("lastSellClientId", clientEnd.getId())
                 .put("lastSellPokers", currentPokers);
         if (!clientEnd.getPokers().isEmpty()) {
-            mapHelper.put("sellClientNickname", next.getNickname());
+            mapUtil.put("sellClientNickname", next.getNickName());
         }
 
-        String result = mapHelper.json();
+        String result = mapUtil.json();
 
         for (ClientEnd client : room.getClientEndList()) {
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_POKERS, result);
@@ -97,7 +97,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         for (ClientEnd client : room.getClientEndList()) {
             MapUtil score = MapUtil.newInstance()
                     .put("clientId", client.getId())
-                    .put("nickName", client.getNickname())
+                    .put("nickName", client.getNickName())
                     .put("score", client.getScore())
                     .put("scoreInc", client.getScoreInc())
                     .put("pokers", client.getPokers());
@@ -106,7 +106,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
 
         SimplePrinter.ServerLog(clientScores.toString());
         String result = MapUtil.newInstance()
-                .put("winnerNickname", winner.getNickname())
+                .put("winnerNickname", winner.getNickName())
                 .put("winnerType", winner.getRole())
                 .put("scores", clientScores)
                 .json();
@@ -118,7 +118,6 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
     private void setRoomClientScore(Room room, ClientRole winnerType) {
         int landLordScore = room.getScore() * 2;
         int peasantScore = room.getScore();
-        // 输的一方分数为负
         if (winnerType == ClientRole.LANDLORD) {
             peasantScore = -peasantScore;
         } else {

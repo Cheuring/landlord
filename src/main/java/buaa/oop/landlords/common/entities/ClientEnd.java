@@ -43,7 +43,7 @@ public class ClientEnd {
 
     public final void addRound() {round += 1;}
 
-    public final String getNickname() { return nickName; }
+    public final String getNickName() { return nickName; }
 
     public final void addScore(int score) {
         this.score += score;
