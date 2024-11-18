@@ -2,6 +2,7 @@ package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.ChatRoom;
 import buaa.oop.landlords.client.SimpleClient;
+import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.channel.Channel;
@@ -55,12 +56,11 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                     break;
                 case 4:
                     channel.close();
-                    pushToServer(channel,ServerEventCode.CODE_CLIENT_OFFLINE,null);
+//                    pushToServer(channel,ServerEventCode.CODE_CLIENT_OFFLINE,null);
                     break;
                 case 5:
-                    SimplePrinter.printNotice("Please enter your content in such format");
-                    SimplePrinter.printNotice("@[yourChatterId] [chatinformation]");
-                    SimpleClient.chatRoom.start();
+                    SimplePrinter.printNotice("Please enter your content in such format\n@[ClientToName] [Content]");
+                    SimpleClient.chatRoom.start(ClientEventCode.CODE_SHOW_OPTIONS);
                     break;
                 default:
                     SimplePrinter.printNotice("Invalid option, please choose again：");

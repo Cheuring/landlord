@@ -14,7 +14,7 @@ public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener
     @Override
     public void call(ClientEnd client, String data) {
         Room room = ServerContainer.ROOM_MAP.get(client.getRoomId());
-        if(room.getStatus() == RoomStatus.STARTING){
+        if(room != null && room.getStatus() == RoomStatus.STARTING){
             // todo: 通知其他玩家 游戏结束
         }
 

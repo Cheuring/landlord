@@ -11,7 +11,5 @@ public class ClientEventListener_CODE_CLIENT_CONNECT extends ClientEventListener
     public void call(Channel channel, String data) {
         SimplePrinter.ServerLog("Connected to server. Welcome !");
         User.INSTANCE.setId(Integer.parseInt(data));
-        SimpleClient.chatRoom = new ChatRoom(channel);
-//        channel.eventLoop().next().execute(SimpleClient.chatRoom);
     }
 }

@@ -1,5 +1,7 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.ChatRoom;
+import buaa.oop.landlords.client.SimpleClient;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.print.SimpleWriter;
 import buaa.oop.landlords.common.print.SimplePrinter;
@@ -22,8 +24,9 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         String name = SimpleWriter.write(user.getNickname(), "nickname");
 
         if (isValidNickname(name)) {
-
+            // todo: 重名
             user.setNickname(name);
+            SimpleClient.chatRoom = ChatRoom.getInstance(channel);
             pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
         } else {
             SimplePrinter.ServerLog("Invalid nickname!");

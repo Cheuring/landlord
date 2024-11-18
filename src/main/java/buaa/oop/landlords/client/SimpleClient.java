@@ -20,10 +20,13 @@ public class SimpleClient {
         NioEventLoopGroup group = new NioEventLoopGroup();
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//                log.info("Client shutdown");
                 SimplePrinter.ServerLog("Client shutdown");
 
                 group.shutdownGracefully();
+                if(chatRoom != null){
+                    chatRoom.shutdown();
+                    chatRoom = null;
+                }
             }));
 
             new Bootstrap()
@@ -45,6 +48,10 @@ public class SimpleClient {
         } catch (InterruptedException e) {
             log.debug("Client error: {}", e.getMessage());
         } finally {
+            if(chatRoom != null){
+                chatRoom.shutdown();
+                chatRoom = null;
+            }
             group.shutdownGracefully();
         }
     }
