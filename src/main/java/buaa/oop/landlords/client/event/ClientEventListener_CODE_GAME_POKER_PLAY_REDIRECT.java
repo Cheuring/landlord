@@ -1,6 +1,7 @@
 package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.JsonUtil;
@@ -44,6 +45,8 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
         }
         else{
             // todo: 展示手牌
+            List<Poker>myPokers=JsonUtil.fromJson((String) roominfo.get("pokers"),new TypeReference<List<Poker>>() {});
+            SimplePrinter.printPokers(myPokers);
             SimplePrinter.printNotice("It is " + roominfo.get("sellClientNickname") + "'s turn. Please wait for him to play his cards.");
         }
 
