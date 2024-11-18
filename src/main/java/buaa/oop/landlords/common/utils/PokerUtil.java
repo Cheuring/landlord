@@ -5,6 +5,7 @@ import buaa.oop.landlords.common.entities.PokerSell;
 import buaa.oop.landlords.common.enums.PokerLevel;
 import buaa.oop.landlords.common.enums.PokerType;
 import buaa.oop.landlords.common.enums.SellType;
+import buaa.oop.landlords.common.print.SimplePrinter;
 
 import java.util.*;
 
@@ -73,7 +74,6 @@ public class PokerUtil {
             return new PokerSell(null, SellType.ILLEGAL,  -1);
         }
         sortPokers(pokers);
-
         int[] levelTable = new int[20];
         for (Poker poker : pokers) {
             levelTable[poker.getLevel().getLevel()]++;
@@ -91,7 +91,7 @@ public class PokerUtil {
         int fourCount = 0;
         int fourStartIndex = -1;
         int fourEndIndex = -1;
-        for (int index = 3; index < 18; index++) {
+        for (int index = 0; index < 18; index++) {
             int value = levelTable[index];
             if (value == 0) {
                 continue;
@@ -291,6 +291,15 @@ public class PokerUtil {
             }
         }
         return true;
+    }
+
+    public static List<Poker> getPoker(int[] indexes, List<Poker> pokers) {
+        List<Poker> resultPokers = new ArrayList<>(indexes.length);
+        for (int index : indexes) {
+            resultPokers.add(pokers.get(index - 1));
+        }
+        sortPokers(resultPokers);
+        return resultPokers;
     }
 
     public static List<PokerSell> parsePokerSells(List<Poker> pokers) {
