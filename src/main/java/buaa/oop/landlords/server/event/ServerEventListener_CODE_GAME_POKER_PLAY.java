@@ -10,8 +10,10 @@ import buaa.oop.landlords.common.enums.SellType;
 import buaa.oop.landlords.common.enums.ClientRole;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
+import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -29,9 +31,9 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
     public void call(ClientEnd clientEnd, String data) {
         Map<String, Object> map = MapUtil.parse(data);
 
-        List<Poker> currentPokers = (List<Poker>) map.get("poker");
+        List<Poker> currentPokers = JsonUtil.fromJson((String)map.get("poker"), new TypeReference<List<Poker>>(){});
 
-        PokerSell currentPokerSell = (PokerSell) map.get("pokerSell");
+        PokerSell currentPokerSell = JsonUtil.fromJson((String)map.get("pokerSell"), new TypeReference<PokerSell>(){});;
 
         Room room = ServerContainer.getRoom(clientEnd.getRoomId());
 

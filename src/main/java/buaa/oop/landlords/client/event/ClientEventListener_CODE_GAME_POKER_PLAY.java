@@ -111,7 +111,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
 
                     PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
                     // todo: fix the bug
-                    if( Integer.parseInt((String)roominfo.get("lastSellClientId")) != User.INSTANCE.getId() && lastPokerSell.getSellType() != SellType.ILLEGAL){
+                    if(  lastPokerSell.getSellType() != SellType.ILLEGAL && Integer.parseInt((String)roominfo.get("lastSellClientId")) != User.INSTANCE.getId()){
 
                         if((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB){
                             SimplePrinter.printNotice(STR."Your combination is \{currentPokerSell.getSellType()} (\{currentPokerSell.getPokers().size()}), but the previous combination is \{lastPokerSell.getSellType()} (\{lastPokerSell.getPokers().size()}). Mismatch!");
@@ -136,13 +136,13 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                             pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
                             return;
                         }
-
-                        String result = MapUtil.newInstance()
-                                .put("poker", currentPokers)
-                                .put("pokerSell", currentPokerSell)
-                                .json();
-                        ChannelUtil.pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                     }
+
+                    String result = MapUtil.newInstance()
+                            .put("poker", currentPokers)
+                            .put("pokerSell", currentPokerSell)
+                            .json();
+                    ChannelUtil.pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                 } else {
                     SimplePrinter.printNotice("Invalid enter");
                     if (lastPokers != null) {
@@ -152,6 +152,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
 
                     call(channel, data);
                 }
+
             }
         }
     }
