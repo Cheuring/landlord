@@ -3,7 +3,9 @@ package buaa.oop.landlords.common.entities;
 import buaa.oop.landlords.common.enums.PokerLevel;
 import buaa.oop.landlords.common.enums.PokerType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class Poker {
     @Getter
     private PokerLevel level;
