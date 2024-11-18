@@ -22,11 +22,10 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         String name = SimpleWriter.write(user.getNickname(), "nickname");
 
         if (isValidNickname(name)) {
-
             user.setNickname(name);
             pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
         } else {
-            SimplePrinter.ServerLog("Invalid nickname!");
+            SimplePrinter.printNotice("Invalid nickname!");
             call(channel, data);
         }
 

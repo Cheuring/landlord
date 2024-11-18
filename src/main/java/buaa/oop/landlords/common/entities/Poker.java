@@ -2,23 +2,18 @@ package buaa.oop.landlords.common.entities;
 
 import buaa.oop.landlords.common.enums.PokerLevel;
 import buaa.oop.landlords.common.enums.PokerType;
+import lombok.Getter;
 
 public class Poker {
+    @Getter
     private PokerLevel level;
 
+    @Getter
     private PokerType type;
 
     public Poker(PokerLevel level, PokerType type) {
         this.level = level;
         this.type = type;
-    }
-
-    public PokerLevel getLevel() {
-        return level;
-    }
-
-    public PokerType getType() {
-        return type;
     }
 
     public boolean equals(Object obj) {
