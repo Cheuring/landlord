@@ -3,7 +3,6 @@ package buaa.oop.landlords.server.event;
 import buaa.oop.landlords.common.entities.ClientEnd;
 import buaa.oop.landlords.common.entities.Room;
 import buaa.oop.landlords.common.enums.RoomStatus;
-import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +20,6 @@ public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener
 
         ServerContainer.CLIENT_END_MAP.remove(client.getId());
 
-        log.info("Client {} | {} offline", client.getId(), client.getNickName());
+        log.info("Client {} | {} offline", client.getId(), client.getNickname());
     }
 }

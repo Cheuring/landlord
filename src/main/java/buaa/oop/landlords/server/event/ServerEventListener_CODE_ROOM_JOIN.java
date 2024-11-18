@@ -38,13 +38,13 @@ public class ServerEventListener_CODE_ROOM_JOIN extends ServerEventListener{
             return;
         }
 
-        log.info("Client {} | {} join room {}", clientEnd.getId(), clientEnd.getNickName(), room.getId());
+        log.info("Client {} | {} join room {}", clientEnd.getId(), clientEnd.getNickname(), room.getId());
 
         clientEnd.setRoomId(roomId);
         clientEnd.setStatus(ClientStatus.READY);
 
         resultMap.put("clientId", clientEnd.getId());
-        resultMap.put("clientNickname", clientEnd.getNickName());
+        resultMap.put("clientNickname", clientEnd.getNickname());
         resultMap.put("roomClientCount", currentNum);
 
         for(ClientEnd client : clientEndList) {

@@ -62,19 +62,19 @@ public class ServerEventListener_CODE_GAME_LANDLORD_ELECT extends ServerEventLis
         if(highestScore != 0){
             result = MapUtil.newInstance()
                     .put("roomId", room.getId())
-                    .put("preClientNickname", clientEnd.getNickName())
+                    .put("preClientNickname", clientEnd.getNickname())
                     .put("preClientId", clientEnd.getId())
                     .put("nextClientId", next.getId())
-                    .put("nextClientNickname", next.getNickName())
+                    .put("nextClientNickname", next.getNickname())
                     .put("highestScore", highestScore)
                     .put("currentLandlordId", (Integer)map.get("currentLandlordId"))
                     .json();
         }else{
             result = MapUtil.newInstance()
                     .put("roomId", room.getId())
-                    .put("preClientNickname", clientEnd.getNickName())
+                    .put("preClientNickname", clientEnd.getNickname())
                     .put("nextClientId", next.getId())
-                    .put("nextClientNickname", next.getNickName())
+                    .put("nextClientNickname", next.getNickname())
                     .put("highestScore", highestScore)
                     .json();
         }
@@ -98,7 +98,7 @@ public class ServerEventListener_CODE_GAME_LANDLORD_ELECT extends ServerEventLis
         for(ClientEnd client: room.getClientEndList()){
             String result = MapUtil.newInstance()
                     .put("roomId", room.getId())
-                    .put("landlordNickname", clientEnd.getNickName())
+                    .put("landlordNickname", clientEnd.getNickname())
                     .put("landlordId", landlordId)
                     .put("additionalPokers", room.getLandlordPokers())
                     .put("baseScore", room.getBaseScore())

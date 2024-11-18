@@ -5,7 +5,6 @@ import buaa.oop.landlords.common.entities.Room;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerContainer {
@@ -63,6 +62,6 @@ public class ServerContainer {
 
     public static void addClient(ClientEnd client) {
         CLIENT_END_MAP.put(client.getId(), client);
-        CLIENT_NAME_TO_ID.put(client.getNickName(), client.getId());
+        CLIENT_NAME_TO_ID.put(client.getNickname(), client.getId());
     }
 }

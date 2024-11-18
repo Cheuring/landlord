@@ -27,7 +27,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
         }
 
         ClientEnd client = ServerContainer.CLIENT_END_MAP.get(getId(ctx.channel()));
-        log.info("Client {} | {} do: {}", client.getId(), client.getNickName(), code.getMsg());
+        log.info("Client {} | {} do: {}", client.getId(), client.getNickname(), code.getMsg());
         ServerEventListener.get(code).call(client, msg.getData());
     }
 
@@ -64,7 +64,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
         client.setNickName("Client " + client.getId());
 
         ServerContainer.CLIENT_END_MAP.put(client.getId(), client);
-        log.info("Client {} | {} online", client.getId(), client.getNickName());
+        log.info("Client {} | {} online", client.getId(), client.getNickname());
 
         new Thread(() -> {
             try {

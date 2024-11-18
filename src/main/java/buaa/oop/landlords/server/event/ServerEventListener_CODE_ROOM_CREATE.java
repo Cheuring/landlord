@@ -17,7 +17,7 @@ public class ServerEventListener_CODE_ROOM_CREATE extends ServerEventListener{
     @Override
     public void call(ClientEnd clientEnd, String data) {
         Room room = new Room(ServerContainer.getNewRoomId());
-        room.setRoomOwner(clientEnd.getNickName());
+        room.setRoomOwner(clientEnd.getNickname());
         room.setStatus(RoomStatus.WAIT);
         room.addClient(clientEnd);
         room.setCurrentSellClient(clientEnd.getId());
@@ -27,7 +27,7 @@ public class ServerEventListener_CODE_ROOM_CREATE extends ServerEventListener{
 
         clientEnd.setStatus(ClientStatus.NO_READY);
 
-        log.info("Client {} | {} create room {}", clientEnd.getId(), clientEnd.getNickName(), room.getId());
+        log.info("Client {} | {} create room {}", clientEnd.getId(), clientEnd.getNickname(), room.getId());
         ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_ROOM_CREATE_SUCCESS, String.valueOf(room.getId()));
     }
 }
