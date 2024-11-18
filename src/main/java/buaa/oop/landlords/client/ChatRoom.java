@@ -1,30 +1,35 @@
 package buaa.oop.landlords.client;
 
 import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.print.SimpleWriter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ChatRoom implements Runnable{
+import static buaa.oop.landlords.client.event.ClientEventListener.get;
+
+public class ChatRoom implements Runnable {
     private final AtomicBoolean running = new AtomicBoolean(false);
-    private final Object lock = new Object();
+    private final Object lock;
     private final Channel channel;
     private Thread thread;
 
-    public ChatRoom(Channel channel){
+    public ChatRoom(Channel channel,Object lock) {
         this.channel = channel;
+        this.lock=lock;
         this.thread = new Thread(this);
         thread.start();
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             synchronized (lock) {
                 while (!running.get()) {
                     try {
@@ -36,18 +41,21 @@ public class ChatRoom implements Runnable{
                 }
             }
             String content = SimpleWriter.write();
+            if (content.equalsIgnoreCase("exit") || content.equalsIgnoreCase("e")) {
+                SimplePrinter.printNotice("exit successfully");
+                stop();
+                synchronized (lock) {
+                    lock.notify();
+                }return;
+            }
             String[] contents = spiltContent(content);
-            /*
-             todo: 处理聊天内容
-             result 包含ClientTo, Content
-             */
-           if(contents!=null){
-               String result = MapUtil.newInstance()
-                    .put("ClientTo", contents[0])
-                    .put("Content", contents[1]).json();
+            if (contents != null) {
+                String result = MapUtil.newInstance()
+                        .put("ClientTo", contents[0])
+                        .put("Content", contents[1]).json();
 
-            ChannelUtil.pushToServer(channel, ServerEventCode.CODE_CHAT, result);
-           }
+                ChannelUtil.pushToServer(channel, ServerEventCode.CODE_CHAT, result);
+            }
         }
     }
 
@@ -60,10 +68,11 @@ public class ChatRoom implements Runnable{
 
     public void stop() {
         running.set(false);
+        Thread.interrupted();
     }
 
     public static String[] spiltContent(String content) {
-        String[] info=new String[2];
+        String[] info = new String[2];
         if (content == null || content.length() == 0) {
             SimplePrinter.printNotice("No information");
         } else {

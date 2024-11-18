@@ -61,13 +61,13 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         clientEnd.getPokers().removeAll(currentPokers);
         MapUtil mapHelper = MapUtil.newInstance()
                 .put("clientId", clientEnd.getId())
-                .put("clientNickname", clientEnd.getNickname())
+                .put("clientNickname", clientEnd.getNickName())
                 .put("clientRole", clientEnd.getRole())
                 .put("pokers", currentPokers)
                 .put("lastSellClientId", clientEnd.getId())
                 .put("lastSellPokers", currentPokers);
         if (!clientEnd.getPokers().isEmpty()) {
-            mapHelper.put("sellClientNickname", next.getNickname());
+            mapHelper.put("sellClientNickname", next.getNickName());
         }
 
         String result = mapHelper.json();
@@ -97,7 +97,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         for (ClientEnd client : room.getClientEndList()) {
             MapUtil score = MapUtil.newInstance()
                     .put("clientId", client.getId())
-                    .put("nickName", client.getNickname())
+                    .put("nickName", client.getNickName())
                     .put("score", client.getScore())
                     .put("scoreInc", client.getScoreInc())
                     .put("pokers", client.getPokers());
@@ -106,7 +106,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
 
         SimplePrinter.ServerLog(clientScores.toString());
         String result = MapUtil.newInstance()
-                .put("winnerNickname", winner.getNickname())
+                .put("winnerNickname", winner.getNickName())
                 .put("winnerType", winner.getRole())
                 .put("scores", clientScores)
                 .json();
