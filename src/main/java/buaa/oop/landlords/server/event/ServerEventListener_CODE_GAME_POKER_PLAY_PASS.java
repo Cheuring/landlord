@@ -27,9 +27,9 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_PASS extends ServerEventLi
         for (ClientEnd client : room.getClientEndList()) {
             String result = MapUtil.newInstance()
                     .put("clientId", clientEnd.getId())
-                    .put("clientNickname", clientEnd.getNickName())
+                    .put("clientNickname", clientEnd.getNickname())
                     .put("nextClientId", next.getId())
-                    .put("nextClientNickname", next.getNickName())
+                    .put("nextClientNickname", next.getNickname())
                     .json();
 
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_POKER_PLAY_PASS, result);

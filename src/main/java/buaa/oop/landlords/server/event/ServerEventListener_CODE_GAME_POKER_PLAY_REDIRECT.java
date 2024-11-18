@@ -29,7 +29,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
             if(clientEnd.getId() != client.getId()) {
                 clientInfos.add(MapUtil.newInstance()
                         .put("clientId", client.getId())
-                        .put("clientNickname", client.getNickName())
+                        .put("clientNickname", client.getNickname())
                         .put("role", client.getRole())
                         .put("surplus", client.getPokers().size())
                         .put("position", clientEnd.getPre().getId() == client.getId() ? "UP" : "DOWN")
@@ -45,7 +45,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
                 .put("lastSellClientId", dataMap.get("lastSellClientId"))
                 .put("clientInfos", clientInfos)
                 .put("sellClientId", room.getCurrentSellClient())
-                .put("sellClientNickname", ServerContainer.CLIENT_END_MAP.get(room.getCurrentSellClient()).getNickName())
+                .put("sellClientNickname", ServerContainer.CLIENT_END_MAP.get(room.getCurrentSellClient()).getNickname())
                 .json();
 
         ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_GAME_POKER_PLAY_REDIRECT, result);

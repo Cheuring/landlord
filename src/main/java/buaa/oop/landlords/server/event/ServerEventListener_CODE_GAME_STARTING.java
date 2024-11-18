@@ -45,7 +45,7 @@ public class ServerEventListener_CODE_GAME_STARTING extends ServerEventListener{
                     .put("roomOwner", room.getRoomOwner())
                     .put("roomClientCount", clientEndList.size())
                     .put("nextClientId", startPlayer.getId())
-                    .put("nextClientNickname", startPlayer.getNickName())
+                    .put("nextClientNickname", startPlayer.getNickname())
                     .put("pokers", client.getPokers())
                     .put("highestScore", 0)
                     .json();

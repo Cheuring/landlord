@@ -16,7 +16,7 @@ public class ServerEventListener_CODE_CHAT extends ServerEventListener{
     public void call(ClientEnd clientEnd, String data) {
         Map<String, Object> map = MapUtil.parse(data);
         String clientToName = (String) map.get("ClientTo");
-        map.put("ClientFrom", clientEnd.getNickName());
+        map.put("ClientFrom", clientEnd.getNickname());
 
         if(!ServerContainer.containsClient(clientToName)) {
             ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT_FAIL, null, "Client not exist");
