@@ -26,6 +26,9 @@ public class JsonUtil {
      * @param <T> type of object
      */
     public static <T> T fromJson(String json, Class<T> clazz) {
+        if(json == null){
+            return null;
+        }
         try {
             return objectMapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
@@ -43,6 +46,9 @@ public class JsonUtil {
      * @param <T> type of object
      */
     public static <T> T fromJson(String json, TypeReference<T> type) {
+        if(json == null){
+            return null;
+        }
         try {
             return objectMapper.readValue(json, type);
         } catch (JsonProcessingException e) {

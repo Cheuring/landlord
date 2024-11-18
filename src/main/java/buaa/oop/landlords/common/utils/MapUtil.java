@@ -24,6 +24,9 @@ public class MapUtil {
      * @return this
      */
     public MapUtil put(String key, Object value) {
+        if(value == null) {
+            return this;
+        }
         if (value instanceof String || value instanceof Number || value instanceof Boolean || value instanceof Character) {
             this.data.put(key, value);
         } else {

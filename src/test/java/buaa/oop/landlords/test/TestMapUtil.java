@@ -132,6 +132,18 @@ public class TestMapUtil implements Serializable{
         }
     }
 
+    @Test
+    public void testMapUtil5(){
+        String json = MapUtil.newInstance()
+                .put("key1", null)
+                .put("key2", 2)
+                .put("key3", "hello")
+                .json();
+
+        Map<String, Object> map = MapUtil.parse(json);
+        System.out.println(map.get("key1") == null);
+    }
+
 }
 @AllArgsConstructor
 @NoArgsConstructor
