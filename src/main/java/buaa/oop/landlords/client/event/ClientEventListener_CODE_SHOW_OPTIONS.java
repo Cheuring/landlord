@@ -16,13 +16,13 @@ import buaa.oop.landlords.common.print.*;
  *   4.ServerEventListener_CODE_CLIENT_OFFLINE
  */
 public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
-    private final Object lock = new Object();
+
     @Override
     /**
      * @param data is always null or no use
      */
     public void call(Channel channel, String data) {
-        SimpleClient.chatRoom = new ChatRoom(channel, lock);
+
 //        System.exit(0);
         SimplePrinter.printNotice("Please select the tab you are entering");
         SimplePrinter.printNotice("1.Create Room");
@@ -60,15 +60,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                 case 5:
                     SimplePrinter.printNotice("Please enter your content in such format");
                     SimplePrinter.printNotice("@[yourChatterId] [chatinformation]");
-
-                    synchronized (lock) {
-                        SimpleClient.chatRoom.start();
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    SimpleClient.chatRoom.start();
                     break;
                 default:
                     SimplePrinter.printNotice("Invalid option, please choose again：");
