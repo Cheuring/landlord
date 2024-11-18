@@ -9,6 +9,7 @@ import buaa.oop.landlords.common.utils.ChannelUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
 import buaa.oop.landlords.server.ServerContainer;
+import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
@@ -50,7 +51,15 @@ public class ServerEventListener_CODE_GAME_STARTING extends ServerEventListener{
                     .put("highestScore", 0)
                     .json();
 
-            ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_STARTING, result);
+            ChannelFuture future = ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_STARTING, result);
+            future.addListener(f -> {
+                if(f.isSuccess()) {
+                    log.info("Game starting message sent to client {}", client.getId());
+                } else {
+                    log.error("Game starting message send to client {} failed", client.getId());
+                    f.cause().printStackTrace();
+                }
+            });
         }
     }
 }

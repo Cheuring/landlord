@@ -21,7 +21,7 @@ public class MsgCodec extends MessageToMessageCodec<ByteBuf, Msg> {
 
         byte[] bytes = JsonUtil.toJson(msg).getBytes(StandardCharsets.UTF_8);
 
-        assert bytes.length < 1016;
+        assert bytes.length < 4088: "Msg too long";
 
         byteBuf.writeInt(bytes.length);
         byteBuf.writeBytes(bytes);

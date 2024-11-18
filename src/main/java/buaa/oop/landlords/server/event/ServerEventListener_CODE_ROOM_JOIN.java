@@ -53,11 +53,11 @@ public class ServerEventListener_CODE_ROOM_JOIN extends ServerEventListener{
 
         // todo: 没考虑执行这里的时候房间有人退出
         if(currentNum == 3) {
-            clientEnd.setNext(clientEndList.getFirst());
-            clientEndList.getFirst().setPre(clientEnd);
+            clientEnd.setNext(clientEndList.getFirst().getId());
+            clientEndList.getFirst().setPre(clientEnd.getId());
             room.setStatus(RoomStatus.STARTING);
 
-            ServerEventListener.get(ServerEventCode.CODE_GAME_STARTING).call(clientEnd, String.valueOf(room.getId()));
+            ServerEventListener.get(ServerEventCode.CODE_GAME_STARTING).call(clientEnd, null);
         }
     }
 }

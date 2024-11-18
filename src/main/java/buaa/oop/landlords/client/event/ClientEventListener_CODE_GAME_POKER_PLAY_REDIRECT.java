@@ -3,7 +3,9 @@ package buaa.oop.landlords.client.event;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
+import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
 
 import java.util.List;
@@ -25,7 +27,8 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
     public void call(Channel channel, String data) {
         Map<String, Object> roominfo= MapUtil.parse(data);
         int sellClientId = (int) roominfo.get("sellClientId");
-        List<Map<String, Object>> clientInfos = (List<Map<String, Object>>) roominfo.get("clientInfos");
+        List<Map<String, Object>> clientInfos = JsonUtil.fromJson((String) roominfo.get("clientInfos"), new TypeReference<List<Map<String, Object>>>() {
+        });
 
         for (int index = 0; index < 2; index++) {
             for (Map<String, Object> clientInfo : clientInfos) {
@@ -40,6 +43,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
             get(ClientEventCode.CODE_GAME_POKER_PLAY).call(channel, data);
         }
         else{
+            // todo: 展示手牌
             SimplePrinter.printNotice("It is " + roominfo.get("sellClientNickname") + "'s turn. Please wait for him to play his cards.");
         }
 

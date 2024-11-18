@@ -39,7 +39,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
             return;
         }
 
-        ClientEnd next = clientEnd.getNext();
+        ClientEnd next = ServerContainer.getClient(clientEnd.getNext());
 
         clientEnd.addRound();
 

@@ -56,9 +56,15 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                 else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS); }
             }
             else if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
+                /*
+                 todo : fix the bug
+                 用户输入 v 时，不能Map<String, Object>roominfo= MapUtil.parse(data);
+                 */
+
                 call(channel, userInput);
                 return;
             }else{
+                // todo: fix the bug
                 String[] strs = userInput.split(" ");
                 List<Character> options = new ArrayList<>();
                 boolean access = true;

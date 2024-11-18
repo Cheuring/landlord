@@ -28,7 +28,7 @@ public class JsonUtil {
     public static <T> T fromJson(String json, Class<T> clazz) {
         try {
             return objectMapper.readValue(json, clazz);
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;

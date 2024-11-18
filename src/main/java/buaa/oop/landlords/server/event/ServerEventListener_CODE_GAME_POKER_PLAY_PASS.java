@@ -21,7 +21,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_PASS extends ServerEventLi
         assert room.getCurrentSellClient() == clientEnd.getId();
         assert clientEnd.getId() != room.getLastSellClient();
 
-        ClientEnd next = clientEnd.getNext();
+        ClientEnd next = ServerContainer.getClient(clientEnd.getNext());
         room.setCurrentSellClient(next.getId());
 
         for (ClientEnd client : room.getClientEndList()) {

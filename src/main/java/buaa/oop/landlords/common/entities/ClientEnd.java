@@ -21,7 +21,7 @@ public class ClientEnd {
 
     private ClientRole role = ClientRole.PEASANT;
 
-    private ClientEnd pre, next;
+    private int pre, next;
 
     private Channel channel;
 

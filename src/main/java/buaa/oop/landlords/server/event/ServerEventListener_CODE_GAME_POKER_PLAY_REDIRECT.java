@@ -21,8 +21,12 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
     @Override
     public void call(ClientEnd clientEnd, String data) {
         Room room = ServerContainer.getRoom(clientEnd.getRoomId());
-        Map<String, Object> dataMap = MapUtil.parse(data);
-        dataMap = dataMap == null ? new HashMap<>() : dataMap;
+        Map<String, Object> dataMap = null;
+        if(data != null) {
+            dataMap = MapUtil.parse(data);
+        }else{
+            dataMap = new HashMap<>();
+        }
 
         List<Map<String, Object>> clientInfos = new ArrayList<>(3);
         for(ClientEnd client : room.getClientEndList()) {
@@ -32,7 +36,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
                         .put("clientNickname", client.getNickname())
                         .put("role", client.getRole())
                         .put("surplus", client.getPokers().size())
-                        .put("position", clientEnd.getPre().getId() == client.getId() ? "UP" : "DOWN")
+                        .put("position", clientEnd.getPre() == client.getId() ? "UP" : "DOWN")
                         .map());
             }
         }

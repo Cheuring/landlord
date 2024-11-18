@@ -8,18 +8,19 @@ import io.netty.channel.ChannelFuture;
 
 public class ChannelUtil {
 
-    public static void pushToClient(Channel channel, ClientEventCode code, String data) {
-        pushToClient(channel, code, data, null);
+    public static ChannelFuture pushToClient(Channel channel, ClientEventCode code, String data) {
+        return pushToClient(channel, code, data, null);
     }
 
-    public static void pushToClient(Channel channel, ClientEventCode code, String data, String info) {
+    public static ChannelFuture pushToClient(Channel channel, ClientEventCode code, String data, String info) {
         if(channel != null) {
             Msg msg = new Msg();
             msg.setCode(code.toString());
             msg.setData(data);
             msg.setInfo(info);
-            channel.writeAndFlush(msg);
+            return channel.writeAndFlush(msg);
         }
+        return null;
     }
 
     public static ChannelFuture pushToServer(Channel channel, ServerEventCode code, String data) {

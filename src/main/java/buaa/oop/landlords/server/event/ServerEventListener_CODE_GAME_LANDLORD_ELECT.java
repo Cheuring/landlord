@@ -36,7 +36,7 @@ public class ServerEventListener_CODE_GAME_LANDLORD_ELECT extends ServerEventLis
             return;
         }
 
-        if(clientEnd.getNext().getId() == room.getFirstSellClient()){
+        if(clientEnd.getNext() == room.getFirstSellClient()){
             if(highestScore == 0) {
                 for (ClientEnd client : room.getClientEndList()) {
                     ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_LANDLORD_CYCLE, null);
@@ -55,7 +55,7 @@ public class ServerEventListener_CODE_GAME_LANDLORD_ELECT extends ServerEventLis
             }
         }
 
-        ClientEnd next = clientEnd.getNext();
+        ClientEnd next = ServerContainer.getClient(clientEnd.getNext());
         room.setCurrentSellClient(next.getId());
         String result;
 
