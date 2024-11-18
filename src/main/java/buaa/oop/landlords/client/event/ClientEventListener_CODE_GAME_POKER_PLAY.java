@@ -37,6 +37,9 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         Map<String, Object>roominfo= MapUtil.parse(data);
         SimplePrinter.printNotice("It's your turn to play");
         List<Poker> pokers = JsonUtil.fromJson((String)roominfo.get("pokers"), new TypeReference<List<Poker>>(){});
+        List<Poker> lastPokers = JsonUtil.fromJson((String)roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>(){});
+        String lastSellClientNickname = (String) roominfo.get("lastSellClientNickname");
+        String lastSellClientType = (String) roominfo.get("role");
         printInfo(roominfo,pokers);
 
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "combination");
@@ -49,11 +52,11 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                 pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS);
             }
             else if(userInput.equalsIgnoreCase("pass")||userInput.equalsIgnoreCase("p")){
-                if((int)roominfo.get("lastSellClientId") != User.INSTANCE.getId()){
+                if( (Integer) roominfo.get("lastSellClientId") == User.INSTANCE.getId()){
                     SimplePrinter.printNotice("You played the previous card, so you can't pass.");
-                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                 }
-                else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS); }
+                else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data); }
             }
             else if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
                 printInfo(roominfo, pokers);
@@ -90,8 +93,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                             SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
                             SimplePrinter.printPokers(lastPokers);
                         }
-
-                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                         return;
                     }
 
@@ -105,13 +107,12 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                             SimplePrinter.printPokers(lastPokers);
                         }
 
-                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                         return;
                     }
 
                     PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
-                    // todo: fix the bug
-                    if(  lastPokerSell.getSellType() != SellType.ILLEGAL && Integer.parseInt((String)roominfo.get("lastSellClientId")) != User.INSTANCE.getId()){
+                    if(  lastPokerSell.getSellType() != SellType.ILLEGAL && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()){
 
                         if((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB){
                             SimplePrinter.printNotice(STR."Your combination is \{currentPokerSell.getSellType()} (\{currentPokerSell.getPokers().size()}), but the previous combination is \{lastPokerSell.getSellType()} (\{lastPokerSell.getPokers().size()}). Mismatch!");
@@ -121,7 +122,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                                 SimplePrinter.printPokers(lastPokers);
                             }
 
-                            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                             return;
                         }
 
@@ -133,7 +134,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                                 SimplePrinter.printPokers(lastPokers);
                             }
 
-                            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+                            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                             return;
                         }
                     }
@@ -142,7 +143,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                             .put("poker", currentPokers)
                             .put("pokerSell", currentPokerSell)
                             .json();
-                    ChannelUtil.pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
+                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                 } else {
                     SimplePrinter.printNotice("Invalid enter");
                     if (lastPokers != null) {
@@ -158,7 +159,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
     }
     public void printInfo(Map<String, Object> roominfo,List<Poker> pokers){
         SimplePrinter.printNotice("Last cards are");
-        SimplePrinter.printNotice(roominfo.containsKey("lastPokers")?roominfo.get("lastPokers").toString():"no last pokers");
+        SimplePrinter.printPokers(JsonUtil.fromJson((String)roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>(){}));
         SimplePrinter.printNotice("Please enter the combination you came up with (enter [exit|e] to exit current room, enter [pass|p] to jump current round, enter [view|v] to show information before)");
         SimplePrinter.printPokers(pokers);
     }

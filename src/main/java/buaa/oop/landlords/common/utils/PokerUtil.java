@@ -207,6 +207,8 @@ public class PokerUtil {
 
     public static String printPokers(List<Poker> pokers)
     {
+        if( pokers == null || pokers.isEmpty() )
+            return "up to you";
         sortPokers(pokers);
         return buildHandStringSharp(pokers);
     }
