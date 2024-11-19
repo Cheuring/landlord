@@ -9,6 +9,7 @@ import io.netty.channel.Channel;
 import java.util.Map;
 
 /**
+ * 前一个状态只为：ClientEventListener_CODE_GAME_POKER_PLAY
  *下一个状态为 ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT
  */
 public class ClientEventListener_CODE_GAME_POKER_PLAY_PASS extends ClientEventListener{
@@ -19,10 +20,10 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_PASS extends ClientEventLi
     public void call(Channel channel, String data) {
         Map<String,Object>players= MapUtil.parse(data);
         SimplePrinter.printNotice(players.get("clientNickname")+"passed");
-        SimplePrinter.printNotice(players.get("It's"+"nextClientNickname")+"'s turn");
+        SimplePrinter.printNotice("It's"+players.get("nextClientNickname")+"'s turn");
         int turnClientId = (int) players.get("nextClientId");
         if (User.getINSTANCE().getId() == turnClientId) {
-            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
+            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT,data);
         }
     }
 }

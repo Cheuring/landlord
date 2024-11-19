@@ -27,6 +27,14 @@ import java.util.Map;
  *       exit 进入 ServerEventListener_CODE_CLIENT_EXIT
  *       view 重新打印出牌信息,重新调用该状态
  *       出牌合法 进入 ServerEventListener_CODE_GAME_POKER_PLAY
+ *          String result = MapUtil.newInstance()
+ *                 .put("pokers", clientEnd.getPokers())
+ *                 .put("lastSellPokers", dataMap.get("lastSellPokers"))
+ *                 .put("lastSellClientId", dataMap.get("lastSellClientId"))
+ *                 .put("clientInfos", clientInfos)
+ *                 .put("sellClientId", room.getCurrentSellClient())
+ *                 .put("sellClientNickname", ServerContainer.CLIENT_END_MAP.get(room.getCurrentSellClient()).getNickname())
+ *                 .json();
  */
 public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListener{
     @Override
@@ -35,11 +43,22 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
      */
     public void call(Channel channel, String data) {
         Map<String, Object>roominfo= MapUtil.parse(data);
+        List<Map<String, Object>>clientInfo= JsonUtil.fromJson((String)roominfo.get("clientInfos"),new TypeReference<ArrayList<Map<String, Object>>>(){});
         SimplePrinter.printNotice("It's your turn to play");
         List<Poker> pokers = JsonUtil.fromJson((String)roominfo.get("pokers"), new TypeReference<List<Poker>>(){});
         List<Poker> lastPokers = JsonUtil.fromJson((String)roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>(){});
-        String lastSellClientNickname = (String) roominfo.get("lastSellClientNickname");
-        String lastSellClientType = (String) roominfo.get("role");
+        Integer lastSellClientNickname = (Integer) roominfo.get("lastSellClientId");
+        String lastSellClientType = "rubbish";
+        for (Map<String, Object> clientEnd : clientInfo) {
+            try {
+                if (lastSellClientNickname.equals(clientEnd.get("clientId"))) {
+                    lastSellClientType = (String) clientEnd.get("role");
+                    break;
+                }
+            } catch (Exception e) {
+                break;
+            }
+        }
         printInfo(roominfo,pokers);
 
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "combination");
@@ -59,7 +78,6 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                 else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data); }
             }
             else if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
-                printInfo(roominfo, pokers);
                 call(channel, data);
                 return;
             }else{
