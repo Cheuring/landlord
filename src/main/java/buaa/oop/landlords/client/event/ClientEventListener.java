@@ -39,18 +39,7 @@ public abstract class ClientEventListener {
         }
         return null;
     }
-    protected static List<Poker> lastPokers = null;
-    protected static String lastSellClientNickname = null;
-    protected static String lastSellClientType = null;
 
-    /**
-     * Initialize playing information
-     */
-    protected static void initLastSellInfo() {
-        lastPokers = null;
-        lastSellClientNickname = null;
-        lastSellClientType = null;
-    }
     protected ChannelFuture pushToServer(Channel channel, ServerEventCode code, String data) {
         return ChannelUtil.pushToServer(channel, code, data);
     }

@@ -17,7 +17,6 @@ public class ClientEventListener_CODE_ROOM_CREATE_SUCCESS extends ClientEventLis
     public void call(Channel channel, String data) {
 //        Room room = JsonUtil.fromJson(data, Room.class);
         int roomId = Integer.parseInt(data);
-        initLastSellInfo();
         SimplePrinter.printNotice("You have created a room with id " + roomId);
         SimplePrinter.printNotice("Please wait for other players to join !");
     }

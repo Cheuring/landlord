@@ -67,6 +67,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
                 .put("clientRole", clientEnd.getRole())
                 .put("pokers", currentPokers)
                 .put("lastSellClientId", clientEnd.getId())
+                .put("lastSellClientName", clientEnd.getNickname())
                 .put("lastSellPokers", currentPokers);
         if (!clientEnd.getPokers().isEmpty()) {
             mapUtil.put("nextPlayerNickname", next.getNickname());

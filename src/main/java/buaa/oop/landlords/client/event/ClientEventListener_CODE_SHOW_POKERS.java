@@ -2,6 +2,7 @@ package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.entities.Poker;
+import buaa.oop.landlords.common.enums.ClientRole;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
@@ -24,7 +25,7 @@ public class ClientEventListener_CODE_SHOW_POKERS extends ClientEventListener{
         Map<String, Object>showPokers= MapUtil.parse(data);
         List<Poker> pokers = JsonUtil.fromJson((String)showPokers.get("pokers"), new TypeReference<List<Poker>>(){});
 
-        SimplePrinter.printNotice("["+(String)showPokers.get("currentPlayerNickname")+"]"+"used ");
+        SimplePrinter.printNotice((String)showPokers.get("lastSellClientName")+ "["+JsonUtil.fromJson((String)showPokers.get("clientRole"), ClientRole.class).name()+"]"+"used ");
         SimplePrinter.printPokers(pokers);
         if(User.getINSTANCE().getId()==(int)showPokers.get("nextPlayerId")){
             SimplePrinter.printNotice("It's your turn");

@@ -47,7 +47,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
             // todo: 展示手牌
             List<Poker>myPokers=JsonUtil.fromJson((String) roominfo.get("pokers"),new TypeReference<List<Poker>>() {});
             SimplePrinter.printPokers(myPokers);
-            SimplePrinter.printNotice("It is " + roominfo.get("sellClientNickname") + "'s turn. Please wait for him to play his cards.");
+            SimplePrinter.printNotice("It is " + roominfo.get("sellClientNickname") + "  \'s turn. Please wait for him to play his cards.");
         }
 
     }
