@@ -12,12 +12,6 @@ import java.util.Map;
 /**
  * 解析data为房间信息的List<Map<String, Object>>并打印
  * 下一个状态：ClientEventListener_CODE_SHOW_OPTIONS
- * todo: roomList.add(MapUtil.newInstance()
- *                     .put("roomId", room.getId())
- *                     .put("roomOwner", room.getRoomOwner())
- *                     .put("roomClientCount", room.getClientEndList().size())
- *                     .put("roomStatus", room.getStatus())
- *                     .map());
  */
 public class ClientEventListener_CODE_SHOW_ROOMS extends ClientEventListener{
     @Override

@@ -3,6 +3,7 @@ package buaa.oop.landlords.server.event;
 import buaa.oop.landlords.common.entities.ClientEnd;
 import buaa.oop.landlords.common.entities.Room;
 import buaa.oop.landlords.common.enums.ClientEventCode;
+import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
@@ -14,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 前一个状态为：ClientEventListener_CODE_GAME_POKER_PLAY_PASS
+ *            ClientEventListener_CODE_GAME_LANDLORD_CONFIRM
+ *            ClientEventListener_CODE_GAME_POKER_PLAY
+ *
  *下一个状态为：  ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT
  */
 @Slf4j
@@ -46,7 +51,11 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
                 .put("sellClientId", room.getCurrentSellClient())
                 .put("sellClientNickname", ServerContainer.CLIENT_END_MAP.get(room.getCurrentSellClient()).getNickname())
                 .json();
-
-        ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_GAME_POKER_PLAY_REDIRECT, result);
+        try {
+            SimplePrinter.printChatMsg("%s\n",SimplePrinter.RED,dataMap.get("lastSellClientId").toString());
+        }catch (Exception e){
+            SimplePrinter.printChatMsg("%s\n",SimplePrinter.RED,(String) dataMap.get("lastSellClientId"));
+        }
+       ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_GAME_POKER_PLAY_REDIRECT, result);
     }
 }
