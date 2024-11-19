@@ -144,6 +144,14 @@ public class TestMapUtil implements Serializable{
         System.out.println(map.get("key1") == null);
     }
 
+    @Test
+    public void testMapUtil6(){
+        Map<String, Object> map = MapUtil.parse("");
+        System.out.println(map);
+        Map<String, Object> map1 = MapUtil.parse(null);
+        System.out.println(map1);
+    }
+
 }
 @AllArgsConstructor
 @NoArgsConstructor

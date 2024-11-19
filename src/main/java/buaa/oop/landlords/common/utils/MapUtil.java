@@ -44,6 +44,9 @@ public class MapUtil {
      * @return map
      */
     public static Map<String, Object> parse(String json) {
+        if(json == null || json.isEmpty()) {
+            return new HashMap<>();
+        }
         return JsonUtil.fromJson(json, Map.class);
     }
 
