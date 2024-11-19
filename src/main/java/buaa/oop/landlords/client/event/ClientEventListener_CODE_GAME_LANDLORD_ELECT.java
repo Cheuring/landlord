@@ -17,7 +17,7 @@ import java.util.Map;
 public class ClientEventListener_CODE_GAME_LANDLORD_ELECT extends ClientEventListener{
     @Override
     /**
-     * @param data inlcudes room info,lase and next player,yourself pokers and highscores(for elect landlord)
+     * @param data includes room info,last and next player,yourself pokers and highscores(for elect landlord)
      */
     public void call(Channel channel, String data) {
         Map<String, Object> roomInfo= MapUtil.parse(data);
