@@ -47,6 +47,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
                 .put("pokers", clientEnd.getPokers())
                 .put("lastSellPokers", dataMap.get("lastSellPokers"))
                 .put("lastSellClientId", dataMap.get("lastSellClientId"))
+                .put("lastSellClientName", dataMap.get("lastSellClientName"))
                 .put("clientInfos", clientInfos)
                 .put("sellClientId", room.getCurrentSellClient())
                 .put("sellClientNickname", ServerContainer.CLIENT_END_MAP.get(room.getCurrentSellClient()).getNickname())

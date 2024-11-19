@@ -19,6 +19,7 @@ import io.netty.channel.Channel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *等待输入：
@@ -47,15 +48,12 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         SimplePrinter.printNotice("It's your turn to play");
         List<Poker> pokers = JsonUtil.fromJson((String)roominfo.get("pokers"), new TypeReference<List<Poker>>(){});
         List<Poker> lastPokers = JsonUtil.fromJson((String)roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>(){});
-        Integer lastSellClientNickname = (Integer) roominfo.get("lastSellClientId");
-        String lastSellClientType = "rubbish";
+        String lastSellClientNickname = (String) roominfo.get("lastSellClientName");
+        Integer lastSellClientId = (Integer) roominfo.get("lastSellClientId");
+        String lastSellClientType = null;
         for (Map<String, Object> clientEnd : clientInfo) {
-            try {
-                if (lastSellClientNickname.equals(clientEnd.get("clientId"))) {
-                    lastSellClientType = (String) clientEnd.get("role");
-                    break;
-                }
-            } catch (Exception e) {
+            if (Objects.equals((Integer) clientEnd.get("clientId"), lastSellClientId)) {
+                lastSellClientType = (String) clientEnd.get("role");
                 break;
             }
         }
