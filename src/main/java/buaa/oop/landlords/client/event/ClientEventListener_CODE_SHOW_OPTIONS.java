@@ -1,12 +1,12 @@
 package buaa.oop.landlords.client.event;
 
-import buaa.oop.landlords.client.ChatRoom;
 import buaa.oop.landlords.client.SimpleClient;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.print.*;
+import io.netty.util.concurrent.Future;
 
 
 /**
@@ -32,12 +32,21 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("4.Exit the program");
         SimplePrinter.printNotice("5.Chat ");
 
-        String userInput= SimpleWriter.write();
-        if(userInput==null){
-            SimplePrinter.printNotice("Please enter a valid option");
-            call(channel,data);
-        }
-        else{
+        Future<String> stringFuture = SimpleWriter.writeAsync();
+        stringFuture.addListener(future -> {
+            if(!future.isSuccess()){
+                future.cause().printStackTrace();
+                call(channel,data);
+                return;
+            }
+
+            String userInput = (String) future.getNow();
+            if(userInput == null || userInput.isEmpty()){
+                SimplePrinter.printNotice("Please enter a valid option");
+                call(channel,data);
+                return;
+            }
+
             int userOption;
             try {
                 userOption= Integer.parseInt(userInput);
@@ -66,7 +75,8 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                     SimplePrinter.printNotice("Invalid option, please choose again:");
                     call(channel, data);
             }
-        }
+        });
+
     }
     public void joinRoom(Channel channel,String data){
         SimplePrinter.printNotice("Please enter the room id you want to join (enter [back|b] return options list)");

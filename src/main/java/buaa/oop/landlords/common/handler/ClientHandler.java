@@ -4,6 +4,7 @@ import buaa.oop.landlords.client.event.ClientEventListener;
 import buaa.oop.landlords.common.entities.Msg;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
+import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -37,7 +38,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("Client error: {}", cause.getMessage());
-        ctx.close();
+        SimplePrinter.printNotice("Connection lost, please restart the client");
+        System.exit(1);
     }
 }

@@ -24,7 +24,6 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         String name = SimpleWriter.write(user.getNickname(), "nickname");
 
         if (isValidNickname(name)) {
-            // todo: 重名
             user.setNickname(name);
             SimpleClient.chatRoom = ChatRoom.getInstance(channel);
             pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
@@ -42,7 +41,7 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
             if (nickname.length() > 16) {
                 return false;
             }
-            if (!nickname.matches("[a-zA-Z0-9_]*")) {
+            if (!nickname.matches("[a-zA-Z0-9_]+")) {
                 return false;
             }
             return true;

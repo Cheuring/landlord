@@ -4,6 +4,7 @@ import buaa.oop.landlords.common.handler.ClientHandler;
 import buaa.oop.landlords.common.handler.MsgCodec;
 import buaa.oop.landlords.common.handler.ProtocolFrameDecoder;
 import buaa.oop.landlords.common.print.SimplePrinter;
+import buaa.oop.landlords.common.print.SimpleWriter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -17,12 +18,13 @@ public class SimpleClient {
     public static ChatRoom chatRoom = null;
 
     public static void main(String[] args) {
-        NioEventLoopGroup group = new NioEventLoopGroup();
+        NioEventLoopGroup group = new NioEventLoopGroup(2);
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 SimplePrinter.ServerLog("Client shutdown");
 
                 group.shutdownGracefully();
+                SimpleWriter.shutdown();
                 if(chatRoom != null){
                     chatRoom.shutdown();
                     chatRoom = null;
@@ -52,6 +54,7 @@ public class SimpleClient {
                 chatRoom.shutdown();
                 chatRoom = null;
             }
+            SimpleWriter.shutdown();
             group.shutdownGracefully();
         }
     }
