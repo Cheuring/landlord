@@ -39,7 +39,7 @@ public class PokerUtil {
      * @return 三个玩家的牌 3*17+3
      */
     public static List<List<Poker>> distributePokers() {
-        Collections.shuffle(basePokers);
+        Collections.reverse(basePokers);
         List<List<Poker>> pokersList = new ArrayList<List<Poker>>();
         List<Poker> pokers1 = new ArrayList<>(17);
         pokers1.addAll(basePokers.subList(0, 17));
