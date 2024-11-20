@@ -115,7 +115,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
                 .put("scores", clientScores)
                 .json();
 
-        ServerEventListener.get(ServerEventCode.CODE_CLIENT_EXIT).call(winner, "");
+        ServerEventListener.get(ServerEventCode.CODE_CLIENT_EXIT).call(winner, result);
 
     }
 
