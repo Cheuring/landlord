@@ -25,7 +25,7 @@ public class ClientEventListener_CODE_GAME_LANDLORD_ELECT extends ClientEventLis
         int highestScore = (int) roomInfo.get("highestScore");
         if (roomInfo.containsKey("preClientNickname")) {
             if(highestScore !=0&&roomInfo.get("preClientId") == roomInfo.get("currentLandlordId")){
-                SimplePrinter.printNotice(roomInfo.get("preClientNickname")+" robs the landlord with " + highestScore+" scores ");
+                SimplePrinter.printNotice(roomInfo.get("preClientNickname")+" robs the landlord with " + highestScore+" scores.");
             }
             else SimplePrinter.printNotice(roomInfo.get("preClientNickname") + " don't rob the landlord!");
         }
@@ -47,12 +47,12 @@ public class ClientEventListener_CODE_GAME_LANDLORD_ELECT extends ClientEventLis
                 try {
                     currentScore = Integer.parseInt(userInput);
                 } catch (Exception e) {
-                    SimplePrinter.printNotice("Invalid options");
+                    SimplePrinter.printNotice("Invalid options!");
                     currentScore = -1;
                     this.call(channel, data);
                 }
                 if (currentScore <= highestScore && currentScore != 0 || currentScore > 3) {
-                    SimplePrinter.printNotice("Invalid options");
+                    SimplePrinter.printNotice("Invalid options!");
                     this.call(channel, data);
                     return;
                 }

@@ -23,7 +23,7 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener {
      */
     public void call(Channel channel, String data) {
         Map<String, Object> map = MapUtil.parse(data);
-        SimplePrinter.printNotice("\nPlayer " + map.get("winnerNickname") + "[" + map.get("winnerType") + "]" + " won the game");
+        SimplePrinter.printNotice("\nPlayer " + map.get("winnerNickname") + "[" + map.get("winnerType") + "]" + " won the game.");
 
         if (map.containsKey("scores")) {
             List<Map<String, Object>> scores = JsonUtil.fromJson((String) map.get("scores"), new TypeReference<List<Map<String, Object>>>() {
@@ -44,7 +44,7 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener {
                 if (User.getINSTANCE().getId() != (int) score.get("clientId")) {
                     SimplePrinter.printNotice(score.get("nickName").toString() + "'s score is " + scoreInc + ", total score is " + scoreTotal);
                 } else {
-                    SimplePrinter.printNotice("your score is " + scoreInc + ", total score is " + scoreTotal);
+                    SimplePrinter.printNotice("Your score is " + scoreInc + ", total score is " + scoreTotal);
                 }
             }
 

@@ -35,9 +35,9 @@ public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
         List<Poker> pokers = JsonUtil.fromJson((String) map.get("pokers"),new TypeReference<List<Poker>>(){});
 
         SimplePrinter.printNotice("");
-        SimplePrinter.printNotice("Your cards are");
+        SimplePrinter.printNotice("Your cards are:");
         SimplePrinter.printPokers(pokers);
-        SimplePrinter.printNotice("Last cards are");
+        SimplePrinter.printNotice("Last cards are:");
         SimplePrinter.printNotice(map.containsKey("lastPokers")?map.get("lastPokers").toString():"");
 
         get(ClientEventCode.CODE_GAME_LANDLORD_ELECT).call(channel, data);

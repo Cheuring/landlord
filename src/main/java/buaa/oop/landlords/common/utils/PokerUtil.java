@@ -39,7 +39,7 @@ public class PokerUtil {
      * @return 三个玩家的牌 3*17+3
      */
     public static List<List<Poker>> distributePokers() {
-        Collections.reverse(basePokers);
+        Collections.shuffle(basePokers);
         List<List<Poker>> pokersList = new ArrayList<List<Poker>>();
         List<Poker> pokers1 = new ArrayList<>(17);
         pokers1.addAll(basePokers.subList(0, 17));
@@ -302,6 +302,38 @@ public class PokerUtil {
         }
         sortPokers(resultPokers);
         return resultPokers;
+    }
+
+    public static List<PokerSell> validSells(PokerSell lastPokerSell, List<Poker> pokers) {
+        List<PokerSell> sells = parsePokerSells(pokers);
+        if(lastPokerSell == null) {
+            return sells;
+        }
+
+        List<PokerSell> validSells = new ArrayList<PokerSell>();
+        for(PokerSell sell: sells) {
+            if (lastPokerSell.getSellType() == SellType.ILLEGAL) {
+                validSells.add(sell);
+            } else {
+                if (sell.getSellType() == lastPokerSell.getSellType()) {
+                    if ((sell.getScore() > lastPokerSell.getScore() && sell.getPokers().size() == lastPokerSell.getPokers().size())) {
+                        validSells.add(sell);
+                    }
+                }
+
+            if (sell.getSellType() == SellType.KING_BOMB) {
+                validSells.add(sell);
+            }
+            }
+        }
+        if(lastPokerSell.getSellType() != SellType.BOMB && lastPokerSell.getSellType() != SellType.KING_BOMB && lastPokerSell.getSellType() != SellType.ILLEGAL) {
+            for(PokerSell sell: sells) {
+                if(sell.getSellType() == SellType.BOMB) {
+                    validSells.add(sell);
+                }
+            }
+        }
+        return validSells;
     }
 
     public static List<PokerSell> parsePokerSells(List<Poker> pokers) {

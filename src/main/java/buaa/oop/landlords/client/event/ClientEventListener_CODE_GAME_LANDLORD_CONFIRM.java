@@ -31,7 +31,7 @@ public class ClientEventListener_CODE_GAME_LANDLORD_CONFIRM extends ClientEventL
             baseScoreString = baseScore + " scores";
         }
 
-        SimplePrinter.printNotice(landlordNickname + " has become the landlord with " + baseScoreString + " and gotten three extra cards");
+        SimplePrinter.printNotice(landlordNickname + " has become the landlord with " + baseScoreString + " and gotten three extra cards.");
 
         List<Poker> additionalPokers = JsonUtil.fromJson((String)roominfo.get("additionalPokers"),new TypeReference<List<Poker>>(){});
         SimplePrinter.printPokers(additionalPokers);

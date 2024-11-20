@@ -51,6 +51,8 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         String lastSellClientNickname = (String) roominfo.get("lastSellClientName");
         Integer lastSellClientId = (Integer) roominfo.get("lastSellClientId");
         String lastSellClientType = null;
+        PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
+        List<PokerSell> sells = PokerUtil.validSells(lastPokerSell, pokers);
         for (Map<String, Object> clientEnd : clientInfo) {
             if (Objects.equals((Integer) clientEnd.get("clientId"), lastSellClientId)) {
                 lastSellClientType = (String) clientEnd.get("role");
@@ -59,9 +61,15 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         }
         printInfo(roominfo,pokers);
 
+        if( sells.size() == 0 && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()) {
+            SimplePrinter.printNotice("You don't have winning combination.");
+            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
+            return;
+        }
+
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "combination");
         if (userInput == null) {
-            SimplePrinter.printNotice("Invalid enter");
+            SimplePrinter.printNotice("Invalid enter!");
             call(channel, data);
         }
         else{
@@ -70,7 +78,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
             }
             else if(userInput.equalsIgnoreCase("pass")||userInput.equalsIgnoreCase("p")){
                 if( (Integer) roominfo.get("lastSellClientId") == User.INSTANCE.getId()){
-                    SimplePrinter.printNotice("You played the previous card, so you can't pass.");
+                    SimplePrinter.printNotice("You played the previous card, so you can't pass again.");
                     pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                 }
                 else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data); }
@@ -78,7 +86,8 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
             else if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
                 call(channel, data);
                 return;
-            }else{
+            }
+            else {
 
                 userInput = userInput.trim();
                 String[] strs = userInput.split(" ");
@@ -103,7 +112,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                     option = options.toArray(option);
                     int[] indexes = PokerUtil.getIndexes(option, pokers);
                     if (!PokerUtil.checkPokerIndex(indexes, pokers)){
-                        SimplePrinter.printNotice("The combination is illegal");
+                        SimplePrinter.printNotice("The combination is illegal!");
 
                         if (lastPokers != null) {
                             SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
@@ -116,7 +125,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                     List<Poker> currentPokers = PokerUtil.getPoker(indexes, pokers);
                     PokerSell currentPokerSell = PokerUtil.checkPokerSell(currentPokers);
                     if(currentPokerSell.getSellType() == SellType.ILLEGAL ) {
-                        SimplePrinter.printNotice("The combination is illegal");
+                        SimplePrinter.printNotice("The combination is illegal!");
 
                         if (lastPokers != null) {
                             SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
@@ -127,7 +136,6 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                         return;
                     }
 
-                    PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
                     if(  lastPokerSell.getSellType() != SellType.ILLEGAL && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()){
 
                         if((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB){
@@ -161,7 +169,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                             .json();
                     pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                 } else {
-                    SimplePrinter.printNotice("Invalid enter");
+                    SimplePrinter.printNotice("Invalid enter!");
                     if (lastPokers != null) {
                         SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
                         SimplePrinter.printPokers(lastPokers);
@@ -174,9 +182,9 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         }
     }
     public void printInfo(Map<String, Object> roominfo,List<Poker> pokers){
-        SimplePrinter.printNotice("Last cards are");
+        SimplePrinter.printNotice("Last cards are:");
         SimplePrinter.printPokers(JsonUtil.fromJson((String)roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>(){}));
-        SimplePrinter.printNotice("Please enter the combination you came up with (enter [exit|e] to exit current room, enter [pass|p] to jump current round, enter [view|v] to show information before)");
+        SimplePrinter.printNotice("Please enter the combination you came up with (enter [exit|e] to exit current room, enter [pass|p] to jump current round, enter [view|v] to show information before.)");
         SimplePrinter.printPokers(pokers);
     }
 

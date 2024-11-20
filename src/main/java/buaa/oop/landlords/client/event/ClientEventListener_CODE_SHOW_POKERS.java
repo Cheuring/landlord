@@ -30,9 +30,9 @@ public class ClientEventListener_CODE_SHOW_POKERS extends ClientEventListener{
 
         if (showPokers.containsKey("nextPlayerId")) {
             if (User.getINSTANCE().getId() == (int) showPokers.get("nextPlayerId")) {
-                SimplePrinter.printNotice("It's your turn");
+                SimplePrinter.printNotice("It's your turn.");
             } else {
-                SimplePrinter.printNotice("It's " + (String) showPokers.get("nextPlayerNickname") + "'s turn");
+                SimplePrinter.printNotice("It's " + (String) showPokers.get("nextPlayerNickname") + "'s turn.");
             }
         }
     }
