@@ -13,7 +13,10 @@ public enum ServerEventCode {
     CODE_GAME_POKER_PLAY_REDIRECT("出牌重定向"),
     CODE_GAME_POKER_PLAY_PASS("不出"),
     CODE_CLIENT_EXIT("退出游戏"),
-    CODE_CHAT("聊天");
+    CODE_CHAT("聊天"),
+    CODE_ROOM_EXIT("退出房间"),
+
+    ;
 
     private String msg;
 

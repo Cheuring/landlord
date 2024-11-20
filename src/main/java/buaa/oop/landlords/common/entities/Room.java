@@ -66,13 +66,42 @@ public class Room {
             if (clientEndList.size() >= 3) {
                 return -1;
             }
-            if (!clientEndList.isEmpty()) {
-                client.setPre(clientEndList.getLast().getId());
-                clientEndList.getLast().setNext(client.getId());
-            }
+//            if (!clientEndList.isEmpty()) {
+//                client.setPre(clientEndList.getLast().getId());
+//                clientEndList.getLast().setNext(client.getId());
+//            }
 
             clientEndList.add(client);
             return clientEndList.size();
+        }
+    }
+
+    public void removeClient(ClientEnd client) {
+        synchronized (lock) {
+            clientEndList.remove(client);
+        }
+    }
+
+    public boolean circleClient(){
+        synchronized (lock) {
+            if (clientEndList.size() < 3) {
+                return false;
+            }
+
+            ClientEnd first = clientEndList.get(0);
+            ClientEnd second = clientEndList.get(1);
+            ClientEnd third = clientEndList.get(2);
+
+            first.setNext(second.getId());
+            first.setPre(third.getId());
+
+            second.setNext(third.getId());
+            second.setPre(first.getId());
+
+            third.setNext(first.getId());
+            third.setPre(second.getId());
+
+            return true;
         }
     }
 

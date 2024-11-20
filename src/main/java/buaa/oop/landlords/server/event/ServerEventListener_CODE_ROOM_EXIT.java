@@ -9,11 +9,9 @@ import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- *data 没有被用到
- */
+
 @Slf4j
-public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener{
+public class ServerEventListener_CODE_ROOM_EXIT extends ServerEventListener{
     @Override
     public void call(ClientEnd client, String data) {
         Room room = ServerContainer.ROOM_MAP.get(client.getRoomId());
@@ -36,9 +34,7 @@ public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener
                     ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_ROOM_EXIT, result);
                 }
             }
+            log.info("Client {} | {} exit room {}", client.getId(), client.getNickname(), room.getId());
         }
-
-        ServerContainer.CLIENT_END_MAP.remove(client.getId());
-        log.info("Client {} | {} offline", client.getId(), client.getNickname());
     }
 }

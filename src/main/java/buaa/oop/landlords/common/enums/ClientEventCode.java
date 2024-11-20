@@ -8,6 +8,7 @@ public enum ClientEventCode {
     CODE_ROOM_CREATE_SUCCESS("创建房间成功"),
     CODE_SHOW_ROOMS("展示房间列表"),
     CODE_ROOM_JOIN_SUCCESS("加入房间成功"),
+    CODE_ROOM_EXIT("退出房间"),
     CODE_ROOM_JOIN_FAIL_BY_FULL("房间人数已满"),
     CODE_ROOM_JOIN_FAIL_BY_INEXIST("加入-房间不存在"),
     CODE_GAME_STARTING("开始游戏"),

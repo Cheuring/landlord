@@ -37,7 +37,7 @@ public class SimpleClient {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
                                     .addLast(new ProtocolFrameDecoder())
-                                    .addLast(new LoggingHandler())
+//                                    .addLast(new LoggingHandler())
                                     .addLast(new MsgCodec())
 //                                    .addLast(new IdleStateHandler(0, 8, 0, TimeUnit.SECONDS))
                                     .addLast(new ClientHandler());

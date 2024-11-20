@@ -3,6 +3,7 @@ package buaa.oop.landlords.client.event;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.entities.PokerSell;
+import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.PokerLevel;
 import buaa.oop.landlords.common.enums.SellType;
 import buaa.oop.landlords.common.enums.ServerEventCode;
@@ -61,7 +62,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         }
         printInfo(roominfo,pokers);
 
-        if( sells.size() == 0 && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()) {
+        if(sells.isEmpty() && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()) {
             SimplePrinter.printNotice("You don't have winning combination.");
             pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
             return;
@@ -71,115 +72,119 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         if (userInput == null) {
             SimplePrinter.printNotice("Invalid enter!");
             call(channel, data);
+            return;
         }
-        else{
-            if(userInput.equalsIgnoreCase("exit")||userInput.equalsIgnoreCase("e")){
-                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS);
+
+        if(userInput.equalsIgnoreCase("exit")||userInput.equalsIgnoreCase("e")){
+            pushToServer(channel, ServerEventCode.CODE_ROOM_EXIT);
+            ClientEventListener.get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, null);
+            return;
+        }
+
+        if(userInput.equalsIgnoreCase("pass")||userInput.equalsIgnoreCase("p")){
+            if( (Integer) roominfo.get("lastSellClientId") == User.INSTANCE.getId()){
+                SimplePrinter.printNotice("You played the previous card, so you can't pass again.");
+                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
+            } else{
+                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
             }
-            else if(userInput.equalsIgnoreCase("pass")||userInput.equalsIgnoreCase("p")){
-                if( (Integer) roominfo.get("lastSellClientId") == User.INSTANCE.getId()){
-                    SimplePrinter.printNotice("You played the previous card, so you can't pass again.");
-                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
+            return;
+        }
+
+        if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
+            call(channel, data);
+            return;
+        }
+
+        userInput = userInput.trim();
+        String[] strs = userInput.split(" ");
+        List<Character> options = new ArrayList<>();
+        boolean access = true;
+        for(int i=0;i<strs.length;i++){
+            String str = strs[i];
+            for(char c:str.toCharArray()){
+                if(c == ' '|| c == '\t'){
+                } else {
+                    if(!PokerLevel.aliasContains(c)){
+                        access = false;
+                        break;
+                    } else {
+                        options.add(c);
+                    }
                 }
-                else{ pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data); }
             }
-            else if (userInput.equalsIgnoreCase("view")||userInput.equalsIgnoreCase("v")) {
-                call(channel, data);
+        }
+        if(access){
+            Character[] option = new Character[options.size()];
+            option = options.toArray(option);
+            int[] indexes = PokerUtil.getIndexes(option, pokers);
+            if (!PokerUtil.checkPokerIndex(indexes, pokers)){
+                SimplePrinter.printNotice("The combination is illegal");
+
+                if (lastPokers != null) {
+                    SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
+                    SimplePrinter.printPokers(lastPokers);
+                }
+                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
                 return;
             }
-            else {
 
-                userInput = userInput.trim();
-                String[] strs = userInput.split(" ");
-                List<Character> options = new ArrayList<>();
-                boolean access = true;
-                for(int i=0;i<strs.length;i++){
-                    String str = strs[i];
-                    for(char c:str.toCharArray()){
-                        if(c == ' '|| c == '\t'){
-                        } else {
-                            if(!PokerLevel.aliasContains(c)){
-                                access = false;
-                                break;
-                            } else {
-                                options.add(c);
-                            }
-                        }
-                    }
+                List<Poker> currentPokers = PokerUtil.getPoker(indexes, pokers);
+                PokerSell currentPokerSell = PokerUtil.checkPokerSell(currentPokers);
+                if(currentPokerSell.getSellType() == SellType.ILLEGAL ) {
+                    SimplePrinter.printNotice("The combination is illegal!");
+
+                if (lastPokers != null) {
+                    SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
+                    SimplePrinter.printPokers(lastPokers);
                 }
-                if(access){
-                    Character[] option = new Character[options.size()];
-                    option = options.toArray(option);
-                    int[] indexes = PokerUtil.getIndexes(option, pokers);
-                    if (!PokerUtil.checkPokerIndex(indexes, pokers)){
-                        SimplePrinter.printNotice("The combination is illegal!");
 
-                        if (lastPokers != null) {
-                            SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
-                            SimplePrinter.printPokers(lastPokers);
-                        }
-                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
-                        return;
-                    }
+                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
+                return;
+            }
 
-                    List<Poker> currentPokers = PokerUtil.getPoker(indexes, pokers);
-                    PokerSell currentPokerSell = PokerUtil.checkPokerSell(currentPokers);
-                    if(currentPokerSell.getSellType() == SellType.ILLEGAL ) {
-                        SimplePrinter.printNotice("The combination is illegal!");
+                if(  lastPokerSell.getSellType() != SellType.ILLEGAL && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()){
 
-                        if (lastPokers != null) {
-                            SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
-                            SimplePrinter.printPokers(lastPokers);
-                        }
+                if((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB){
+                    SimplePrinter.printNotice(STR."Your combination is \{currentPokerSell.getSellType()} (\{currentPokerSell.getPokers().size()}), but the previous combination is \{lastPokerSell.getSellType()} (\{lastPokerSell.getPokers().size()}). Mismatch!");
 
-                        pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
-                        return;
-                    }
-
-                    if(  lastPokerSell.getSellType() != SellType.ILLEGAL && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()){
-
-                        if((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB){
-                            SimplePrinter.printNotice(STR."Your combination is \{currentPokerSell.getSellType()} (\{currentPokerSell.getPokers().size()}), but the previous combination is \{lastPokerSell.getSellType()} (\{lastPokerSell.getPokers().size()}). Mismatch!");
-
-                            if(lastPokers != null) {
-                                SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
-                                SimplePrinter.printPokers(lastPokers);
-                            }
-
-                            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
-                            return;
-                        }
-
-                        if(lastPokerSell.getScore() >= currentPokerSell.getScore()){
-                            SimplePrinter.printNotice("Your combination has lower rank than the previous. You cannot play this combination!");
-
-                            if(lastPokers != null) {
-                                SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
-                                SimplePrinter.printPokers(lastPokers);
-                            }
-
-                            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
-                            return;
-                        }
-                    }
-
-                    String result = MapUtil.newInstance()
-                            .put("poker", currentPokers)
-                            .put("pokerSell", currentPokerSell)
-                            .json();
-                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
-                } else {
-                    SimplePrinter.printNotice("Invalid enter!");
-                    if (lastPokers != null) {
+                    if(lastPokers != null) {
                         SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
                         SimplePrinter.printPokers(lastPokers);
                     }
 
-                    call(channel, data);
+                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
+                    return;
                 }
 
+                if(lastPokerSell.getScore() >= currentPokerSell.getScore()){
+                    SimplePrinter.printNotice("Your combination has lower rank than the previous. You cannot play this combination!");
+
+                    if(lastPokers != null) {
+                        SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
+                        SimplePrinter.printPokers(lastPokers);
+                    }
+
+                    pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
+                    return;
+                }
             }
+
+                String result = MapUtil.newInstance()
+                        .put("poker", currentPokers)
+                        .put("pokerSell", currentPokerSell)
+                        .json();
+                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
+            } else {
+                SimplePrinter.printNotice("Invalid enter!");
+                if (lastPokers != null) {
+                    SimplePrinter.printNotice(lastSellClientNickname + "[" + lastSellClientType + "] played:");
+                    SimplePrinter.printPokers(lastPokers);
+                }
+
+            call(channel, data);
         }
+
     }
     public void printInfo(Map<String, Object> roominfo,List<Poker> pokers){
         SimplePrinter.printNotice("Last cards are:");
