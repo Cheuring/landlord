@@ -48,19 +48,21 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         List<Poker> lastPokers = JsonUtil.fromJson((String)roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>(){});
         String lastSellClientNickname = (String) roominfo.get("lastSellClientName");
         Integer lastSellClientId = (Integer) roominfo.get("lastSellClientId");
-        String lastSellClientType = null;
         PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
         List<PokerSell> sells = PokerUtil.validSells(lastPokerSell, pokers);
 
-        for (Map<String, Object> clientEnd : clientInfo) {
-            if (Objects.equals((Integer) clientEnd.get("clientId"), lastSellClientId)) {
-                lastSellClientType = (String) clientEnd.get("role");
-                if( lastSellClientType != "null" ){
-                    lastSellClientType = JsonUtil.fromJson((String)clientEnd.get("role"), ClientRole.class).name();
-                }
-                break;
-            }
-        }
+        ClientRole role = JsonUtil.fromJson((String) roominfo.get("role"), ClientRole.class);
+        String lastSellClientType = role == null ? null : role.name();
+
+//        for (Map<String, Object> clientEnd : clientInfo) {
+//            if (Objects.equals((Integer) clientEnd.get("clientId"), lastSellClientId)) {
+//                lastSellClientType = (String) clientEnd.get("role");
+//                if( lastSellClientType != "null" ){
+//                    lastSellClientType = JsonUtil.fromJson((String)clientEnd.get("role"), ClientRole.class).name();
+//                }
+//                break;
+//            }
+//        }
 
         printInfo(roominfo, pokers, lastSellClientNickname, lastSellClientType);
 

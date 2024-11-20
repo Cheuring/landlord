@@ -36,6 +36,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_PASS extends ServerEventLi
                     .put("lastSellPokers", map.get("lastSellPokers"))
                     .put("lastSellClientId", map.get("lastSellClientId"))
                     .put("lastSellClientName", map.get("lastSellClientName"))
+                    .put("role", map.get("role"))
                     .json();
 
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_POKER_PLAY_PASS, result);

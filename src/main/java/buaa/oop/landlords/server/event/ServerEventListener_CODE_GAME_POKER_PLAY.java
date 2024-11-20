@@ -64,7 +64,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         MapUtil mapUtil = MapUtil.newInstance()
                 .put("clientId", clientEnd.getId())
                 .put("currentPlayerNickname", clientEnd.getNickname())
-                .put("clientRole", clientEnd.getRole())
+                .put("role", clientEnd.getRole())
                 .put("pokers", currentPokers)
                 .put("lastSellClientId", clientEnd.getId())
                 .put("lastSellClientName", clientEnd.getNickname())

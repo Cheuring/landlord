@@ -51,12 +51,9 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ServerEve
                 .put("clientInfos", clientInfos)
                 .put("sellClientId", room.getCurrentSellClient())
                 .put("sellClientNickname", ServerContainer.CLIENT_END_MAP.get(room.getCurrentSellClient()).getNickname())
+                .put("role", dataMap.get("role"))
                 .json();
-        try {
-            SimplePrinter.printChatMsg("%s\n",SimplePrinter.RED,dataMap.get("lastSellClientId").toString());
-        }catch (Exception e){
-            SimplePrinter.printChatMsg("%s\n",SimplePrinter.RED,(String) dataMap.get("lastSellClientId"));
-        }
+
        ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_GAME_POKER_PLAY_REDIRECT, result);
     }
 }
