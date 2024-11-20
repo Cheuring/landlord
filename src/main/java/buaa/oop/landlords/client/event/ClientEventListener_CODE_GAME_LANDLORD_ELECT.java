@@ -31,6 +31,7 @@ public class ClientEventListener_CODE_GAME_LANDLORD_ELECT extends ClientEventLis
         }
         if(nextClientId != User.getINSTANCE().getId()){
             SimplePrinter.printNotice("It's not your turn. Please wait patiently for his/her confirmation !");
+            SimplePrinter.printNotice("");
         }
         else{
             String s="It's  your turn.Please select your score [0";

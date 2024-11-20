@@ -19,6 +19,7 @@ public class ClientEventListener_CODE_ROOM_JOIN_FAIL_BY_FULL extends ClientEvent
         Map<String, Object> room = MapUtil.parse(data);
 
         SimplePrinter.printNotice("Join room failed. Room " + room.get("roomId") + " is full!");
+        SimplePrinter.printNotice("");
         ClientEventListener.get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
     }
 }

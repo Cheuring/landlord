@@ -63,7 +63,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                     SimpleClient.chatRoom.start(ClientEventCode.CODE_SHOW_OPTIONS);
                     break;
                 default:
-                    SimplePrinter.printNotice("Invalid option, please choose again：");
+                    SimplePrinter.printNotice("Invalid option, please choose again:");
                     call(channel, data);
             }
         }
@@ -74,6 +74,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         if(roomId==null){
             SimplePrinter.printNotice("Please enter a valid room id");
             joinRoom(channel,data);
+            return;
         }
         if(roomId.equalsIgnoreCase("BACK") || roomId.equalsIgnoreCase("b")){
             call(channel,data);

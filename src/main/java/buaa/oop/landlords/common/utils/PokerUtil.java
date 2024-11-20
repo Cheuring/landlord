@@ -208,9 +208,9 @@ public class PokerUtil {
     public static String printPokers(List<Poker> pokers)
     {
         if( pokers == null || pokers.isEmpty() )
-            return "up to you";
+            return "Up to you.";
         sortPokers(pokers);
-        return buildHandStringSharp(pokers);
+        return buildHandStringRounded(pokers);
     }
 
     private static String buildHandStringSharp(List<Poker> pokers) {
@@ -251,6 +251,43 @@ public class PokerUtil {
         return builder.toString();
     }
 
+    private static String buildHandStringRounded(List<Poker> pokers) {
+        StringBuilder builder = new StringBuilder();
+        if (pokers != null && pokers.size() > 0) {
+
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("┌──╮");
+                } else {
+                    builder.append("──╮");
+                }
+            }
+            builder.append(System.lineSeparator());
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("│");
+                }
+                String name = pokers.get(index).getLevel().getName();
+                builder.append(name).append(name.length() == 1 ? " " : "").append("|");
+            }
+            builder.append(System.lineSeparator());
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("│");
+                }
+                builder.append(pokers.get(index).getType().getName()).append(" |");
+            }
+            builder.append(System.lineSeparator());
+            for (int index = 0; index < pokers.size(); index++) {
+                if (index == 0) {
+                    builder.append("└──╯");
+                } else {
+                    builder.append("──╯");
+                }
+            }
+        }
+        return builder.toString();
+    }
     /**
      * 检查可以出什么牌型
      * @param pokers 牌型列表
