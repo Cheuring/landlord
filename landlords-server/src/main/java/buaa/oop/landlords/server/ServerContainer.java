@@ -9,8 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerContainer {
 
-    public static int port = 8080;
-
     public final static Map<Integer, Room> ROOM_MAP = new ConcurrentHashMap<>();
     public final static Map<Integer, ClientEnd> CLIENT_END_MAP = new ConcurrentHashMap<>();
     public final static Map<String, Integer> CHANNEL_ID_MAP = new ConcurrentHashMap<>();
