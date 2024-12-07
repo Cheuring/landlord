@@ -16,7 +16,6 @@ import org.apache.commons.cli.*;
 
 import java.util.concurrent.TimeUnit;
 
-// todo: 在./log/client.log中记录客户端的日志
 @Slf4j
 public class SimpleClient {
     public static ChatRoom chatRoom = null;

@@ -25,8 +25,8 @@ public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener
                     .put("roomClientCount", room.getClientEndList().size())
                     .json();
 
+            ServerContainer.ROOM_MAP.remove(room.getId());
             if(room.getStatus() == RoomStatus.STARTING){
-                ServerContainer.ROOM_MAP.remove(room.getId());
 
                 for(ClientEnd other: room.getClientEndList()){
                     ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_EXIT, result);

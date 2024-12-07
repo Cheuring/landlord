@@ -19,9 +19,8 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
 
     @Override
     public void call(Channel channel, String data) {
-        SimplePrinter.printNotice("Please set your nickname (upto " + NICKNAME_MAX_LENGTH + " characters)");
-        SimplePrinter.printNotice("English letters, numbers, and underscores are legal");
         SimplePrinter.ServerLog("Please set your nickname:");
+        SimplePrinter.printNotice("English letters, numbers, and underscores are legal");
         User user = User.INSTANCE;
         String name = SimpleWriter.write(user.getNickname(), "nickname");
 
