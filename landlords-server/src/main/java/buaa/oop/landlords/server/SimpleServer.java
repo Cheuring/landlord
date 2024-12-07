@@ -38,8 +38,7 @@ public class SimpleServer {
             return;
         }
 
-        int port = Integer.parseInt(cmd.getOptionValue("port"));
-        port = port == 0 ? 8080 : port;
+        int port = Integer.parseInt(cmd.getOptionValue("port", "8080"));
 
         startServer(port);
     }

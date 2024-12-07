@@ -46,11 +46,9 @@ public class SimpleClient {
             return;
         }
 
-        String host = cmd.getOptionValue("host");
-        host = host == null ? "8.152.218.39" : host;
+        String host = cmd.getOptionValue("host", "8.152.218.39");
 
-        int port = Integer.parseInt(cmd.getOptionValue("port"));
-        port = port == 0 ? 8080 : port;
+        int port = Integer.parseInt(cmd.getOptionValue("port", "8080"));
 
         connect(host, port);
     }
