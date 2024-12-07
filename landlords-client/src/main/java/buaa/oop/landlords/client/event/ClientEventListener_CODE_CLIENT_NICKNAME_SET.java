@@ -7,11 +7,13 @@ import buaa.oop.landlords.common.print.SimpleWriter;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 下一个状态为：ServerEventListener_CODE_CLIENT_NICKNAME_SET
  * 已完成
  */
+@Slf4j
 public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventListener {
     public static final int NICKNAME_MAX_LENGTH = 16;
 
@@ -26,6 +28,7 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         if (isValidNickname(name)) {
             user.setNickname(name);
             SimpleClient.chatRoom = ChatRoom.getInstance(channel);
+            log.info("nickname set to {}", name);
             pushToServer(channel, ServerEventCode.CODE_CLIENT_NICKNAME_SET, name);
         } else {
             SimplePrinter.ServerLog("Invalid nickname!");

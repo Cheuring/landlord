@@ -1,6 +1,7 @@
 package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.SimpleClient;
+import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
@@ -32,7 +33,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("4.Exit the program");
         SimplePrinter.printNotice("5.Chat ");
 
-        Future<String> stringFuture = SimpleWriter.writeAsync();
+        Future<String> stringFuture = SimpleWriter.writeAsync(User.INSTANCE.getNickname(), "Options");
         stringFuture.addListener(future -> {
             if(!future.isSuccess()){
                 future.cause().printStackTrace();

@@ -19,7 +19,11 @@ public class SimplePrinter {
     }
 
     public static void printNotice(String msg) {
-        System.out.println(msg);
+        System.out.println(GREEN + msg + RESET);
+    }
+
+    public static void printWarning(String msg) {
+        System.out.println(RED + msg + RESET);
     }
 
     public static void printChatMsg(String format ,String color,String... msg) {System.out.printf(color + format + RESET , (Object[]) msg);}

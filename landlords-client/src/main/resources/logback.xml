@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- Console Appender -->
+<!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <encoder>-->
+<!--            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    <appender name="LOG_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>./log/client.log</file>
+        <append>true</append>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-<!--        <appender-ref ref="FILE" />-->
+    <!-- Root Logger -->
+    <root level="WARN">
+<!--        <appender-ref ref="CONSOLE" />-->
+        <appender-ref ref="LOG_FILE" />
     </root>
 
-    <logger name="io.netty" level="WARN"/>
-
-    <logger name="com.cheuring" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
+    <!-- Logger for com.cheuring package -->
+    <logger name="buaa.oop.landlords" level="DEBUG" additivity="false">
+<!--        <appender-ref ref="CONSOLE"/>-->
+        <appender-ref ref="LOG_FILE"/>
     </logger>
 
+    <!-- Logger for io.netty.handler.logging.LoggingHandler class -->
     <logger name="io.netty.handler.logging.LoggingHandler" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOG_FILE"/>
     </logger>
 </configuration>

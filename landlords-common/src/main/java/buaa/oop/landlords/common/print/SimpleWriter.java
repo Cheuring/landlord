@@ -35,6 +35,10 @@ public class SimpleWriter {
         return eventLoop.submit(() -> write());
     }
 
+    public static Future<String> writeAsync(String nickname, String message) {
+        return eventLoop.submit(() -> write(nickname, message));
+    }
+
     public static void shutdown() {
         eventLoop.shutdownGracefully();
     }

@@ -48,12 +48,13 @@ public class SimpleClient {
 
         String host = cmd.getOptionValue("host", "8.152.218.39");
 
-        int port = Integer.parseInt(cmd.getOptionValue("port", "8080"));
+        int port = Integer.parseInt(cmd.getOptionValue("port", "32112"));
 
         connect(host, port);
     }
 
     private static void connect(String host, int port) {
+        log.info("Connecting to server {}:{}", host, port);
         NioEventLoopGroup group = new NioEventLoopGroup(2);
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -72,7 +73,7 @@ public class SimpleClient {
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        protected void initChannel(SocketChannel socketChannel) {
                             socketChannel.pipeline()
                                     .addLast(new ProtocolFrameDecoder())
                                     .addLast(new MsgCodec())
@@ -82,7 +83,7 @@ public class SimpleClient {
                     })
                     .connect(host, port).sync()
                     .channel().closeFuture().sync();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             log.debug("Client error: {}", e.getMessage());
         } finally {
             if(chatRoom != null){
