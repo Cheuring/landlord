@@ -19,8 +19,8 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
 
     @Override
     public void call(Channel channel, String data) {
-        SimplePrinter.ServerLog("Please set your nickname:");
-        SimplePrinter.printNotice("English letters, numbers, and underscores are legal");
+        SimplePrinter.ServerLog("Please set your nickname:\n\tformat: [a-zA-Z0-9_]{4,16}");
+//        SimplePrinter.printNotice("English letters, numbers, and underscores are legal");
         User user = User.INSTANCE;
         String name = SimpleWriter.write(user.getNickname(), "nickname");
 
@@ -39,13 +39,10 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
     public boolean isValidNickname(String nickname) {
         if (nickname == null) {
             return false;
-            }
-            if (nickname.length() > 16) {
-                return false;
-            }
-            if (!nickname.matches("[a-zA-Z0-9_]+")) {
-                return false;
-            }
-            return true;
+        }
+//            if (nickname.length() > 16) {
+//                return false;
+//            }
+        return nickname.matches("[a-zA-Z0-9_]{4,16}");
     }
 }
