@@ -6,15 +6,13 @@ import buaa.oop.landlords.server.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MybatisTest {
     private SqlSession session;
     private UserMapper userMapper;
@@ -35,14 +33,14 @@ public class MybatisTest {
     }
 
     @Test
+    @Order(1)
     public void testSelectAll() {
         List<User> users = userMapper.selectAll();
-        System.out.println(users);
-
         Assertions.assertNotNull(users, "Users should not be null");
     }
 
     @Test
+    @Order(2)
     public void testInsertUser() {
         User user = new User();
         user.setName("TT");
@@ -53,6 +51,7 @@ public class MybatisTest {
     }
 
     @Test
+    @Order(3)
     public void testUpdateUser() {
         User user = new User();
         user.setName("TT");
@@ -63,15 +62,7 @@ public class MybatisTest {
     }
 
     @Test
-    public void testDeleteUser() {
-        User user = new User();
-        user.setName("TT");
-
-        int result = userMapper.deleteUser(user);
-        Assertions.assertEquals(1, result, "User should be deleted");
-    }
-
-    @Test
+    @Order(4)
     public void testSelectByName(){
         User notExit = userMapper.selectUserByName("NO");
         Assertions.assertNull(notExit, "User should not exist");
@@ -81,4 +72,13 @@ public class MybatisTest {
         Assertions.assertEquals("TT", user.getName(), "User name should be TT");
     }
 
+    @Test
+    @Order(5)
+    public void testDeleteUser() {
+        User user = new User();
+        user.setName("TT");
+
+        int result = userMapper.deleteUser(user);
+        Assertions.assertEquals(1, result, "User should be deleted");
+    }
 }
