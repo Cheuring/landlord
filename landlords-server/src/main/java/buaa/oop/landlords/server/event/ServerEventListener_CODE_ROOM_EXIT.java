@@ -22,10 +22,8 @@ public class ServerEventListener_CODE_ROOM_EXIT extends ServerEventListener{
                     .put("exitClientNickname", client.getNickname())
                     .put("roomClientCount", room.getClientEndList().size())
                     .json();
-
             if(room.getStatus() == RoomStatus.STARTING){
                 ServerContainer.ROOM_MAP.remove(room.getId());
-
                 for(ClientEnd other: room.getClientEndList()){
                     ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_EXIT, result);
                 }

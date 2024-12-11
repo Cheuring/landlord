@@ -1,16 +1,20 @@
 package buaa.oop.landlords.client;
 
+import buaa.oop.landlords.client.GUI.Loading;
+import buaa.oop.landlords.client.GUI.Login;
 import buaa.oop.landlords.client.handler.ClientHandler;
 import buaa.oop.landlords.common.handler.MsgCodec;
 import buaa.oop.landlords.common.handler.ProtocolFrameDecoder;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.print.SimpleWriter;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
+import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
@@ -22,39 +26,41 @@ public class SimpleClient {
     public static ChatRoom chatRoom = null;
 
     public static void main(String[] args) {
-        Options options = new Options();
-
-        Option hostOption = new Option("h", "host", true, "server host");
-        hostOption.setRequired(false);
-        options.addOption(hostOption);
-
-        Option portOption = new Option("p", "port", true, "server port");
-        portOption.setRequired(false);
-        options.addOption(portOption);
-
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd;
-
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("java -jar landlord-client", options, true);
-
-            System.exit(1);
-            return;
-        }
-
-        String host = cmd.getOptionValue("host", "8.152.218.39");
-
-        int port = Integer.parseInt(cmd.getOptionValue("port", "32112"));
-
-        connect(host, port);
+//        Options options = new Options();
+//
+//        Option hostOption = new Option("h", "host", true, "server host");
+//        hostOption.setRequired(false);
+//        options.addOption(hostOption);
+//
+//        Option portOption = new Option("p", "port", true, "server port");
+//        portOption.setRequired(false);
+//        options.addOption(portOption);
+//
+//        CommandLineParser parser = new DefaultParser();
+//        HelpFormatter formatter = new HelpFormatter();
+//        CommandLine cmd;
+//
+//        try {
+//            cmd = parser.parse(options, args);
+//        } catch (ParseException e) {
+//            System.out.println(e.getMessage());
+//            formatter.printHelp("java -jar landlord-client", options, true);
+//
+//            System.exit(1);
+//            return;
+//        }
+//
+//        String host = cmd.getOptionValue("host", "8.152.218.39");
+//
+//        int port = Integer.parseInt(cmd.getOptionValue("port", "32112"));
+//
+//        connect(host, port);
+        Application.launch(Loading.class);
     }
 
-    private static void connect(String host, int port) {
+    public static boolean connect(String host, int port) {
         log.info("Connecting to server {}:{}", host, port);
+        boolean success = false;
         NioEventLoopGroup group = new NioEventLoopGroup(2);
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -82,16 +88,24 @@ public class SimpleClient {
                         }
                     })
                     .connect(host, port).sync()
-                    .channel().closeFuture().sync();
+                    .channel().closeFuture().addListener((ChannelFutureListener) future -> {
+
+                group.shutdownGracefully();
+                SimpleWriter.shutdown();
+                if (chatRoom != null) {
+                    chatRoom.shutdown();
+                    chatRoom = null;
+                }
+            });
+            success = true;
         } catch (Exception e) {
             log.debug("Client error: {}", e.getMessage());
-        } finally {
             if(chatRoom != null){
                 chatRoom.shutdown();
                 chatRoom = null;
             }
             SimpleWriter.shutdown();
             group.shutdownGracefully();
-        }
+        }return success;
     }
 }

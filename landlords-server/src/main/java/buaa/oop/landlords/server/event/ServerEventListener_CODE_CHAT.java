@@ -20,6 +20,7 @@ public class ServerEventListener_CODE_CHAT extends ServerEventListener{
 
         if(!ServerContainer.containsClient(clientToName)) {
             ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT_FAIL, null);
+            return;
         }
 
         ChannelUtil.pushToClient(ServerContainer.getClient(clientToName).getChannel(), ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));

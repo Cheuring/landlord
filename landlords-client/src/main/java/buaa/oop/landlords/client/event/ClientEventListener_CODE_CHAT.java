@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUI.RoomHall;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,7 +18,7 @@ import static buaa.oop.landlords.common.print.SimplePrinter.BLUE;
 public class ClientEventListener_CODE_CHAT extends ClientEventListener{
     @Override
     /**
-     * @param data includes
+     * @param
      */
     public void call(Channel channel, String data) {
         Map<String,Object>chatMsg = JsonUtil.fromJson(data,new TypeReference<Map<String,Object>>(){});
@@ -27,6 +28,9 @@ public class ClientEventListener_CODE_CHAT extends ClientEventListener{
         String formattedTime = now.format(formatter);
         String format="[%s] [%s]:%s\n";
         SimplePrinter.printChatMsg(format,BLUE,formattedTime,(String)chatMsg.get("ClientFrom"),(String)chatMsg.get("Content"));
+        String clientFrom = (String) chatMsg.get("ClientFrom");
+        String content = (String) chatMsg.get("Content");
+        String formattedString = String.format(format, formattedTime, clientFrom, content);
+        RoomHall.msgDisplay(formattedString);
     }
-
 }

@@ -1,23 +1,37 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUI.Login;
+import buaa.oop.landlords.client.GUI.RoomHall;
 import buaa.oop.landlords.client.SimpleClient;
-import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.print.*;
-import io.netty.util.concurrent.Future;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
  * 根据输入进入
- *   1.ServerEventListener_CODE_ROOM_CREATE
- *   2.ServerEventListener_CODE_ROOM_GETALL
- *   3.ServerEventListener_CODE_ROOM_JOIN
- *   4.ServerEventListener_CODE_CLIENT_OFFLINE
+ * 1.ServerEventListener_CODE_ROOM_CREATE
+ * 2.ServerEventListener_CODE_ROOM_GETALL
+ * 3.ServerEventListener_CODE_ROOM_JOIN
+ * 4.ServerEventListener_CODE_CLIENT_OFFLINE
  */
 public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final AtomicBoolean schedulerStarted = new AtomicBoolean(false);
+    private final AtomicBoolean roomDisplay = new AtomicBoolean(false);
+    private static final AtomicBoolean roomHide= new AtomicBoolean(false);
+
+
 
     @Override
     /**
@@ -32,77 +46,82 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("3.Join Room");
         SimplePrinter.printNotice("4.Exit the program");
         SimplePrinter.printNotice("5.Chat ");
-
-        Future<String> stringFuture = SimpleWriter.writeAsync(User.INSTANCE.getNickname(), "Options");
-        stringFuture.addListener(future -> {
-            if(!future.isSuccess()){
-                future.cause().printStackTrace();
-                call(channel,data);
-                return;
-            }
-
-            String userInput = (String) future.getNow();
-            if(userInput == null || userInput.isEmpty()){
-                SimplePrinter.printNotice("Please enter a valid option");
-                call(channel,data);
-                return;
-            }
-
-            int userOption;
-            try {
-                userOption= Integer.parseInt(userInput);
-            } catch (NumberFormatException e) {
-                userOption=-1;
-            }
-            switch(userOption){
-                case 1:
-                    pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE,null);
-                    break;
-                case 2:
-                    pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL,null);
-                    break;
-                case 3:
-                    joinRoom(channel,data);
-                    break;
-                case 4:
-                    channel.close();
-//                    pushToServer(channel,ServerEventCode.CODE_CLIENT_OFFLINE,null);
-                    break;
-                case 5:
-                    SimplePrinter.printNotice("Please enter your content in such format\n@[ClientToName] [Content]");
-                    SimpleClient.chatRoom.start(ClientEventCode.CODE_SHOW_OPTIONS);
-                    break;
-                default:
-                    SimplePrinter.printNotice("Invalid option, please choose again:");
-                    call(channel, data);
-            }
-        });
-
+//        SimpleClient.chatRoom.start(ClientEventCode.CODE_CHAT);
+        if (roomDisplay.compareAndSet(false, true)) {
+            Platform.runLater(() -> {
+                try{
+                    Stage stage = Login.getPrimaryStage();
+                    stage.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                RoomHall.stageInit(channel);
+                RoomHall.roomHallDisplay();
+            });
+        }
+        if(roomHide.compareAndSet(true, false)) {
+            Platform.runLater(() -> {
+                RoomHall.roomHallDisplay();
+            });
+        }
+        if (schedulerStarted.compareAndSet(false, true)) {
+            startRoomListScheduler(channel);
+        }
     }
-    public void joinRoom(Channel channel,String data){
+
+    public void joinRoom(Channel channel, String data) {
         SimplePrinter.printNotice("Please enter the room id you want to join (enter [back|b] return options list)");
-        String roomId= SimpleWriter.write();
-        if(roomId==null){
+        String roomId = SimpleWriter.write();
+        if (roomId == null) {
             SimplePrinter.printNotice("Please enter a valid room id");
-            joinRoom(channel,data);
+            joinRoom(channel, data);
             return;
         }
-        if(roomId.equalsIgnoreCase("BACK") || roomId.equalsIgnoreCase("b")){
-            call(channel,data);
+        if (roomId.equalsIgnoreCase("BACK") || roomId.equalsIgnoreCase("b")) {
+            call(channel, data);
             return;
         }
 
         int userOption;
         try {
-            userOption= Integer.parseInt(roomId);
+            userOption = Integer.parseInt(roomId);
         } catch (NumberFormatException e) {
-            userOption=-1;
+            userOption = -1;
         }
-        if(userOption<1){
+        if (userOption < 1) {
             SimplePrinter.printNotice("Please enter a valid room id");
-            joinRoom(channel,data);
+            joinRoom(channel, data);
         }
-        pushToServer(channel,ServerEventCode.CODE_ROOM_JOIN, String.valueOf(userOption));
+        pushToServer(channel, ServerEventCode.CODE_ROOM_JOIN, String.valueOf(userOption));
     }
 
+    private void startRoomListScheduler(Channel channel) {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL, null);
+                SimplePrinter.printNotice("Room list fetched from the server.");
+            } catch (Exception e) {
+                SimplePrinter.printNotice("Error fetching room list: " + e.getMessage());
+            }
+        }, 0, 5, TimeUnit.MINUTES);
+    }
+
+    public void stopRoomListScheduler() {
+        scheduler.shutdown();
+        try {
+            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                scheduler.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            scheduler.shutdownNow();
+        }
+        SimplePrinter.printNotice("Room list scheduler stopped.");
+    }
+    public static AtomicBoolean getRoomHide() {
+        return roomHide;
+    }
+
+    public AtomicBoolean getRoomDisplay() {
+        return roomDisplay;
+    }
 }
