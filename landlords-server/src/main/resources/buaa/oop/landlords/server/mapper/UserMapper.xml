@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="buaa.oop.landlords.server.mapper.UserMapper">
+    <select id="selectAll" resultType="User">
+        SELECT * FROM user
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true">
+        INSERT INTO user (name, password) VALUES (#{name}, #{password})
+    </insert>
+    
+    <update id="updateUser">
+        UPDATE user SET score = #{score} WHERE name = #{name}
+    </update>
+    
+    <select id="selectUserByName" resultType="User">
+        SELECT * FROM user WHERE name = #{name}
+    </select>
+    
+    <delete id="deleteUser">
+        DELETE FROM user WHERE name = #{name}
+    </delete>
+</mapper>
