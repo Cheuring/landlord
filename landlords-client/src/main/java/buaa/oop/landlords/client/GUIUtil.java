@@ -23,7 +23,9 @@ public class GUIUtil {
     public static void renderScene(String msgSource,String msg ) {
         Platform.runLater(()->{
             FailPopup.showPopup(msgSource,msg);
+           try{msg.wait();}catch(Exception e){e.printStackTrace();}
         });
+        msg.notify();
     }
 
     private static Alert closeAlert = null;
@@ -48,7 +50,7 @@ public class GUIUtil {
                 Optional<ButtonType> result = closeAlert.showAndWait();
                 if (result.isPresent() && result.get() == yesButton) {
                     System.out.println("关闭应用程序");
-                    Platform.exit(); // 退出应用程序
+                    System.exit(0); // 退出应用程序
                 } else {
                     event.consume(); // 消费事件，阻止关闭窗口
                 }

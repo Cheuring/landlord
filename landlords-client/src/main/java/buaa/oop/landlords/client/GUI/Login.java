@@ -2,6 +2,7 @@ package buaa.oop.landlords.client.GUI;
 
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.common.utils.MapUtil;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -17,7 +18,7 @@ import javafx.stage.Stage;
 
 public class Login extends Application {
     private static final Object loginLock = new Object();
-    private static boolean isLoggedIn = false;
+    public static boolean isLoggedIn = false;
     private static Stage primaryStage;
     TextField usernameField = new TextField();
     PasswordField passwordField = new PasswordField();
@@ -26,7 +27,6 @@ public class Login extends Application {
 
     @Override
     public void start(Stage Stage) {
-        isLoggedIn = false;
         primaryStage = Stage;
         usernameField.setPromptText("请输入用户名");
         usernameField.setStyle("-fx-font-size: 14px; -fx-prompt-text-fill: #888888;");
@@ -36,8 +36,7 @@ public class Login extends Application {
         passwordField.setStyle("-fx-font-size: 14px; -fx-prompt-text-fill: #888888;");
         passwordField.setPrefWidth(250);
 
-        // 创建登录按钮
-        Button submitButton = new Button("登录");
+        Button submitButton = new Button("注册");
         submitButton.setStyle(
                 "-fx-background-color: #4CAF50; " +
                         "-fx-text-fill: white; " +
@@ -48,6 +47,12 @@ public class Login extends Application {
             inputUsername = usernameField.getText();
             if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
                 isLoggedIn = true;
+                inputUsername = MapUtil.newInstance()
+                        .put("operation",0)
+                        .put("username",usernameField.getText())
+                        .put("password",passwordField.getText())
+                        .json();
+                User.getINSTANCE().setNickname(usernameField.getText());
                 synchronized (loginLock) {
                     if (isLoggedIn) {
                         loginLock.notify();
@@ -58,7 +63,32 @@ public class Login extends Application {
                 usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
             }
         });
-
+        Button LoginButton = new Button("登录");
+        LoginButton.setStyle(
+                "-fx-background-color: #4CAF50; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-background-radius: 5px;");
+        LoginButton.setOnAction(e -> {
+            inputUsername = usernameField.getText();
+            if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
+                isLoggedIn = true;
+                inputUsername = MapUtil.newInstance()
+                        .put("operation",1)
+                        .put("username",usernameField.getText())
+                        .put("password",passwordField.getText())
+                        .json();
+                synchronized (loginLock) {
+                    if (isLoggedIn) {
+                        loginLock.notify();
+                    }
+                }
+                System.out.println("用户输入的用户名：" + inputUsername);
+            } else {
+                usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
+            }
+        });
         // 创建布局容器
         VBox layout = new VBox(10);
         layout.getChildren().addAll(
@@ -66,7 +96,8 @@ public class Login extends Application {
                 usernameField,
                 new Label("密码："),
                 passwordField,
-                submitButton
+                submitButton,
+                LoginButton
         );
         layout.setStyle("-fx-padding: 20px; -fx-alignment: center;");
 

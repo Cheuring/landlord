@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class User {
     public static User INSTANCE = new User();
 
+    private int score;
     private String nickname ;
     private int id;
 
@@ -23,7 +24,9 @@ public class User {
     public int getId() {
         return id;
     }
-
+    public int getScore(){
+        return score;
+    }
     public static User getINSTANCE() {
         return INSTANCE;
     }

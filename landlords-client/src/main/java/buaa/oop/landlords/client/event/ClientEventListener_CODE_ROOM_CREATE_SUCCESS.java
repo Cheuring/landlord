@@ -30,7 +30,7 @@ public class ClientEventListener_CODE_ROOM_CREATE_SUCCESS extends ClientEventLis
             Platform.runLater(()->{
                 RoomHall.roomHallHide();
                 GameRoom gameRoom=new GameRoom();
-                gameRoom.setChannel(channel);
+                gameRoom.init(channel,roomId);
                 gameRoom.start(new Stage());
             });
         }

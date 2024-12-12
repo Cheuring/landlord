@@ -23,6 +23,7 @@ import static buaa.oop.landlords.common.utils.ChannelUtil.pushToServer;
 
 public class GameRoom extends Application {
     private  Channel channel;
+    private int roomId;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("三人斗地主房间");
@@ -30,9 +31,9 @@ public class GameRoom extends Application {
         // 房间信息展示区
         VBox roomInfoBox = new VBox(10);
         roomInfoBox.setAlignment(Pos.TOP_CENTER);
-        Label roomInfoLabel = new Label("房间号: 1234");
-        Label gameStatusLabel = new Label("游戏状态: 等待其他玩家准备");
-        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
+        Label roomInfoLabel = new Label("房间号: "+Integer.toString(roomId));
+//        Label gameStatusLabel = new Label("游戏状态: 等待其他玩家准备");
+//        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
 
         // 退出按钮
         Button exitButton = new Button("返回大厅");
@@ -64,9 +65,6 @@ public class GameRoom extends Application {
         readyButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         actionButtonsBox.getChildren().addAll(playButton, passButton, readyButton);
 
-        readyButton.setOnAction(e -> {
-           pushToServer(channel, )
-        });
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
@@ -119,8 +117,9 @@ public class GameRoom extends Application {
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
     }
-    public  void setChannel(Channel channel) {
+    public  void init(Channel channel,int romid) {
         this.channel = channel;
+        this.roomId = romid;
     }
     public static void main(String[] args) {
         launch(args);
