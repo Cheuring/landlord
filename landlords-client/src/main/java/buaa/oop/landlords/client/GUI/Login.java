@@ -107,7 +107,8 @@ public class Login extends Application {
             }
         }
         return inputUsername;
-    }public static Stage getPrimaryStage() {
+    }
+    public static Stage getPrimaryStage() {
         return primaryStage;
     }
 }

@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.GUI;
 
+import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.utils.JsonUtil;
@@ -194,10 +195,12 @@ public class RoomHall extends Application {
         Scene scene = new Scene(mainLayout, 800, 600);
         primaryStage.setScene(scene);
     }
-    public static void roomHallDisplay(){
+    public static void roomHallDisplay() {
+        GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
     }
     public static void roomHallHide(){
+        GUIUtil.autoCloseAlertHandler(primaryStage);
         primaryStage.hide();
     }
     public static void msgDisplay(String msg){

@@ -57,10 +57,16 @@ public class GameRoom extends Application {
         HBox actionButtonsBox = new HBox(20);
         actionButtonsBox.setAlignment(Pos.CENTER);
         Button playButton = new Button("出牌");
+        playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         Button passButton = new Button("过牌");
+        passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         Button readyButton = new Button("准备");
+        readyButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         actionButtonsBox.getChildren().addAll(playButton, passButton, readyButton);
 
+        readyButton.setOnAction(e -> {
+           pushToServer(channel, )
+        });
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
