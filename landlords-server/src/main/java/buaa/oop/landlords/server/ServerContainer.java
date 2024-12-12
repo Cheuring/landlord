@@ -2,11 +2,20 @@ package buaa.oop.landlords.server;
 
 import buaa.oop.landlords.common.entities.ClientEnd;
 import buaa.oop.landlords.common.entities.Room;
+import buaa.oop.landlords.server.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class ServerContainer {
 
     public final static Map<Integer, Room> ROOM_MAP = new ConcurrentHashMap<>();
@@ -15,6 +24,20 @@ public class ServerContainer {
     public final static Map<String, Integer> CLIENT_NAME_TO_ID = new ConcurrentHashMap<>();
     private final static AtomicInteger CLIENT_ATOMIC_ID = new AtomicInteger(1);
     private final static AtomicInteger ROOM_ATOMIC_ID = new AtomicInteger(1);
+    private final static SqlSessionFactory FACTORY;
+
+
+    static {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = null;
+        try {
+            inputStream = Resources.getResourceAsStream(resource);
+        } catch (IOException e) {
+            log.error("Failed to load mybatis config file", e);
+        }
+        FACTORY = new SqlSessionFactoryBuilder()
+                .build(inputStream);
+    }
 
     public static int getNewClientId() {
         return CLIENT_ATOMIC_ID.getAndIncrement();
@@ -61,5 +84,9 @@ public class ServerContainer {
     public static void addClient(ClientEnd client) {
         CLIENT_END_MAP.put(client.getId(), client);
         CLIENT_NAME_TO_ID.put(client.getNickname(), client.getId());
+    }
+
+    public static SqlSession getSession() {
+        return FACTORY.openSession();
     }
 }

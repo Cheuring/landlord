@@ -15,6 +15,7 @@ public enum ServerEventCode {
     CODE_CLIENT_EXIT("退出游戏"),
     CODE_CHAT("聊天"),
     CODE_ROOM_EXIT("退出房间"),
+    CODE_USER_LOGIN("用户登录"),
 
     ;
 

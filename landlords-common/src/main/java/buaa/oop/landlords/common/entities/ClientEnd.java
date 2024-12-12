@@ -4,10 +4,12 @@ import buaa.oop.landlords.common.enums.ClientRole;
 import buaa.oop.landlords.common.enums.ClientStatus;
 import io.netty.channel.Channel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class ClientEnd {
     private int id;
 
