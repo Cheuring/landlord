@@ -21,7 +21,10 @@ public enum ClientEventCode {
     CODE_GAME_OVER("游戏结束"),
     CODE_CHAT("聊天"),
     CODE_CHAT_FAIL("聊天失败"),
-    CODE_SHOW_POKERS("展示出牌");
+    CODE_SHOW_POKERS("展示出牌"),
+    CODE_CLIENT_LOGIN("客户端登录"),
+
+    ;
     private final String msg;
 
     private ClientEventCode(String msg) {
