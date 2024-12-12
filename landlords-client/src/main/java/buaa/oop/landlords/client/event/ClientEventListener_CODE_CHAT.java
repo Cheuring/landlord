@@ -26,7 +26,7 @@ public class ClientEventListener_CODE_CHAT extends ClientEventListener{
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = now.format(formatter);
-        String format="[%s] [%s]:%s\n";
+        String format="[%s From %s]: %s\n";
         SimplePrinter.printChatMsg(format,BLUE,formattedTime,(String)chatMsg.get("ClientFrom"),(String)chatMsg.get("Content"));
         String clientFrom = (String) chatMsg.get("ClientFrom");
         String content = (String) chatMsg.get("Content");

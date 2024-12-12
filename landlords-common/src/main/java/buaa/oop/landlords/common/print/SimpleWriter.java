@@ -12,8 +12,7 @@ public class SimpleWriter {
     private static final EventLoop eventLoop = new DefaultEventLoop();
 
     public static String write(String nickname, String message) {
-        System.out.println();
-        System.out.printf("[%s@%s]$ ", nickname, message);
+        SimplePrinter.printPrompt(String.format("%n[%s@%s]$ ", nickname, message));
         try {
             return write();
         } finally {
