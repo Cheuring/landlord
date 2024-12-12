@@ -14,6 +14,7 @@ import org.apache.commons.cli.*;
 
 import java.util.concurrent.TimeUnit;
 
+// todo: 在./log/server.log中记录服务器的日志
 @Slf4j
 public class SimpleServer {
     public static void main(String[] args) {

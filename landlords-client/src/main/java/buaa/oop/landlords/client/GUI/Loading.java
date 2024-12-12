@@ -5,12 +5,11 @@ import buaa.oop.landlords.client.SimpleClient;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Optional;
 
 import static buaa.oop.landlords.client.GUIUtil.renderScene;
 

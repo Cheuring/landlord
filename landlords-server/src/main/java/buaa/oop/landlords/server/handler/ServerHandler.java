@@ -26,7 +26,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
             return;
         }
 
-        ClientEnd client = ServerContainer.CLIENT_END_MAP.get(getId(ctx.channel(), true));
+        ClientEnd client = ServerContainer.CLIENT_END_MAP.get(getId(ctx.channel()));
         log.info("Client {} | {} do: {}", client.getId(), client.getNickname(), code.getMsg());
         ServerEventListener.get(code).call(client, msg.getData());
     }
@@ -34,7 +34,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if(cause instanceof java.io.IOException) {
-            clientOfflineEvent(ctx.channel());
+//            clientOfflineEvent(ctx.channel());
         }else{
             log.error("Server error: {}", cause.getMessage());
             cause.printStackTrace();
@@ -60,7 +60,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ClientEnd client = new ClientEnd(getId(ctx.channel(), true), ctx.channel(), ClientStatus.IDLE);
+        ClientEnd client = new ClientEnd(getId(ctx.channel()), ctx.channel(), ClientStatus.IDLE);
         client.setNickName("Client " + client.getId());
 
         ServerContainer.CLIENT_END_MAP.put(client.getId(), client);
@@ -76,14 +76,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
         }).start();
     }
 
-    private Integer getId(Channel channel, boolean create) {
-        Integer clientId;
-        if(create){
-            clientId = ServerContainer.CHANNEL_ID_MAP.get(channel.id().asLongText());
-        }else{
-            clientId = ServerContainer.CHANNEL_ID_MAP.remove(channel.id().asLongText());
-        }
-        if (clientId == null && create) {
+    private int getId(Channel channel) {
+        Integer clientId = ServerContainer.CHANNEL_ID_MAP.get(channel.id().asLongText());
+        if (clientId == null) {
             clientId = ServerContainer.getNewClientId();
             ServerContainer.CHANNEL_ID_MAP.put(channel.id().asLongText(), clientId);
         }
@@ -91,9 +86,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     }
 
     private void clientOfflineEvent(Channel channel) {
-        Integer clientId = getId(channel, false);
-        if(clientId == null) return;
-
+        int clientId = getId(channel);
         ClientEnd client = ServerContainer.CLIENT_END_MAP.get(clientId);
         if (client != null) {
 //            log.info("Client {} | {} offline", client.getId(), client.getNickName());
