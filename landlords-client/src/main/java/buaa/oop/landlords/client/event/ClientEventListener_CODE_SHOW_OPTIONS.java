@@ -2,6 +2,7 @@ package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.GUI.Login;
 import buaa.oop.landlords.client.GUI.RoomHall;
+import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.SimpleClient;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
@@ -51,6 +52,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
             Platform.runLater(() -> {
                 try{
                     Stage stage = Login.getPrimaryStage();
+                    GUIUtil.autoCloseAlertHandler(stage);
                     stage.close();
                 }catch (Exception e){
                     e.printStackTrace();

@@ -1,14 +1,16 @@
 package buaa.oop.landlords.client.GUI;
 
+import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.SimpleClient;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 import static buaa.oop.landlords.client.GUIUtil.renderScene;
 
@@ -41,6 +43,7 @@ public class Loading extends Application {
         Scene scene = new Scene(root, 400, 200);
         primaryStage.setScene(scene);
         primaryStage.setTitle("加载中...");
+        GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
 
         // 启动后台线程连接服务器
@@ -61,6 +64,7 @@ public class Loading extends Application {
                         Login login = new Login();
                         Stage loginStage = new Stage();
                         login.start(loginStage);
+                        GUIUtil.autoCloseAlertHandler(loginStage);
                         primaryStage.close();  // 关闭加载界面
                     } else {
                         statusLabel.setText("连接失败！");
@@ -74,6 +78,8 @@ public class Loading extends Application {
             }
         }).start();
     }
+
+
 
     public static void main(String[] args) {
         setConnectionDetails("localhost", 32112);

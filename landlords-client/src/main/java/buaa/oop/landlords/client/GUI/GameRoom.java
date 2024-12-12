@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.GUI;
 
+import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.utils.ChannelUtil;
@@ -109,6 +110,7 @@ public class GameRoom extends Application {
         // 设置场景
         Scene scene = new Scene(mainLayout, 800, 600);
         primaryStage.setScene(scene);
+        GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
     }
     public  void setChannel(Channel channel) {

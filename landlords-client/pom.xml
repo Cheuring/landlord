@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>23.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>buaa.oop.landlords</groupId>
             <artifactId>landlords-common</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -34,10 +39,24 @@
                 <artifactId>javafx-controls</artifactId>
                 <version>23.0.1</version>
             </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>buaa.oop.landlords.client.SimpleClient</mainClass>
+                </configuration>
+            </plugin>
             <plugin>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-maven-plugin</artifactId>
