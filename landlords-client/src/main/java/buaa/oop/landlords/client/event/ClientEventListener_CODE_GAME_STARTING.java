@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUI.GameRoom;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
@@ -31,13 +32,14 @@ public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
         Map<String, Object> map = MapUtil.parse(data);
 
         SimplePrinter.printNotice("Game starting!");
-
+        GameRoom.setRoomStatus("游戏状态: 选择地主");
         List<Poker> pokers = JsonUtil.fromJson((String) map.get("pokers"),new TypeReference<List<Poker>>(){});
-
+        GameRoom.displayPokers(pokers);
         SimplePrinter.printNotice("");
         SimplePrinter.printNotice("Your cards are:");
         SimplePrinter.printPokers(pokers);
 
         get(ClientEventCode.CODE_GAME_LANDLORD_ELECT).call(channel, data);
     }
+
 }
