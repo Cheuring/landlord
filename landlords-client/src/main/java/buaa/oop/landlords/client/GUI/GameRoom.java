@@ -1,13 +1,19 @@
 package buaa.oop.landlords.client.GUI;
 
 import buaa.oop.landlords.client.GUIUtil;
+import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ClientEventCode;
+import buaa.oop.landlords.common.enums.PokerLevel;
+import buaa.oop.landlords.common.enums.PokerType;
+import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +40,21 @@ public class GameRoom extends Application {
     private  Channel channel;
     private int roomId;
     private static Label gameStatusLabel = new Label();
-    private static VBox player1Cards = new VBox(21);
-    private static VBox player3Cards = new VBox(21);
-    private static HBox player2Cards = new HBox(21);
+    private static HBox actionButtonsBox = new HBox(20);
+    private static VBox player1Cards = new VBox(-50);
+    private static VBox player3Cards = new VBox(-50);
+    private static HBox player2Cards = new HBox(-50);
     //indexes数组用于记录第i张牌是否被按下
     private static int[] indexes = new int[20];
     private static List<Poker> pokers = new ArrayList<>();   //玩家手牌
 
+    private static VBox p1LastPokers = new VBox(-50);
+    private static VBox p3LastPokers = new VBox(-50);
+
+
+    private static final Object gameRoomLock = new Object();
+    public static boolean isElect=false;
+    public static String robScore="";
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("三人斗地主房间");
@@ -73,8 +88,8 @@ public class GameRoom extends Application {
         topLayout.setSpacing(10);
 
         // 操作按钮区，水平排列
-        HBox actionButtonsBox = new HBox(20);
         actionButtonsBox.setAlignment(Pos.CENTER);
+        /*
         Button playButton = new Button("出牌");
         playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         Button passButton = new Button("过牌");
@@ -85,6 +100,7 @@ public class GameRoom extends Application {
             List<Poker> selectedCards = getSelectedCards(indexes, pokers);
             if(!selectedCards.isEmpty()){
                 // todo:传回POKERPLAY进行进一步判断
+
             }
             else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -96,41 +112,33 @@ public class GameRoom extends Application {
         });
 
         passButton.setOnAction(e -> {
-            // todo：传个p回去
+
         });
+         */
 
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
+        Label player1Role = new Label("农民");
         Label player1Name = new Label("玩家1");
-        //VBox player1Cards = new VBox(5); // 每张手牌独占一行
-        Label card1 = new Label("♠A");
-        Label card2 = new Label("♣10");
-        Label card3 = new Label("♥K");
-        player1Cards.getChildren().addAll(card1, card2, card3);
-        player1Box.getChildren().addAll(player1Name, player1Cards);
+        player1Box.getChildren().addAll(player1Role, player1Name, player1Cards);
+
+        VBox p1LastPokers = new VBox(10);
 
         // 玩家3的卡牌区（右侧玩家）
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
+        Label player3Role = new Label("农民");
         Label player3Name = new Label("玩家3");
-        //VBox player3Cards = new VBox(5); // 每张手牌独占一行
-        Label card3_1 = new Label("♠K");
-        Label card3_2 = new Label("♦2");
-        Label card3_3 = new Label("♣Q");
-        player3Cards.getChildren().addAll(card3_1, card3_2, card3_3);
-        player3Box.getChildren().addAll(player3Name, player3Cards);
+        player3Box.getChildren().addAll(player3Role, player3Name, player3Cards);
 
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
         player2Box.setAlignment(Pos.CENTER);
+        Label player2Role = new Label("农民");
         Label player2Name = new Label("玩家2");
-        //HBox player2Cards = new HBox(5); // 每张手牌横向展示
-        Label card2_1 = new Label("♠5");
-        Label card2_2 = new Label("♥J");
-        Label card2_3 = new Label("♦7");
-        player2Cards.getChildren().addAll(card2_1, card2_2, card2_3);
-        player2Box.getChildren().addAll(player2Name, player2Cards);
+        player2Cards.setAlignment(Pos.CENTER);
+        player2Box.getChildren().addAll(player2Role, player2Name, player2Cards);
 
         // 左右玩家布局
         BorderPane sidePlayersLayout = new BorderPane();
@@ -151,7 +159,8 @@ public class GameRoom extends Application {
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
     }
-    public void init(Channel channel,int romid) {
+
+    public void init(Channel channel, int romid) {
         this.channel = channel;
         this.roomId = romid;
     }
@@ -180,6 +189,7 @@ public class GameRoom extends Application {
          return selectedCards;
     }
 
+    //更新自己手牌
     public static void displayPokers(List<Poker> pokers) {
         player2Cards.getChildren().clear();
         for(int i = 0; i < 20; i++)
@@ -187,7 +197,6 @@ public class GameRoom extends Application {
         int cnt = pokers.size();
         for(int i = 0; i < cnt; i++) {
             Poker poker = pokers.get(i);
-            //拿到牌的大小以及种类，并找到对应路径
             int idx = poker.getLevel().getIdx();
             int value = poker.getType().getValue();
             ImageView imageView = GUIUtil.getPokerImage(idx, value);
@@ -198,6 +207,7 @@ public class GameRoom extends Application {
             int finalI = i;
             cardButton.setOnAction(e -> {
                 // todo:在按下按键时让按钮颜色反转
+                System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
                 }
@@ -209,73 +219,106 @@ public class GameRoom extends Application {
         }
     }
 
-    private static String getCardImageName(String level, String type) {
-        String code;
-        String num = "";
-        switch (type) {
-            case "♣":
-                code = "C";
-                break;
-            case "♠":
-                code = "S";
-                break;
-            case "♥":
-                code = "H";
-                break;
-            case "♦":
-                code = "D";
-                break;
-            default:
-                code = "";
-                break;
+    //更新他人手牌
+    public static void updatePokers(int size, int player) {
+        ImageView imageView = GUIUtil.getPokerBackImage();
+        if(player == 1) {
+            for(int i = 0; i < size; i++)
+                player1Cards.getChildren().add(imageView);
         }
-        switch(level) {
-            case "A":
-                num = "0";
-                break;
-            case "2":
-                num = "1";
-                break;
-            case "3":
-                num = "2";
-                break;
-            case "4":
-                num = "3";
-                break;
-            case "5":
-                num = "4";
-                break;
-            case "6":
-                num = "5";
-                break;
-            case "7":
-                num = "6";
-                break;
-            case "8":
-                num = "7";
-                break;
-            case "9":
-                num = "8";
-                break;
-            case "10":
-                num = "9";
-                break;
-            case "J":
-                num = "10";
-                break;
-            case "Q":
-                num = "11";
-                break;
-            case "K":
-                num = "12";
-                break;
-            case "S":
-                num = "S";
-                break;
-            case "B":
-                num = "B";
-                break;
+        else {
+            for(int i = 0; i < size; i++)
+                player1Cards.getChildren().add(imageView);
         }
-        return code + num + ".png";
+    }
+
+    public static void electButtonOn(int point) {
+        Button buttonZero = new Button("0");
+        buttonZero.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+        buttonZero.setOnAction(e -> {
+            robScore="0";
+            isElect=true;
+            synchronized (gameRoomLock) {
+                    if (isElect) {
+                        gameRoomLock.notify();
+                    }
+            }
+        });
+        Button buttonOne = new Button("1");
+        buttonOne.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+        buttonOne.setOnAction(e -> {
+            if(point < 1) {
+                robScore="1";
+                isElect=true;
+                synchronized (gameRoomLock) {
+                    if (isElect) {
+                        gameRoomLock.notify();
+                    }
+                }
+            }
+            else {
+                buttonOne.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5; -fx-border-color: red; -fx-border-width: 1;");
+
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                    buttonOne.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+                }));
+
+                timeline.play();
+            }
+        });
+        Button buttonTwo = new Button("2");
+        buttonTwo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+        buttonTwo.setOnAction(e -> {
+            if(point < 2) {
+                robScore="2";
+                isElect=true;
+                synchronized (gameRoomLock) {
+                    if (isElect) {
+                        gameRoomLock.notify();
+                    }
+                }
+            }
+            else {
+                buttonTwo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5; -fx-border-color: red; -fx-border-width: 1;");
+
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                    buttonTwo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+                }));
+
+                timeline.play();
+            }
+        });
+        Button buttonThree = new Button("3");
+        buttonThree.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+        buttonThree.setOnAction(e -> {
+            robScore="3";
+            isElect=true;
+            synchronized (gameRoomLock) {
+                if (isElect) {
+                    gameRoomLock.notify();
+                }
+            }
+        });
+        if(point < 2) {
+            buttonTwo.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+            if(point < 1) {
+                buttonOne.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+            }
+        }
+        actionButtonsBox.getChildren().addAll(buttonZero, buttonOne, buttonTwo, buttonThree);
+    }
+
+    public static String electGetUserInput(){
+        synchronized (gameRoomLock) {
+            while (!isElect) {
+                try {
+                    gameRoomLock.wait(); // 阻塞等待
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("登录等待被中断", e);
+                }
+            }
+        }
+        return robScore;
     }
 }

@@ -2,13 +2,17 @@ package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.GUI.GameRoom;
 import buaa.oop.landlords.client.GUI.RoomHall;
+import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.entities.Room;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.JsonUtil;
+import buaa.oop.landlords.common.utils.PokerUtil;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 /**
  * 参数为新创建的room
