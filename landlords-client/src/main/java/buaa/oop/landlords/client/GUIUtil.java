@@ -2,25 +2,18 @@ package buaa.oop.landlords.client;
 
 
 import buaa.oop.landlords.client.GUI.FailPopup;
-import buaa.oop.landlords.client.GUI.Loading;
-import buaa.oop.landlords.client.GUI.Login;
-import buaa.oop.landlords.client.GUI.RoomHall;
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Popup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class GUIUtil {
     //显示错误提示信息
-    // todo: fix the bug 后来调用会崩溃
     public static void renderScene(String msgSource,String msg ) {
         Platform.runLater(()->{
             FailPopup.showPopup(msgSource,msg);
@@ -28,6 +21,35 @@ public class GUIUtil {
     }
 
     private static Alert closeAlert = null;
+    private static ImageView pokerImages[][] = new ImageView[4][13];
+    private static ImageView pokerImagesRest[] = new ImageView[3];
+
+
+    static {
+        Image image = new Image(GUIUtil.class.getResource("/images/pokers.png").toExternalForm());
+        double tileWidth = image.getWidth() / 13;
+        double tileHeight = image.getHeight() / 5;
+
+        for(int i = 0; i < 4; ++i){
+            for(int j = 0; j < 13; ++j){
+                pokerImages[i][j] = new ImageView(image);
+                pokerImages[i][j].setViewport(new javafx.geometry.Rectangle2D(j * tileWidth, i * tileHeight, tileWidth, tileHeight));
+                pokerImages[i][j].setFitWidth(80);
+                pokerImages[i][j].setFitHeight(120);
+            }
+        }
+
+        for(int i = 0; i < 2; ++i){
+            pokerImagesRest[i] = new ImageView(GUIUtil.class.getResource(String.format("/images/joker_%d.png", i)).toExternalForm());
+            pokerImagesRest[i].setFitWidth(80);
+            pokerImagesRest[i].setFitHeight(120);
+        }
+
+        pokerImagesRest[2] = new ImageView(image);
+        pokerImagesRest[2].setViewport(new javafx.geometry.Rectangle2D(2 * tileWidth, 4 * tileHeight, tileWidth, tileHeight));
+        pokerImagesRest[2].setFitWidth(80);
+        pokerImagesRest[2].setFitHeight(120);
+    }
 
     public static void cancelHandler(Stage primaryStage) {
         primaryStage.setOnCloseRequest(event -> {
@@ -61,5 +83,17 @@ public class GUIUtil {
         if (closeAlert != null) { // 如果确认关闭弹窗已经显示，取消显示
             closeAlert.close();
         }
+    }
+
+    public static ImageView getPokerImage(int idx, int type) {
+        if(type != -1){
+            return pokerImages[type][idx];
+        }
+
+        return pokerImagesRest[idx];
+    }
+
+    public static ImageView getPokerBackImage() {
+        return pokerImagesRest[2];
     }
 }

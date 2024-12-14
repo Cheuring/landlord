@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.ClientContainer;
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.print.SimplePrinter;
@@ -10,6 +11,6 @@ public class ClientEventListener_CODE_CLIENT_CONNECT extends ClientEventListener
     public void call(Channel channel, String data) {
         SimplePrinter.ServerLog("Connected to server. Welcome !");
         User.INSTANCE.setId(Integer.parseInt(data));
-
+        ClientContainer.channel = channel;
     }
 }

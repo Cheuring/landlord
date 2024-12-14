@@ -8,6 +8,7 @@ import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import javafx.application.Platform;
 
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,12 @@ public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
         Map<String, Object> map = MapUtil.parse(data);
 
         SimplePrinter.printNotice("Game starting!");
-        GameRoom.setRoomStatus("游戏状态: 选择地主");
         List<Poker> pokers = JsonUtil.fromJson((String) map.get("pokers"),new TypeReference<List<Poker>>(){});
-        GameRoom.displayPokers(pokers);
+        Platform.runLater(() -> {
+            GameRoom.setRoomStatus("游戏状态: 选择地主");
+            GameRoom.displayPokers(pokers);
+        });
+//        GameRoom.setRoomStatus("游戏状态: 选择地主");
         SimplePrinter.printNotice("");
         SimplePrinter.printNotice("Your cards are:");
         SimplePrinter.printPokers(pokers);
