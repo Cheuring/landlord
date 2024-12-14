@@ -24,9 +24,7 @@ public class GUIUtil {
     public static void renderScene(String msgSource,String msg ) {
         Platform.runLater(()->{
             FailPopup.showPopup(msgSource,msg);
-           try{msg.wait();}catch(Exception e){e.printStackTrace();}
         });
-        msg.notify();
     }
 
     private static Alert closeAlert = null;

@@ -54,6 +54,7 @@ public class GameRoom extends Application {
 //        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
 
         // 退出按钮
+
         Button exitButton = new Button("返回大厅");
         exitButton.setOnAction(e -> {
             System.out.println("玩家退出房间");

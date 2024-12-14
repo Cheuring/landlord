@@ -7,12 +7,17 @@ import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -26,7 +31,7 @@ public class RoomHall extends Application {
 
     private static Channel channel;
 
-    private static TextArea chatArea = new TextArea();
+    private static TextFlow chatArea = new TextFlow();
     private static Stage primaryStage=new Stage();
     private static GridPane roomDisplayArea = new GridPane();
     private static BorderPane mainLayout = new BorderPane();
@@ -126,45 +131,33 @@ public class RoomHall extends Application {
         updateRoomDisplay(roomDisplayArea);
     }
     public static void stageInit(Channel channel){
-        RoomHall.channel =channel;
+        RoomHall.channel = channel;
         primaryStage.setTitle("游戏大厅");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPadding(new Insets(10));
-
         roomDisplayArea.setHgap(10);
         roomDisplayArea.setVgap(10);
         roomDisplayArea.setAlignment(Pos.TOP_CENTER);
-
         scrollPane.setContent(roomDisplayArea);
-
         mainLayout.setCenter(scrollPane);
         updateRoomDisplay(roomDisplayArea);
 
-        // 设置主布局
         HBox hbox = new HBox();
         hbox.setSpacing(10); // 控件间距
         hbox.setAlignment(Pos.CENTER_LEFT);
 
-        // 将左侧的内容区域 (房间显示区域) 设置为四分之三宽度
         Region leftRegion = new Region();
         HBox.setHgrow(leftRegion, Priority.ALWAYS);
-        leftRegion.setMinWidth(0); // 设置最小宽度为 0，避免拉伸到最大宽度
+        leftRegion.setMinWidth(0);
 
-        // 右侧的聊天框区域（四分之一宽度）
         VBox chatBox = new VBox();
         chatBox.setSpacing(10);
         chatBox.setPadding(new Insets(10));
         chatBox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5;");
+        chatArea.setStyle("-fx-background-color: white; -fx-padding: 10;");
+        chatArea.setPrefHeight(320);
 
-        // 上部显示聊天信息
-
-        chatArea.setEditable(false); // 禁止编辑聊天记录
-        chatArea.setStyle("-fx-text-fill: pink; -fx-font-weight: bold; -fx-font-size: 14;");;
-        chatArea.setWrapText(true);
-        chatArea.setPrefHeight(300);
-
-        // 下方输入框
         inputField.setPromptText("请输入消息...");
         inputField.setOnKeyPressed(e -> {
             if (e.getCode().getName().equals("Enter")) {
@@ -172,20 +165,63 @@ public class RoomHall extends Application {
             }
         });
         Button sendButton = new Button("发送");
-
-        // 发送按钮事件
         sendButton.setOnAction(e -> sendMessage());
-
         Label formatHint = new Label("Please enter your content in such format:\n@[ClientToName] [Content]");
         formatHint.setStyle("-fx-font-size: 12; -fx-text-fill: gray; -fx-padding: 5;");
         chatBox.getChildren().addAll(chatArea, inputField, sendButton, formatHint);
 
-        hbox.getChildren().addAll(leftRegion, scrollPane, chatBox);
+        VBox rightBottomBox = new VBox();
+        rightBottomBox.setSpacing(10);
+        rightBottomBox.setPadding(new Insets(10));
+        rightBottomBox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5;");
 
-        mainLayout.setCenter(hbox);
+        Label nameLabel = new Label("姓名: ");
+        TextArea nameArea = new TextArea();
+        nameArea.appendText(User.INSTANCE.getNickname());
+        nameArea.setEditable(false);
+        nameArea.setPrefHeight(50);
+        nameArea.setStyle("-fx-background-color: white; -fx-padding: 5;");
 
-        Scene scene = new Scene(mainLayout, 800, 600);
+        Label scoreLabel = new Label("分数: ");
+        TextArea scoreArea = new TextArea();
+        scoreArea.appendText(String.valueOf(User.INSTANCE.getScore()));
+        scoreArea.setEditable(false);
+        scoreArea.setPrefHeight(50);
+        scoreArea.setStyle("-fx-background-color: white; -fx-padding: 5;");
+        rightBottomBox.setPrefWidth(20);
+        rightBottomBox.getChildren().addAll(nameLabel, nameArea, scoreLabel, scoreArea);
+
+        VBox rightTopBox = new VBox();
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        webView.setPrefSize(150, 230);
+        String htmlContent = "<div class=\"tenor-gif-embed\" data-postid=\"16231326\" data-share-method=\"host\" " +
+                "data-aspect-ratio=\"1.04235\" data-width=\"100%\">" +
+                "<a href=\"https://tenor.com/view/hatsune-miku-anime-vocaloid-lamazep-dance-gif-16231326\">" +
+                "Hatsune Miku Anime Sticker</a>from " +
+                "<a href=\"https://tenor.com/search/hatsune+miku-stickers\">Hatsune Miku Stickers</a></div>" +
+                "<script type=\"text/javascript\" async src=\"https://tenor.com/embed.js\"></script>";
+        webEngine.loadContent(htmlContent);
+        rightTopBox.getChildren().add(webView);
+
+        HBox rightBox = new HBox();
+        rightBox.setSpacing(10);
+        rightBox.setPadding(new Insets(10));
+
+        rightBox.getChildren().addAll(rightBottomBox, rightTopBox);
+
+        VBox right = new VBox();
+        right.setSpacing(10);
+        right.getChildren().addAll(chatBox, rightBox);
+
+        HBox mainBox = new HBox();
+        mainBox.setSpacing(10);
+        mainBox.getChildren().addAll(leftRegion, scrollPane, right);
+        mainLayout.setCenter(mainBox);
+
+        Scene scene = new Scene(mainLayout, 900, 600);
         primaryStage.setScene(scene);
+
     }
 
     private static void sendMessage() {
@@ -223,8 +259,13 @@ public class RoomHall extends Application {
         GUIUtil.autoCloseAlertHandler(primaryStage);
         primaryStage.hide();
     }
-    public static void msgDisplay(String msg){
-        chatArea.appendText(msg);
+    public static void msgDisplay(String msg,String to){
+        Platform.runLater(()->{
+            Text text=new Text(msg);
+            if(to.equalsIgnoreCase("all"))text.setStyle("-fx-fill: pink; -fx-font-size: 14px; -fx-font-weight: bold;");
+            else text.setStyle("-fx-fill: black; -fx-font-size: 14px; -fx-font-weight: bold;");
+            chatArea.getChildren().add(text);});
+
     }
     private static boolean isValid(String msg){
         if(msg.charAt(0) == '@'&&(idx=msg.indexOf(' '))>1){
