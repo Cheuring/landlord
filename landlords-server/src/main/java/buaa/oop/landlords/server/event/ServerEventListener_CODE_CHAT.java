@@ -23,6 +23,7 @@ public class ServerEventListener_CODE_CHAT extends ServerEventListener{
             return;
         }
 
+        ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));
         ChannelUtil.pushToClient(ServerContainer.getClient(clientToName).getChannel(), ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));
     }
 }

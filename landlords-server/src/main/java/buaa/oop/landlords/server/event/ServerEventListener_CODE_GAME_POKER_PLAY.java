@@ -89,6 +89,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         gameOver(clientEnd, room);
     }
 
+    // todo : 更新分数
     private void gameOver(ClientEnd winner, Room room) {
         ClientRole winnerType = winner.getRole();
         if (isSpring(winner, room)) {

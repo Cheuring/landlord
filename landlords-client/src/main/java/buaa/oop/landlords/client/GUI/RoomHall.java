@@ -160,29 +160,21 @@ public class RoomHall extends Application {
         // 上部显示聊天信息
 
         chatArea.setEditable(false); // 禁止编辑聊天记录
+        chatArea.setStyle("-fx-text-fill: pink; -fx-font-weight: bold; -fx-font-size: 14;");;
         chatArea.setWrapText(true);
         chatArea.setPrefHeight(300);
 
         // 下方输入框
         inputField.setPromptText("请输入消息...");
+        inputField.setOnKeyPressed(e -> {
+            if (e.getCode().getName().equals("Enter")) {
+                sendMessage();
+            }
+        });
         Button sendButton = new Button("发送");
 
         // 发送按钮事件
-        sendButton.setOnAction(e -> {
-            String message = inputField.getText();
-            if (!message.isEmpty()&&isVaild(message)) {
-                chatArea.appendText(User.getINSTANCE().getNickname()+": " + message + "\n");
-                inputField.clear();
-                String result = MapUtil.newInstance()
-                        .put("ClientTo",message.substring(1, idx))
-                        .put("Content", message.substring(idx + 1))
-                        .json();
-                pushToServer(channel,ServerEventCode.CODE_CHAT,result);
-            }else {
-                inputField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
-                inputField.clear();
-            }
-        });
+        sendButton.setOnAction(e -> sendMessage());
 
         Label formatHint = new Label("Please enter your content in such format:\n@[ClientToName] [Content]");
         formatHint.setStyle("-fx-font-size: 12; -fx-text-fill: gray; -fx-padding: 5;");
@@ -195,6 +187,34 @@ public class RoomHall extends Application {
         Scene scene = new Scene(mainLayout, 800, 600);
         primaryStage.setScene(scene);
     }
+
+    private static void sendMessage() {
+        String message = inputField.getText();
+        if (!message.isEmpty()&&isVaild(message)) {
+//                chatArea.appendText(User.getINSTANCE().getNickname()+": " + message + "\n");
+            inputField.clear();
+
+            String clientTo = message.substring(1, idx);
+            if(clientTo.equals(User.INSTANCE.getNickname())){
+                inputField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
+                inputField.setPromptText("不能私聊自己");
+                return;
+            }
+
+            String result = MapUtil.newInstance()
+                    .put("ClientTo", clientTo)
+                    .put("Content", message.substring(idx + 1))
+                    .json();
+            pushToServer(channel,ServerEventCode.CODE_CHAT,result);
+            inputField.setPromptText("请输入消息...");
+            inputField.setStyle("");
+        }else {
+            inputField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
+            inputField.setPromptText("请输入正确格式");
+            inputField.clear();
+        }
+    }
+
     public static void roomHallDisplay() {
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
