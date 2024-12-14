@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,14 +32,15 @@ public class GUIUtil {
     private static ImageView pokerImages[][] = new ImageView[4][13];
     private static ImageView pokerImagesRest[] = new ImageView[3];
 
+
     static {
         // "spade" "heart" "diamond" "club"
         char[] pokerTypes = {'S', 'H', 'D', 'C'};
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j <= 12; j++) {
-                pokerImages[i][j] = new ImageView("images/" + pokerTypes[i] + j + ".png");
-                pokerImages[i][j].setFitWidth(50);
-                pokerImages[i][j].setFitHeight(70);
+                pokerImages[i][j] = new ImageView(GUIUtil.class.getResource("/images/" + pokerTypes[i] + j + ".png").toExternalForm());
+                pokerImages[i][j].setFitWidth(80);
+                pokerImages[i][j].setFitHeight(120);
             }
         }
         // todo: 加载大小王 背面
@@ -78,12 +80,12 @@ public class GUIUtil {
         }
     }
 
-    public static ImageView getPokerImage(int type, int value) {
+    public static ImageView getPokerImage(int idx, int type) {
         if(type != -1){
-            return pokerImages[type][value];
+            return pokerImages[type][idx];
         }
 
-        return pokerImagesRest[value];
+        return pokerImagesRest[idx];
     }
 
     public static ImageView getPokerBackImage() {
