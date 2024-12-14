@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.GUI;
 
+import buaa.oop.landlords.client.ClientContainer;
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
@@ -9,6 +10,7 @@ import buaa.oop.landlords.common.enums.PokerLevel;
 import buaa.oop.landlords.common.enums.PokerType;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
+import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
@@ -232,93 +234,54 @@ public class GameRoom extends Application {
         }
     }
 
-    public static void electButtonOn(int point) {
-        Button buttonZero = new Button("0");
-        buttonZero.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-        buttonZero.setOnAction(e -> {
-            robScore="0";
-            isElect=true;
-            synchronized (gameRoomLock) {
-                    if (isElect) {
-                        gameRoomLock.notify();
-                    }
-            }
-        });
-        Button buttonOne = new Button("1");
-        buttonOne.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-        buttonOne.setOnAction(e -> {
-            if(point < 1) {
-                robScore="1";
-                isElect=true;
-                synchronized (gameRoomLock) {
-                    if (isElect) {
-                        gameRoomLock.notify();
-                    }
-                }
-            }
-            else {
-                buttonOne.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5; -fx-border-color: red; -fx-border-width: 1;");
+    public static void electButtonOn(int point, Integer currentLandlordId) {
+        Button[] buttons = new Button[4];
 
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                    buttonOne.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-                }));
-
-                timeline.play();
+        buttons[0] = new Button("0");
+        buttons[0].setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+        buttons[0].setOnAction(e -> {
+            String result;
+             if (currentLandlordId != null) {
+                result = MapUtil.newInstance()
+                        .put("highestScore", point)
+                        .put("currentLandlordId", currentLandlordId)
+                        .json();
+            } else {
+                result = MapUtil.newInstance()
+                        .put("highestScore", 0)
+                        .json();
             }
+            pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_LANDLORD_ELECT, result);
         });
-        Button buttonTwo = new Button("2");
-        buttonTwo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-        buttonTwo.setOnAction(e -> {
-            if(point < 2) {
-                robScore="2";
-                isElect=true;
-                synchronized (gameRoomLock) {
-                    if (isElect) {
-                        gameRoomLock.notify();
-                    }
-                }
-            }
-            else {
-                buttonTwo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5; -fx-border-color: red; -fx-border-width: 1;");
 
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                    buttonTwo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-                }));
+        for(int i=1; i<4; ++i){
+            int finalI = i;
+            buttons[i] = new Button(Integer.toString(i));
+            if(i <= point){
+                buttons[i].setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+                buttons[i].setOnAction(e -> {
+                    buttons[finalI].setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5; -fx-border-color: red; -fx-border-width: 1;");
 
-                timeline.play();
-            }
-        });
-        Button buttonThree = new Button("3");
-        buttonThree.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-        buttonThree.setOnAction(e -> {
-            robScore="3";
-            isElect=true;
-            synchronized (gameRoomLock) {
-                if (isElect) {
-                    gameRoomLock.notify();
-                }
-            }
-        });
-        if(point < 2) {
-            buttonTwo.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
-            if(point < 1) {
-                buttonOne.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                        buttons[finalI].setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+                    }));
+
+                    timeline.play();
+                });
+            }else{
+                buttons[i].setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 5;");
+                buttons[i].setOnAction(e -> {
+                    String result = MapUtil.newInstance()
+                            .put("highestScore", finalI)
+                            .put("currentLandlordId", User.getINSTANCE().getId())
+                            .json();
+                    actionButtonsBox.getChildren().clear();
+                    pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_LANDLORD_ELECT, result);
+                });
             }
         }
-        actionButtonsBox.getChildren().addAll(buttonZero, buttonOne, buttonTwo, buttonThree);
+
+        actionButtonsBox.getChildren().addAll(buttons);
     }
 
-    public static String electGetUserInput(){
-        synchronized (gameRoomLock) {
-            while (!isElect) {
-                try {
-                    gameRoomLock.wait(); // 阻塞等待
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException("登录等待被中断", e);
-                }
-            }
-        }
-        return robScore;
-    }
 }
