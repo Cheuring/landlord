@@ -26,7 +26,6 @@ public class GUIUtil {
 
 
     static {
-        // todo: 加载大小王 背面
         Image image = new Image(GUIUtil.class.getResource("/images/pokers.png").toExternalForm());
         double tileWidth = image.getWidth() / 13;
         double tileHeight = image.getHeight() / 5;
@@ -40,12 +39,16 @@ public class GUIUtil {
             }
         }
 
-        for(int i = 0; i < 3; ++i){
-            pokerImagesRest[i] = new ImageView(image);
-            pokerImagesRest[i].setViewport(new javafx.geometry.Rectangle2D(i * tileWidth, 4 * tileHeight, tileWidth, tileHeight));
+        for(int i = 0; i < 2; ++i){
+            pokerImagesRest[i] = new ImageView(GUIUtil.class.getResource(String.format("/images/joker_%d.png", i)).toExternalForm());
             pokerImagesRest[i].setFitWidth(80);
             pokerImagesRest[i].setFitHeight(120);
         }
+
+        pokerImagesRest[2] = new ImageView(image);
+        pokerImagesRest[2].setViewport(new javafx.geometry.Rectangle2D(2 * tileWidth, 4 * tileHeight, tileWidth, tileHeight));
+        pokerImagesRest[2].setFitWidth(80);
+        pokerImagesRest[2].setFitHeight(120);
     }
 
     public static void cancelHandler(Stage primaryStage) {
