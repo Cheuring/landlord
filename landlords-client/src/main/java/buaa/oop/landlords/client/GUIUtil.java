@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.ImageView;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -27,6 +28,21 @@ public class GUIUtil {
     }
 
     private static Alert closeAlert = null;
+    private static ImageView pokerImages[][] = new ImageView[4][13];
+    private static ImageView pokerImagesRest[] = new ImageView[3];
+
+    static {
+        // "spade" "heart" "diamond" "club"
+        char[] pokerTypes = {'S', 'H', 'D', 'C'};
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j <= 12; j++) {
+                pokerImages[i][j] = new ImageView("images/" + pokerTypes[i] + j + ".png");
+                pokerImages[i][j].setFitWidth(50);
+                pokerImages[i][j].setFitHeight(70);
+            }
+        }
+        // todo: 加载大小王 背面
+    }
 
     public static void cancelHandler(Stage primaryStage) {
         primaryStage.setOnCloseRequest(event -> {
@@ -60,5 +76,17 @@ public class GUIUtil {
         if (closeAlert != null) { // 如果确认关闭弹窗已经显示，取消显示
             closeAlert.close();
         }
+    }
+
+    public static ImageView getPokerImage(int type, int value) {
+        if(type != -1){
+            return pokerImages[type][value];
+        }
+
+        return pokerImagesRest[value];
+    }
+
+    public static ImageView getPokerBackImage() {
+        return pokerImagesRest[2];
     }
 }

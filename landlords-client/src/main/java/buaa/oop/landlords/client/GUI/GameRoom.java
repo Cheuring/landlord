@@ -188,15 +188,9 @@ public class GameRoom extends Application {
         for(int i = 0; i < cnt; i++) {
             Poker poker = pokers.get(i);
             //拿到牌的大小以及种类，并找到对应路径
-            String level = poker.getLevel().getName();
-            String type = poker.getType().getName();
-            // todo:此处取地址大概率会出错，函数返回文件名
-            String imagePath = "/" + getCardImageName(level, type);
-            Image image = new Image(imagePath);
-            ImageView imageView = new ImageView(image);
-            //设置图片大小
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(70);
+            int idx = poker.getLevel().getIdx();
+            int value = poker.getType().getValue();
+            ImageView imageView = GUIUtil.getPokerImage(idx, value);
 
             Button cardButton = new Button();
             cardButton.setGraphic(imageView);
