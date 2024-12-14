@@ -28,6 +28,7 @@ import static buaa.oop.landlords.common.utils.ChannelUtil.pushToServer;
 
 public class GameRoom extends Application {
     private  Channel channel;
+    private int roomId;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("三人斗地主房间");
@@ -40,6 +41,9 @@ public class GameRoom extends Application {
         roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
         List<Poker> pokers = new ArrayList<>();   //玩家手牌
         int[] indexs = new int[20];   //玩家手牌索引
+        Label roomInfoLabel = new Label("房间号: "+Integer.toString(roomId));
+//        Label gameStatusLabel = new Label("游戏状态: 等待其他玩家准备");
+//        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
 
         // 退出按钮
         Button exitButton = new Button("返回大厅");
@@ -129,8 +133,9 @@ public class GameRoom extends Application {
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
     }
-    public  void setChannel(Channel channel) {
+    public  void init(Channel channel,int romid) {
         this.channel = channel;
+        this.roomId = romid;
     }
     public static void main(String[] args) {
         launch(args);

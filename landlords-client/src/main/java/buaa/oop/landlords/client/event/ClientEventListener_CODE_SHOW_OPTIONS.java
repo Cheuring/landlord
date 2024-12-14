@@ -4,9 +4,11 @@ import buaa.oop.landlords.client.GUI.Login;
 import buaa.oop.landlords.client.GUI.RoomHall;
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.SimpleClient;
+import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
+import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.print.*;
 import javafx.application.Platform;
@@ -48,6 +50,13 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("4.Exit the program");
         SimplePrinter.printNotice("5.Chat ");
 //        SimpleClient.chatRoom.start(ClientEventCode.CODE_CHAT);
+        if (User.getINSTANCE().getScore() == 0) {
+            try {
+                User.getINSTANCE().setScore((int) (MapUtil.parse(data).get("score")));
+            } catch (Exception e) {
+                System.out.println("data is null");
+            }
+        }
         if (roomDisplay.compareAndSet(false, true)) {
             Platform.runLater(() -> {
                 try{
