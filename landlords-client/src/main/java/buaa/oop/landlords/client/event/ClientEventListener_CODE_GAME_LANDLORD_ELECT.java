@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUI.GameRoom;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.entities.Room;
 import buaa.oop.landlords.common.enums.ServerEventCode;
@@ -40,7 +41,8 @@ public class ClientEventListener_CODE_GAME_LANDLORD_ELECT extends ClientEventLis
             }
             s = s + "] (enter [exit|e] to exit current room)";
             SimplePrinter.printNotice(s);
-            String userInput = SimpleWriter.write(User.getINSTANCE().getNickname(), "getScore");
+            GameRoom.electButtonOn(highestScore);
+            String userInput = GameRoom.electGetUserInput();
             if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("e")) {
                 pushToServer(channel, ServerEventCode.CODE_CLIENT_EXIT);
             } else {
