@@ -252,6 +252,7 @@ public class GameRoom extends Application {
                         .put("highestScore", 0)
                         .json();
             }
+            actionButtonsBox.getChildren().clear();
             pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_LANDLORD_ELECT, result);
         });
 

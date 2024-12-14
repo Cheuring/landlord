@@ -20,5 +20,6 @@ public class ClientEventListener_CODE_ROOM_EXIT extends ClientEventListener{
         Map<String, Object> map = MapUtil.parse(data);
 
         SimplePrinter.printNotice(String.format("\n%s left the room.\nCurrent players in the room: %s\n", map.get("exitClientNickname"), map.get("roomClientCount")));
+
     }
 }
