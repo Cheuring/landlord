@@ -2,8 +2,10 @@ package buaa.oop.landlords.client.GUI;
 
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
+import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.utils.ChannelUtil;
+import buaa.oop.landlords.common.utils.PokerUtil;
 import io.netty.channel.Channel;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import javafx.application.Application;
@@ -17,6 +19,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToClient;
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToServer;
@@ -33,6 +38,8 @@ public class GameRoom extends Application {
         Label roomInfoLabel = new Label("房间号: 1234");
         Label gameStatusLabel = new Label("游戏状态: 等待其他玩家准备");
         roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
+        List<Poker> pokers = new ArrayList<>();   //玩家手牌
+        int[] indexs = new int[20];   //玩家手牌索引
 
         // 退出按钮
         Button exitButton = new Button("返回大厅");
@@ -60,13 +67,16 @@ public class GameRoom extends Application {
         playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         Button passButton = new Button("过牌");
         passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        Button readyButton = new Button("准备");
-        readyButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        actionButtonsBox.getChildren().addAll(playButton, passButton, readyButton);
+        actionButtonsBox.getChildren().addAll(playButton, passButton);
 
-        readyButton.setOnAction(e -> {
-           pushToServer(channel, )
+        playButton.setOnAction(e -> {
+            List<Poker> selectedCards = getSelectedCards();
         });
+
+        passButton.setOnAction(e -> {
+
+        });
+
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
@@ -124,5 +134,11 @@ public class GameRoom extends Application {
     }
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private static List<Poker> getSelectedCards(int[] indexs, List<Poker> pokers) {
+        List<Poker> selectedCards = new ArrayList<>();
+        selectedCards = PokerUtil.getPoker(indexs, pokers);
+        return selectedCards;
     }
 }
