@@ -20,6 +20,7 @@ import java.util.Optional;
 
 public class GUIUtil {
     //显示错误提示信息
+    // todo: fix the bug 后来调用会崩溃
     public static void renderScene(String msgSource,String msg ) {
         Platform.runLater(()->{
             FailPopup.showPopup(msgSource,msg);

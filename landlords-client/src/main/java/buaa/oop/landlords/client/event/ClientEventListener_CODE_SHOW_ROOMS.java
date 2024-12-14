@@ -33,10 +33,10 @@ public class ClientEventListener_CODE_SHOW_ROOMS extends ClientEventListener {
                 System.out.printf(format, room.get("roomId"), room.get("roomOwner"), JsonUtil.fromJson((String) room.get("roomStatus"), String.class), room.get("roomClientCount"));
             }
             SimplePrinter.printNotice("");
-            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+//            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
         } else {
             SimplePrinter.printNotice("No available room. Please create a room!");
-            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+//            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
         }
 
     }

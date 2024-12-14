@@ -79,6 +79,7 @@ public class Login extends Application {
                         .put("username",usernameField.getText())
                         .put("password",passwordField.getText())
                         .json();
+                User.getINSTANCE().setNickname(usernameField.getText());
                 synchronized (loginLock) {
                     if (isLoggedIn) {
                         loginLock.notify();

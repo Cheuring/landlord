@@ -42,7 +42,6 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         Login.isLoggedIn=false;
         String name = Login.getNickname();
 
-        SimpleClient.chatRoom = ChatRoom.getInstance(channel);
         log.info("nickname set to {}", name);
         pushToServer(channel, ServerEventCode.CODE_USER_LOGIN, name);
 //            } else {

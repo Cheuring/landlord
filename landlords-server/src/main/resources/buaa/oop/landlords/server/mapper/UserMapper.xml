@@ -7,7 +7,7 @@
         SELECT * FROM user
     </select>
 
-    <insert id="insertUser" useGeneratedKeys="true">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (name, password) VALUES (#{name}, #{password})
     </insert>
     
@@ -22,4 +22,8 @@
     <delete id="deleteUser">
         DELETE FROM user WHERE name = #{name}
     </delete>
+
+    <update id="updateUserScore">
+        UPDATE user SET score = score + #{score} WHERE id = #{id}
+    </update>
 </mapper>

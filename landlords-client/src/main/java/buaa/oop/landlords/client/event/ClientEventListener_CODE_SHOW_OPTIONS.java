@@ -114,7 +114,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
             } catch (Exception e) {
                 SimplePrinter.printNotice("Error fetching room list: " + e.getMessage());
             }
-        }, 0, 5, TimeUnit.MINUTES);
+        }, 0, 5, TimeUnit.SECONDS);
     }
 
     public void stopRoomListScheduler() {
