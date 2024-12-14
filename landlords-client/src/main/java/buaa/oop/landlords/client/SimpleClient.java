@@ -22,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class SimpleClient {
-    public static ChatRoom chatRoom = null;
-
     public static void main(String[] args) {
 //        Options options = new Options();
 //
@@ -67,10 +65,6 @@ public class SimpleClient {
 
                 group.shutdownGracefully();
                 SimpleWriter.shutdown();
-                if(chatRoom != null){
-                    chatRoom.shutdown();
-                    chatRoom = null;
-                }
             }));
 
             new Bootstrap()
@@ -91,20 +85,13 @@ public class SimpleClient {
 
                 group.shutdownGracefully();
                 SimpleWriter.shutdown();
-                if (chatRoom != null) {
-                    chatRoom.shutdown();
-                    chatRoom = null;
-                }
             });
             success = true;
         } catch (Exception e) {
             log.debug("Client error: {}", e.getMessage());
-            if(chatRoom != null){
-                chatRoom.shutdown();
-                chatRoom = null;
-            }
             SimpleWriter.shutdown();
             group.shutdownGracefully();
-        }return success;
+        }
+        return success;
     }
 }

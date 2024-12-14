@@ -125,8 +125,8 @@ public class RoomHall extends Application {
         roomList = roomList1;
         updateRoomDisplay(roomDisplayArea);
     }
-    public static void stageInit(Channel channelt){
-        channel=channelt;
+    public static void stageInit(Channel channel){
+        RoomHall.channel =channel;
         primaryStage.setTitle("游戏大厅");
 
         scrollPane.setFitToWidth(true);
@@ -190,7 +190,7 @@ public class RoomHall extends Application {
 
     private static void sendMessage() {
         String message = inputField.getText();
-        if (!message.isEmpty()&&isVaild(message)) {
+        if (!message.isEmpty()&& isValid(message)) {
 //                chatArea.appendText(User.getINSTANCE().getNickname()+": " + message + "\n");
             inputField.clear();
 
@@ -226,7 +226,7 @@ public class RoomHall extends Application {
     public static void msgDisplay(String msg){
         chatArea.appendText(msg);
     }
-    private static boolean isVaild(String msg){
+    private static boolean isValid(String msg){
         if(msg.charAt(0) == '@'&&(idx=msg.indexOf(' '))>1){
             return true;
         }return false;

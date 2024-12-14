@@ -44,7 +44,7 @@ public class ServerEventListener_CODE_USER_LOGIN extends ServerEventListener{
                     user.setPassword(MD5Util.encrypt(password));
                     userMapper.insertUser(user);
                     session.commit();
-                    log.debug("User {} registered", username);
+                    log.debug("User {} | {} registered", user.getId(), username);
                     setSucceed(result, user, clientEnd);
                 }
             }else if(op == 1){

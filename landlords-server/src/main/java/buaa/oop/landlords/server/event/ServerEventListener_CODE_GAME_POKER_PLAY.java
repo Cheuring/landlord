@@ -13,8 +13,10 @@ import buaa.oop.landlords.common.utils.ChannelUtil;
 import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
+import buaa.oop.landlords.server.mapper.UserMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +80,6 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
 
         for (ClientEnd client : room.getClientEndList()) {
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_POKERS, result);
-
         }
 
         if (!clientEnd.getPokers().isEmpty()) {
@@ -99,18 +100,43 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         setRoomClientScore(room, winnerType);
 
         ArrayList<Object> clientScores = new ArrayList<>();
-        for (ClientEnd client : room.getClientEndList()) {
-            MapUtil score = MapUtil.newInstance()
-                    .put("clientId", client.getId())
-                    .put("nickName", client.getNickname())
-                    .put("score", client.getScore())
-                    .put("scoreInc", client.getScoreInc())
-                    .put("pokers", client.getPokers());
-            clientScores.add(score.map());
+        SqlSession session = null;
+        int isSuccessful = 0;
+        try {
+            session = ServerContainer.getSession();
+            UserMapper mapper = session.getMapper(UserMapper.class);
+
+            for (ClientEnd client : room.getClientEndList()) {
+
+                int res = mapper.updateUserScore(client.getId(), client.getScore());
+                if (res == 0) {
+                    throw new Exception("client " + client.getNickname() + " update failed");
+                }
+
+                MapUtil score = MapUtil.newInstance()
+                        .put("clientId", client.getId())
+                        .put("nickName", client.getNickname())
+                        .put("score", client.getScore())
+                        .put("scoreInc", client.getScoreInc())
+                        .put("pokers", client.getPokers());
+                clientScores.add(score.map());
+            }
+            isSuccessful = 1;
+        }catch (Exception e){
+            log.error("Failed to update score", e);
+            if(session != null){
+                session.rollback();
+            }
+        }finally {
+            if(session != null){
+                session.commit();
+                session.close();
+            }
         }
 
         SimplePrinter.ServerLog(clientScores.toString());
         String result = MapUtil.newInstance()
+                .put("status", isSuccessful)
                 .put("winnerNickname", winner.getNickname())
                 .put("winnerType", winner.getRole())
                 .put("scores", clientScores)
