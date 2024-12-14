@@ -2,22 +2,14 @@ package buaa.oop.landlords.client;
 
 
 import buaa.oop.landlords.client.GUI.FailPopup;
-import buaa.oop.landlords.client.GUI.Loading;
-import buaa.oop.landlords.client.GUI.Login;
-import buaa.oop.landlords.client.GUI.RoomHall;
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class GUIUtil {
@@ -34,16 +26,26 @@ public class GUIUtil {
 
 
     static {
-        // "spade" "heart" "diamond" "club"
-        char[] pokerTypes = {'S', 'H', 'D', 'C'};
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j <= 12; j++) {
-                pokerImages[i][j] = new ImageView(GUIUtil.class.getResource("/images/" + pokerTypes[i] + j + ".png").toExternalForm());
+        // todo: 加载大小王 背面
+        Image image = new Image(GUIUtil.class.getResource("/images/pokers.png").toExternalForm());
+        double tileWidth = image.getWidth() / 13;
+        double tileHeight = image.getHeight() / 5;
+
+        for(int i = 0; i < 4; ++i){
+            for(int j = 0; j < 13; ++j){
+                pokerImages[i][j] = new ImageView(image);
+                pokerImages[i][j].setViewport(new javafx.geometry.Rectangle2D(j * tileWidth, i * tileHeight, tileWidth, tileHeight));
                 pokerImages[i][j].setFitWidth(80);
                 pokerImages[i][j].setFitHeight(120);
             }
         }
-        // todo: 加载大小王 背面
+
+        for(int i = 0; i < 3; ++i){
+            pokerImagesRest[i] = new ImageView(image);
+            pokerImagesRest[i].setViewport(new javafx.geometry.Rectangle2D(i * tileWidth, 4 * tileHeight, tileWidth, tileHeight));
+            pokerImagesRest[i].setFitWidth(80);
+            pokerImagesRest[i].setFitHeight(120);
+        }
     }
 
     public static void cancelHandler(Stage primaryStage) {

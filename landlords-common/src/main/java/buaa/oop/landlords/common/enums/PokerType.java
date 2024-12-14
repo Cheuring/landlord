@@ -3,13 +3,13 @@ package buaa.oop.landlords.common.enums;
 public enum PokerType {
     BLANK(" ", -1),
 
-    DIAMOND("♦", 2),
+    DIAMOND("♦", 1),
 
-    CLUB("♣", 3),
+    CLUB("♣", 0),
 
-    SPADE("♠", 0),
+    SPADE("♠", 3),
 
-    HEART("♥", 1);
+    HEART("♥", 2);
 
     private final String name;
     private final int value;
