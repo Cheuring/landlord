@@ -2,6 +2,7 @@ package buaa.oop.landlords.client;
 
 
 import buaa.oop.landlords.client.GUI.FailPopup;
+import buaa.oop.landlords.client.GUI.HintPopup;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -17,6 +18,11 @@ public class GUIUtil {
     public static void renderScene(String msgSource,String msg ) {
         Platform.runLater(()->{
             FailPopup.showPopup(msgSource,msg);
+        });
+    }
+    public static void renderScene(String msgSource,String msg, int time) {
+        Platform.runLater(()->{
+            HintPopup.showPopup(msgSource,msg,time);
         });
     }
 

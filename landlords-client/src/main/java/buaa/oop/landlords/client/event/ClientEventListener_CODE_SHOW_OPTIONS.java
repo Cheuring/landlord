@@ -34,8 +34,6 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
     private final AtomicBoolean roomDisplay = new AtomicBoolean(false);
     private static final AtomicBoolean roomHide= new AtomicBoolean(false);
 
-
-
     @Override
     /**
      * @param data is always null or no use

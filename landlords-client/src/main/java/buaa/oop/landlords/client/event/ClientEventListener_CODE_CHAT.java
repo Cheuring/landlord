@@ -42,6 +42,6 @@ public class ClientEventListener_CODE_CHAT extends ClientEventListener{
             message = String.format(FROM,formattedTime, clientFrom,(String)chatMsg.get("Content"));
         }
 
-        RoomHall.msgDisplay(message);
+        RoomHall.msgDisplay(message,clientTo);
     }
 }

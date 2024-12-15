@@ -18,7 +18,6 @@ import javafx.stage.StageStyle;
 
 public class FailPopup {
     public static void showPopup(String title, String message) {
-      // 确保在 JavaFX 应用程序线程中运行
             // 创建弹窗
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL); // 设置模态窗口

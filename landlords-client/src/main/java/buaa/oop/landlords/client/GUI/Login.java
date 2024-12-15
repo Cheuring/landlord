@@ -71,6 +71,7 @@ public class Login extends Application {
                         "-fx-padding: 10px 20px; " +
                         "-fx-background-radius: 5px;");
         LoginButton.setOnAction(e -> {
+            GUIUtil.renderScene("第一次登录耗时较长","请耐心等待",10);
             inputUsername = usernameField.getText();
             if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
                 isLoggedIn = true;
