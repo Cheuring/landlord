@@ -2,7 +2,10 @@ package buaa.oop.landlords.server;
 
 import buaa.oop.landlords.common.entities.ClientEnd;
 import buaa.oop.landlords.common.entities.Room;
-import buaa.oop.landlords.server.mapper.UserMapper;
+import buaa.oop.landlords.common.enums.ClientEventCode;
+import buaa.oop.landlords.common.utils.ChannelUtil;
+import io.netty.channel.DefaultEventLoop;
+import io.netty.channel.EventLoop;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -25,6 +28,7 @@ public class ServerContainer {
     private final static AtomicInteger CLIENT_ATOMIC_ID = new AtomicInteger(1);
     private final static AtomicInteger ROOM_ATOMIC_ID = new AtomicInteger(1);
     private final static SqlSessionFactory FACTORY;
+    public final static EventLoop EVENT_LOOP = new DefaultEventLoop();
 
 
     static {
@@ -88,5 +92,13 @@ public class ServerContainer {
 
     public static SqlSession getSession() {
         return FACTORY.openSession();
+    }
+
+    public static void pushAll(ClientEventCode clientEventCode, String data) {
+        EVENT_LOOP.submit(() -> {
+            for (ClientEnd clientEnd : CLIENT_END_MAP.values()) {
+                ChannelUtil.pushToClient(clientEnd.getChannel(), clientEventCode, data);
+            }
+        });
     }
 }

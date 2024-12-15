@@ -262,7 +262,7 @@ public class RoomHall extends Application {
     public static void msgDisplay(String msg,String to){
         Platform.runLater(()->{
             Text text=new Text(msg);
-            if(to.equalsIgnoreCase("all"))text.setStyle("-fx-fill: pink; -fx-font-size: 14px; -fx-font-weight: bold;");
+            if(!to.equalsIgnoreCase("all"))text.setStyle("-fx-fill: pink; -fx-font-size: 14px; -fx-font-weight: bold;");
             else text.setStyle("-fx-fill: black; -fx-font-size: 14px; -fx-font-weight: bold;");
             chatArea.getChildren().add(text);});
 

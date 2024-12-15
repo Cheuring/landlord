@@ -44,23 +44,6 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
 
         log.info("nickname set to {}", name);
         pushToServer(channel, ServerEventCode.CODE_USER_LOGIN, name);
-//            } else {
-//                SimplePrinter.ServerLog("Invalid nickname!");
-//                call(channel, data);
-//            }
 
     }
 }
-//    public boolean isValidNickname(String nickname) {
-//        if (nickname == null) {
-//            return false;
-//        }
-//        if (nickname.length() > 16) {
-//            return false;
-//        }
-//        if (!nickname.matches("[a-zA-Z0-9_]+")) {
-//            return false;
-//        }
-//        return true;
-//    }
-//}

@@ -17,8 +17,9 @@ import static buaa.oop.landlords.common.print.SimplePrinter.BLUE;
  *
  */
 public class ClientEventListener_CODE_CHAT extends ClientEventListener{
-    private static final String FROM="(私聊) %s  来自 %s :\n%s\n";
-    private static final String TO="(私聊) %s  发给 %s :\n%s\n";
+    private static final String FROM = "(私聊) %s  来自 %s :\n%s\n";
+    private static final String TO = "(私聊) %s  发给 %s :\n%s\n";
+    private static final String ALL = "%s  %s :\n%s\n";
     @Override
     /**
      * @param
@@ -34,14 +35,19 @@ public class ClientEventListener_CODE_CHAT extends ClientEventListener{
         String content = (String) chatMsg.get("Content");
 
         String message;
-        if(clientFrom.equals(User.INSTANCE.getNickname())){
-            SimplePrinter.printChatMsg(TO,BLUE,formattedTime, clientTo,(String)chatMsg.get("Content"));
-            message = String.format(TO,formattedTime, clientTo,(String)chatMsg.get("Content"));
+        if(clientTo.equalsIgnoreCase("ALL")){
+            message = String.format(ALL,formattedTime, clientFrom, content);
         }else{
-            SimplePrinter.printChatMsg(FROM,BLUE,formattedTime, clientFrom,(String)chatMsg.get("Content"));
-            message = String.format(FROM,formattedTime, clientFrom,(String)chatMsg.get("Content"));
+            if(clientFrom.equals(User.INSTANCE.getNickname())){
+                SimplePrinter.printChatMsg(TO,BLUE,formattedTime, clientTo, content);
+                message = String.format(TO,formattedTime, clientTo, content);
+            }else{
+                SimplePrinter.printChatMsg(FROM,BLUE,formattedTime, clientFrom, content);
+                message = String.format(FROM,formattedTime, clientFrom, content);
+            }
         }
-
+        
+        
         RoomHall.msgDisplay(message,clientTo);
     }
 }

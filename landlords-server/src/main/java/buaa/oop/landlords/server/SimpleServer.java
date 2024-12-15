@@ -68,6 +68,7 @@ public class SimpleServer {
         } finally {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
+            ServerContainer.EVENT_LOOP.shutdownGracefully();
         }
     }
 }
