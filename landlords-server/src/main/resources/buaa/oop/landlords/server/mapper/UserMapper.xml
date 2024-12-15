@@ -12,15 +12,15 @@
     </insert>
     
     <update id="updateUser">
-        UPDATE user SET score = #{score} WHERE name = #{name}
+        UPDATE user SET score = #{score} WHERE Binary name = #{name}
     </update>
     
     <select id="selectUserByName" resultType="User">
-        SELECT * FROM user WHERE name = #{name}
+        SELECT * FROM user WHERE BINARY name = #{name}
     </select>
     
     <delete id="deleteUser">
-        DELETE FROM user WHERE name = #{name}
+        DELETE FROM user WHERE BINARY name = #{name}
     </delete>
 
     <update id="updateUserScore">

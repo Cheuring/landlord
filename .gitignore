@@ -39,3 +39,5 @@ build/
 
 ### log ###
 log
+
+landlords-server/src/main/resources/db.properties
