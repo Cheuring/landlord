@@ -14,6 +14,7 @@ import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import buaa.oop.landlords.common.enums.ServerEventCode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -51,6 +52,7 @@ public class GameRoom extends Application {
     private static HBox player2Cards = new HBox(-50);
     //indexes数组用于记录第i张牌是否被按下
     private static int[] indexes = new int[20];
+    private static List<Poker> pokers = new ArrayList<>();   //玩家手牌
 
     private static VBox player1LastPokers = new VBox(-50);
     private static VBox p3LastPokers = new VBox(-50);
@@ -256,13 +258,16 @@ public class GameRoom extends Application {
             int finalI = i;
             cardButton.setOnAction(e -> {
                 // todo:在按下按键时让按钮颜色反转
+                System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
                     cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: red;");
+                    cardButton.setTranslateY(-10);
                 }
                 else {
                     indexes[finalI] = 0;
                     cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+                    cardButton.setTranslateY(0);
                 }
             });
             player2Cards.getChildren().add(cardButton);
