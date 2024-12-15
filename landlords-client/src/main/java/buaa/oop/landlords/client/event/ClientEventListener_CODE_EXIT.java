@@ -1,12 +1,17 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 import java.util.Map;
+
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
 
 /**
  *
@@ -23,6 +28,11 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
             role = "You";
         }
         SimplePrinter.printNotice(String.format("\n%s left the room. Room disbanded!\n", role));
+        Platform.runLater(() -> {
+            Stage stage = gameRoom.getPrimaryStage();
+            GUIUtil.autoCloseAlertHandler(stage);
+            stage.close();
+        });
         get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
     }
 }

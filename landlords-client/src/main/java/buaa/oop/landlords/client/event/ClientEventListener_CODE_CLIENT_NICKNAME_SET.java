@@ -40,6 +40,7 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         }catch (Exception e){
         }
         Login.isLoggedIn=false;
+        Login.initFlag();
         String name = Login.getNickname();
 
         log.info("nickname set to {}", name);

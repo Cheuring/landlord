@@ -7,9 +7,12 @@ import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import javafx.application.Platform;
 
 import java.util.List;
 import java.util.Map;
+
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
 
 /**
  *下一个状态为, ServerEventListener_CODE_GAME_POKER_PLAY_REDIRECT
@@ -35,6 +38,17 @@ public class ClientEventListener_CODE_GAME_LANDLORD_CONFIRM extends ClientEventL
 
         List<Poker> additionalPokers = JsonUtil.fromJson((String)roominfo.get("additionalPokers"),new TypeReference<List<Poker>>(){});
         SimplePrinter.printPokers(additionalPokers);
+
+
+        Platform.runLater(()->{
+           for(int i = 1; i<= 3; i++) {
+               if(landlordNickname.equals(gameRoom.getPlayerName(i)))
+                   gameRoom.setPlayerRole("landlord", i);
+               else
+                   gameRoom.setPlayerRole("peasant", i);
+           }
+           gameRoom.playButtonOn();
+        });
 
         pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);
 

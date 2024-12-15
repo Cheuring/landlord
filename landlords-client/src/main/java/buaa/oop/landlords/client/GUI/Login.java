@@ -24,6 +24,7 @@ public class Login extends Application {
     PasswordField passwordField = new PasswordField();
 
     static String inputUsername = "";
+    private static boolean flag = true;
 
     @Override
     public void start(Stage Stage) {
@@ -71,24 +72,27 @@ public class Login extends Application {
                         "-fx-padding: 10px 20px; " +
                         "-fx-background-radius: 5px;");
         LoginButton.setOnAction(e -> {
-            GUIUtil.renderScene("第一次登录耗时较长","请耐心等待",10);
-            inputUsername = usernameField.getText();
-            if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
-                isLoggedIn = true;
-                inputUsername = MapUtil.newInstance()
-                        .put("operation",1)
-                        .put("username",usernameField.getText())
-                        .put("password",passwordField.getText())
-                        .json();
-                User.getINSTANCE().setNickname(usernameField.getText());
-                synchronized (loginLock) {
-                    if (isLoggedIn) {
-                        loginLock.notify();
+            //GUIUtil.renderScene("第一次登录耗时较长","请耐心等待",1);
+            if(flag) {
+                flag = false;
+                inputUsername = usernameField.getText();
+                if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
+                    isLoggedIn = true;
+                    inputUsername = MapUtil.newInstance()
+                            .put("operation", 1)
+                            .put("username", usernameField.getText())
+                            .put("password", passwordField.getText())
+                            .json();
+                    User.getINSTANCE().setNickname(usernameField.getText());
+                    synchronized (loginLock) {
+                        if (isLoggedIn) {
+                            loginLock.notify();
+                        }
                     }
+                    System.out.println("用户输入的用户名：" + inputUsername);
+                } else {
+                    usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
                 }
-                System.out.println("用户输入的用户名：" + inputUsername);
-            } else {
-                usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
             }
         });
         // 创建布局容器
@@ -143,5 +147,9 @@ public class Login extends Application {
     }
     public static Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public static void initFlag() {
+        flag = true;
     }
 }

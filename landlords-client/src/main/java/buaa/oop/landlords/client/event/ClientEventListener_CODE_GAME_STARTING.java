@@ -36,6 +36,8 @@ public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
         List<Poker> pokers = JsonUtil.fromJson((String) map.get("pokers"),new TypeReference<List<Poker>>(){});
         Platform.runLater(() -> {
             GameRoom.setRoomStatus("游戏状态: 选择地主");
+            GameRoom.setPlayerName((String)map.get("preClientNickname"), 1);
+            GameRoom.setPlayerName((String)map.get("nextClientNickname"), 3);
             GameRoom.displayPokers(pokers);
         });
 //        GameRoom.setRoomStatus("游戏状态: 选择地主");
