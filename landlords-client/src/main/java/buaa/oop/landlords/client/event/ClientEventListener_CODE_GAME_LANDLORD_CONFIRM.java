@@ -47,7 +47,6 @@ public class ClientEventListener_CODE_GAME_LANDLORD_CONFIRM extends ClientEventL
                else
                    gameRoom.setPlayerRole("peasant", i);
            }
-           gameRoom.playButtonOn();
         });
 
         pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);

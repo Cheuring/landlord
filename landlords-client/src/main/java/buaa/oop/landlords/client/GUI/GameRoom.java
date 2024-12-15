@@ -5,15 +5,15 @@ import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
 import buaa.oop.landlords.common.entities.Poker;
-import buaa.oop.landlords.common.enums.ClientEventCode;
-import buaa.oop.landlords.common.enums.PokerLevel;
-import buaa.oop.landlords.common.enums.PokerType;
+import buaa.oop.landlords.common.entities.PokerSell;
+import buaa.oop.landlords.common.enums.*;
 import buaa.oop.landlords.common.print.SimplePrinter;
 import buaa.oop.landlords.common.utils.ChannelUtil;
+import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
-import buaa.oop.landlords.common.enums.ServerEventCode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -31,9 +31,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToClient;
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToServer;
@@ -48,7 +51,6 @@ public class GameRoom extends Application {
     private static HBox player2Cards = new HBox(-50);
     //indexes数组用于记录第i张牌是否被按下
     private static int[] indexes = new int[20];
-    private static List<Poker> pokers = new ArrayList<>();   //玩家手牌
 
     private static VBox player1LastPokers = new VBox(-50);
     private static VBox p3LastPokers = new VBox(-50);
@@ -61,7 +63,14 @@ public class GameRoom extends Application {
     private static Label player2Role = new Label();
     private static Label player3Role = new Label();
 
+    @Getter
     private static Stage primaryStage;
+
+    private static String data;
+    private static List<Poker> pokers;
+    private static List<Poker> lastPokers;
+    private static String lastSellClientNickname;
+    private static Integer lastSellClientId;
 
     private static final Object gameRoomLock = new Object();
     public static boolean isElect=false;
@@ -158,10 +167,6 @@ public class GameRoom extends Application {
         launch(args);
     }
 
-    public static Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
     public static void setRoomStatus(String title) {
         gameStatusLabel.setText(title);
     }
@@ -206,6 +211,15 @@ public class GameRoom extends Application {
         }
     }
 
+    public static void setData(String content) {
+        data = content;
+        Map<String, Object> roominfo = MapUtil.parse(data);
+        pokers = JsonUtil.fromJson((String) roominfo.get("pokers"), new TypeReference<List<Poker>>() {});
+        lastPokers = JsonUtil.fromJson((String) roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>() {});
+        lastSellClientNickname = (String) roominfo.get("lastSellClientName");
+        lastSellClientId = (Integer) roominfo.get("lastSellClientId");
+    }
+
     private static List<Poker> getSelectedCards(int[] index, List<Poker> pokers) {
         List<Poker> selectedCards = new ArrayList<>();
         int[] list = new int[20];
@@ -215,9 +229,11 @@ public class GameRoom extends Application {
                  list[pos++] = i;
          }
          //此处由于getPoker()方法的原因，只能再开个数组
-         int[] ans = new int[list.length];
-         for (int i = 0; i < list.length; i++)
+         int[] ans = new int[pos];
+         for (int i = 0; i < pos; i++) {
              ans[i] = list[i];
+             System.out.println(ans[i]);
+         }
          selectedCards = PokerUtil.getPoker(ans, pokers);
          return selectedCards;
     }
@@ -240,12 +256,13 @@ public class GameRoom extends Application {
             int finalI = i;
             cardButton.setOnAction(e -> {
                 // todo:在按下按键时让按钮颜色反转
-                System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
+                    cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: red;");
                 }
                 else {
                     indexes[finalI] = 0;
+                    cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
                 }
             });
             player2Cards.getChildren().add(cardButton);
@@ -322,13 +339,53 @@ public class GameRoom extends Application {
         playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         Button passButton = new Button("过牌");
         passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        actionButtonsBox.getChildren().addAll(playButton, passButton);
+        if (lastSellClientId == null || lastSellClientId == User.INSTANCE.getId())
+            actionButtonsBox.getChildren().addAll(playButton);
+        else
+            actionButtonsBox.getChildren().addAll(playButton, passButton);
 
         playButton.setOnAction(e -> {
             List<Poker> selectedCards = getSelectedCards(indexes, pokers);
-            if(!selectedCards.isEmpty()){
-                // todo:传回POKERPLAY进行进一步判断
+            if(!selectedCards.isEmpty()) {
+                PokerSell currentPokerSell = PokerUtil.checkPokerSell(selectedCards);
+                PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
+                if (currentPokerSell.getSellType() == SellType.ILLEGAL) {
+                    SimplePrinter.printNotice("The combination is illegal!");
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("警告");
+                    alert.setHeaderText(null);
+                    alert.setContentText("牌型不合法");
+                    alert.showAndWait();
+                }
 
+                else if (lastPokerSell.getSellType() != SellType.ILLEGAL && lastSellClientId != User.INSTANCE.getId()) {
+
+                    if ((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB) {
+                        SimplePrinter.printNotice(String.format("Your combination is %s (%d), but the previous combination is %s (%d). Mismatch!", currentPokerSell.getSellType(), currentPokerSell.getPokers().size(), lastPokerSell.getSellType(), lastPokerSell.getPokers().size()));
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("警告");
+                        alert.setHeaderText(null);
+                        alert.setContentText("牌型不匹配");
+                        alert.showAndWait();
+                    }
+
+                    else if (lastPokerSell.getScore() >= currentPokerSell.getScore()) {
+                        SimplePrinter.printNotice("Your combination has lower rank than the previous. You cannot play this combination!");
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("警告");
+                        alert.setHeaderText(null);
+                        alert.setContentText("大小不匹配");
+                        alert.showAndWait();
+                    }
+                }
+                else {
+                    String result = MapUtil.newInstance()
+                            .put("poker", selectedCards)
+                            .put("pokerSell", currentPokerSell)
+                            .json();
+                    actionButtonsBox.getChildren().clear();
+                    pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
+                }
             }
             else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -340,7 +397,8 @@ public class GameRoom extends Application {
         });
 
         passButton.setOnAction(e -> {
-
+            actionButtonsBox.getChildren().clear();
+            pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
         });
     }
 }

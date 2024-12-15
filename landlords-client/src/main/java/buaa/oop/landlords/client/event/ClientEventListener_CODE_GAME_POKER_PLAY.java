@@ -11,10 +11,13 @@ import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.common.utils.PokerUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
 
 /**
  * 等待输入：
@@ -72,6 +75,11 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
             return;
         }
 
+        Platform.runLater(() -> {
+           gameRoom.setData(data);
+           gameRoom.playButtonOn();
+        });
+    /*
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "combination");
         if (userInput == null) {
             SimplePrinter.printNotice("Invalid enter!");
@@ -168,7 +176,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
 
             call(channel, data);
         }
-
+        */
     }
 
     public void printInfo(Map<String, Object> roominfo, List<Poker> pokers, String lastSellClientNickname, String lastSellClientType) {

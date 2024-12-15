@@ -42,6 +42,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
                 }
             }
         }
+
         SimplePrinter.printNotice("");
         if(sellClientId== User.getINSTANCE().getId()){
             Platform.runLater( () -> {
