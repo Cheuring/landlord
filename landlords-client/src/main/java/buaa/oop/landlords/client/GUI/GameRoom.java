@@ -50,15 +50,25 @@ public class GameRoom extends Application {
     private static int[] indexes = new int[20];
     private static List<Poker> pokers = new ArrayList<>();   //玩家手牌
 
-    private static VBox p1LastPokers = new VBox(-50);
+    private static VBox player1LastPokers = new VBox(-50);
     private static VBox p3LastPokers = new VBox(-50);
 
+    private static Label player1Name = new Label();
+    private static Label player2Name = new Label();
+    private static Label player3Name = new Label();
+
+    private static Label player1Role = new Label();
+    private static Label player2Role = new Label();
+    private static Label player3Role = new Label();
+
+    private static Stage primaryStage;
 
     private static final Object gameRoomLock = new Object();
     public static boolean isElect=false;
     public static String robScore="";
     @Override
     public void start(Stage primaryStage) {
+        GameRoom.primaryStage = primaryStage;
         primaryStage.setTitle("三人斗地主房间");
 
         // 房间信息展示区
@@ -71,7 +81,6 @@ public class GameRoom extends Application {
 //        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
 
         // 退出按钮
-
         Button exitButton = new Button("返回大厅");
         exitButton.setOnAction(e -> {
             System.out.println("玩家退出房间");
@@ -92,38 +101,12 @@ public class GameRoom extends Application {
 
         // 操作按钮区，水平排列
         actionButtonsBox.setAlignment(Pos.CENTER);
-        /*
-        Button playButton = new Button("出牌");
-        playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        Button passButton = new Button("过牌");
-        passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        actionButtonsBox.getChildren().addAll(playButton, passButton);
-
-        playButton.setOnAction(e -> {
-            List<Poker> selectedCards = getSelectedCards(indexes, pokers);
-            if(!selectedCards.isEmpty()){
-                // todo:传回POKERPLAY进行进一步判断
-
-            }
-            else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("警告");
-                alert.setHeaderText(null);
-                alert.setContentText("请选择要出的卡牌");
-                alert.showAndWait();
-            }
-        });
-
-        passButton.setOnAction(e -> {
-
-        });
-         */
 
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
-        Label player1Role = new Label("农民");
-        Label player1Name = new Label("玩家1");
+        player1Role.setText("");
+        player1Name.setText("玩家1");
         player1Box.getChildren().addAll(player1Role, player1Name, player1Cards);
 
         VBox p1LastPokers = new VBox(10);
@@ -131,15 +114,14 @@ public class GameRoom extends Application {
         // 玩家3的卡牌区（右侧玩家）
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
-        Label player3Role = new Label("农民");
-        Label player3Name = new Label("玩家3");
+        player3Role.setText("");
+        player3Name.setText("玩家3");
         player3Box.getChildren().addAll(player3Role, player3Name, player3Cards);
 
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
         player2Box.setAlignment(Pos.CENTER);
-        Label player2Role = new Label("农民");
-        Label player2Name = new Label("玩家2");
+        player2Role.setText("");
         player2Cards.setAlignment(Pos.CENTER);
         player2Box.getChildren().addAll(player2Role, player2Name, player2Cards);
 
@@ -166,14 +148,62 @@ public class GameRoom extends Application {
     public void init(Channel channel, int romid) {
         this.channel = channel;
         this.roomId = romid;
+        actionButtonsBox.getChildren().clear();
+        player1Cards.getChildren().clear();
+        player2Cards.getChildren().clear();
+        player3Cards.getChildren().clear();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     public static void setRoomStatus(String title) {
         gameStatusLabel.setText(title);
+    }
+
+    public static void setPlayerName(String name,int i) {
+        switch (i) {
+            case 1:
+                player1Name.setText(name);
+                break;
+            case 2:
+                player2Name.setText(name);
+                break;
+            case 3:
+                player3Name.setText(name);
+                break;
+            default:
+        }
+    }
+
+    public static String getPlayerName(int i) {
+        switch (i) {
+            case 1:
+                return player1Name.getText();
+            case 2:
+                return player2Name.getText();
+            default:
+                return player3Name.getText();
+        }
+    }
+
+    public static void setPlayerRole(String role,int i) {
+        switch (i) {
+            case 1:
+                player1Role.setText(role);
+                break;
+            case 2:
+                player2Role.setText(role);
+                break;
+            case 3:
+                player3Role.setText(role);
+                break;
+        }
     }
 
     private static List<Poker> getSelectedCards(int[] index, List<Poker> pokers) {
@@ -286,4 +316,31 @@ public class GameRoom extends Application {
         actionButtonsBox.getChildren().addAll(buttons);
     }
 
+    public static void playButtonOn() {
+        actionButtonsBox.getChildren().clear();
+        Button playButton = new Button("出牌");
+        playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
+        Button passButton = new Button("过牌");
+        passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
+        actionButtonsBox.getChildren().addAll(playButton, passButton);
+
+        playButton.setOnAction(e -> {
+            List<Poker> selectedCards = getSelectedCards(indexes, pokers);
+            if(!selectedCards.isEmpty()){
+                // todo:传回POKERPLAY进行进一步判断
+
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("警告");
+                alert.setHeaderText(null);
+                alert.setContentText("请选择要出的卡牌");
+                alert.showAndWait();
+            }
+        });
+
+        passButton.setOnAction(e -> {
+
+        });
+    }
 }

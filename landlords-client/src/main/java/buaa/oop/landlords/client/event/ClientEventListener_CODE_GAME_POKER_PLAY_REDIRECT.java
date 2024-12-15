@@ -8,10 +8,12 @@ import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import javafx.application.Platform;
 
 import java.util.List;
 import java.util.Map;
 
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
 import static buaa.oop.landlords.client.event.ClientEventListener_CODE_CLIENT_NICKNAME_SET.NICKNAME_MAX_LENGTH;
 
 /**
@@ -28,6 +30,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
     public void call(Channel channel, String data) {
         Map<String, Object> roominfo= MapUtil.parse(data);
         int sellClientId = (int) roominfo.get("sellClientId");
+        List<Poker> pokers = JsonUtil.fromJson((String)roominfo.get("pokers"),new TypeReference<List<Poker>>(){});
         List<Map<String, Object>> clientInfos = JsonUtil.fromJson((String) roominfo.get("clientInfos"), new TypeReference<List<Map<String, Object>>>() {
         });
 
@@ -41,6 +44,9 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
         }
         SimplePrinter.printNotice("");
         if(sellClientId== User.getINSTANCE().getId()){
+            Platform.runLater( () -> {
+                gameRoom.displayPokers(pokers);
+            });
             get(ClientEventCode.CODE_GAME_POKER_PLAY).call(channel, data);
         }
         else{
