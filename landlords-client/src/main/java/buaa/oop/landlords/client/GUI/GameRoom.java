@@ -380,6 +380,13 @@ public class GameRoom extends Application {
                         alert.setHeaderText(null);
                         alert.setContentText("大小不匹配");
                         alert.showAndWait();
+                    }else{
+                        String result = MapUtil.newInstance()
+                                .put("poker", selectedCards)
+                                .put("pokerSell", currentPokerSell)
+                                .json();
+                        actionButtonsBox.getChildren().clear();
+                        pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                     }
                 }
                 else {

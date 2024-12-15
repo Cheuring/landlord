@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ClientEnd {
+    @Data
+    @NoArgsConstructor
     public class User {
         private String name;
         private int score;
