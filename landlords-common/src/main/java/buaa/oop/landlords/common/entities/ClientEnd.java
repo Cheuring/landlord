@@ -11,13 +11,18 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ClientEnd {
+    public class User {
+        private String name;
+        private int score;
+    };
+
     private int id;
 
     private int score;
 
-    private int scoreInc;
+    private User user = new User();
 
-    private String nickName;
+    private int scoreInc;
 
     private List<Poker> pokers;
 
@@ -45,10 +50,20 @@ public class ClientEnd {
 
     public final void addRound() {round += 1;}
 
-    public final String getNickname() { return nickName; }
+    public final String getNickname() { return user.name; }
+
+    public final void setNickname(String nickname) { user.name = nickname; }
 
     public final void addScore(int score) {
         this.score += score;
         this.scoreInc = score;
+    }
+
+    public int getTotalScore() {
+        return user.score;
+    }
+
+    public void setTotalScore(int totalScore) {
+        user.score = totalScore;
     }
 }

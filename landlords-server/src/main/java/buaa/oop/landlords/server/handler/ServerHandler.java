@@ -61,7 +61,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ClientEnd client = new ClientEnd(getId(ctx.channel()), ctx.channel(), ClientStatus.IDLE);
-        client.setNickName("Client " + client.getId());
+        client.setNickname("Client " + client.getId());
 
         ServerContainer.CLIENT_END_MAP.put(client.getId(), client);
         log.info("Client {} | {} online", client.getId(), client.getNickname());
