@@ -243,9 +243,11 @@ public class GameRoom extends Application {
                 System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
+                    cardButton.setTranslateY(-10);
                 }
                 else {
                     indexes[finalI] = 0;
+                    cardButton.setTranslateY(0);
                 }
             });
             player2Cards.getChildren().add(cardButton);
