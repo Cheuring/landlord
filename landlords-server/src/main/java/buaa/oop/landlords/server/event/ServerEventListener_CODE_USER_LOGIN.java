@@ -43,6 +43,7 @@ public class ServerEventListener_CODE_USER_LOGIN extends ServerEventListener{
                     user.setName(username);
                     user.setPassword(MD5Util.encrypt(password));
                     userMapper.insertUser(user);
+                    user.setScore(100);
                     session.commit();
                     log.debug("User {} | {} registered", user.getId(), username);
                     setSucceed(result, user, clientEnd);
@@ -75,8 +76,12 @@ public class ServerEventListener_CODE_USER_LOGIN extends ServerEventListener{
         result.put("code", 0);
         result.put("score", user.getScore());
         result.put("username", user.getName());
-        clientEnd.setNickName(user.getName());
+
+        clientEnd.setNickname(user.getName());
+        clientEnd.setTotalScore(user.getScore());
+
         ServerContainer.addClient(clientEnd);
+
         log.debug("User {} logged in", user.getName());
     }
 }
