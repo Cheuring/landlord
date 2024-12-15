@@ -52,7 +52,6 @@ public class GameRoom extends Application {
     private static HBox player2Cards = new HBox(-50);
     //indexes数组用于记录第i张牌是否被按下
     private static int[] indexes = new int[20];
-    private static List<Poker> pokers = new ArrayList<>();   //玩家手牌
 
     private static VBox player1LastPokers = new VBox(-50);
     private static VBox p3LastPokers = new VBox(-50);
