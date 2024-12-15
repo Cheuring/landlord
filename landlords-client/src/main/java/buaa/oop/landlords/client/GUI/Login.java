@@ -45,23 +45,26 @@ public class Login extends Application {
                         "-fx-padding: 10px 20px; " +
                         "-fx-background-radius: 5px;");
         submitButton.setOnAction(e -> {
-            inputUsername = usernameField.getText();
-            if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
-                isLoggedIn = true;
-                inputUsername = MapUtil.newInstance()
-                        .put("operation",0)
-                        .put("username",usernameField.getText())
-                        .put("password",passwordField.getText())
-                        .json();
-                User.getINSTANCE().setNickname(usernameField.getText());
-                synchronized (loginLock) {
-                    if (isLoggedIn) {
-                        loginLock.notify();
+            if(flag){
+                flag = false;
+                inputUsername = usernameField.getText();
+                if (!inputUsername.isEmpty() && isValidNickname(inputUsername)) {
+                    isLoggedIn = true;
+                    inputUsername = MapUtil.newInstance()
+                            .put("operation",0)
+                            .put("username",usernameField.getText())
+                            .put("password",passwordField.getText())
+                            .json();
+                    User.getINSTANCE().setNickname(usernameField.getText());
+                    synchronized (loginLock) {
+                        if (isLoggedIn) {
+                            loginLock.notify();
+                        }
                     }
+                    System.out.println("用户输入的用户名：" + inputUsername);
+                } else {
+                    usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
                 }
-                System.out.println("用户输入的用户名：" + inputUsername);
-            } else {
-                usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
             }
         });
         Button LoginButton = new Button("登录");
