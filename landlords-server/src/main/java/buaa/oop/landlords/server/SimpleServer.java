@@ -52,7 +52,7 @@ public class SimpleServer {
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        protected void initChannel(SocketChannel socketChannel) {
                             socketChannel.pipeline()
                                     .addLast(new IdleStateHandler(60 * 10, 0, 0, TimeUnit.SECONDS))
                                     .addLast(new ProtocolFrameDecoder())

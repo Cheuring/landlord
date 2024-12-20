@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, Msg msg) {
         ServerEventCode code = ServerEventCode.valueOf(msg.getCode());
 
         if(code == ServerEventCode.CODE_CLIENT_HEART_BEAT){
@@ -32,7 +32,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if(cause instanceof java.io.IOException) {
 //            clientOfflineEvent(ctx.channel());
         }else{
@@ -42,7 +42,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
         clientOfflineEvent(ctx.channel());
     }
 
@@ -59,7 +59,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<Msg> {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         ClientEnd client = new ClientEnd(getId(ctx.channel()), ctx.channel(), ClientStatus.IDLE);
         client.setNickname("Client " + client.getId());
 

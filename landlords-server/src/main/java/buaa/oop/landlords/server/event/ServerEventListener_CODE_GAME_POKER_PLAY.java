@@ -35,7 +35,7 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
 
         List<Poker> currentPokers = JsonUtil.fromJson((String)map.get("poker"), new TypeReference<List<Poker>>(){});
 
-        PokerSell currentPokerSell = JsonUtil.fromJson((String)map.get("pokerSell"), new TypeReference<PokerSell>(){});;
+        PokerSell currentPokerSell = JsonUtil.fromJson((String)map.get("pokerSell"), new TypeReference<PokerSell>(){});
 
         Room room = ServerContainer.getRoom(clientEnd.getRoomId());
 
@@ -90,7 +90,6 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
         gameOver(clientEnd, room);
     }
 
-    // todo : 更新分数
     private void gameOver(ClientEnd winner, Room room) {
         ClientRole winnerType = winner.getRole();
         if (isSpring(winner, room)) {
