@@ -9,6 +9,8 @@ import buaa.oop.landlords.common.utils.MapUtil;
 import buaa.oop.landlords.server.ServerContainer;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+
 
 @Slf4j
 public class ServerEventListener_CODE_ROOM_EXIT extends ServerEventListener{
@@ -16,25 +18,35 @@ public class ServerEventListener_CODE_ROOM_EXIT extends ServerEventListener{
     public void call(ClientEnd client, String data) {
         Room room = ServerContainer.ROOM_MAP.get(client.getRoomId());
         if(room != null){
-            room.removeClient(client);
-            String result = MapUtil.newInstance()
-                    .put("exitClientId", client.getId())
-                    .put("exitClientNickname", client.getNickname())
-                    .put("roomClientCount", room.getClientEndList().size())
-                    .json();
-            if(room.getStatus() == RoomStatus.STARTING){
-                for(ClientEnd other: room.getClientEndList()){
-                    ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_EXIT, result);
-                }
-            }else{
-                for(ClientEnd other: room.getClientEndList()){
-                    ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_ROOM_EXIT, result);
-                }
-            }
-            if(room.getClientEndList().isEmpty()){
-                ServerContainer.ROOM_MAP.remove(room.getId());
-            }
+            roomExit(client, room);
             log.info("Client {} | {} exit room {}", client.getId(), client.getNickname(), room.getId());
+        }
+    }
+
+    public static void roomExit(ClientEnd client, Room room) {
+        room.removeClient(client);
+        client.setRoomId(0);
+
+        String result = MapUtil.newInstance()
+                .put("exitClientId", client.getId())
+                .put("exitClientNickname", client.getNickname())
+                .put("roomClientCount", room.getClientEndList().size())
+                .json();
+
+        if(room.getStatus() == RoomStatus.STARTING){
+            for (ClientEnd other : new ArrayList<>(room.getClientEndList())) {
+                other.setRoomId(0);
+                room.removeClient(other);
+
+                ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_EXIT, result);
+            }
+        }else{
+            for(ClientEnd other: room.getClientEndList()){
+                ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_ROOM_EXIT, result);
+            }
+        }
+        if(room.getClientEndList().isEmpty()){
+            ServerContainer.ROOM_MAP.remove(room.getId());
         }
     }
 }

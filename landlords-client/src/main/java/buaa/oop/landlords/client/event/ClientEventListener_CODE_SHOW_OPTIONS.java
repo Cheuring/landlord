@@ -22,9 +22,6 @@ import java.util.Map;
 public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
 
     @Override
-    /**
-     * @param data is always null or no use
-     */
     public void call(Channel channel, String data) {
         Map<String, Object> map = MapUtil.parse(data);
         if (map != null && map.containsKey("score")) {
@@ -38,11 +35,12 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("3.Join Room");
         SimplePrinter.printNotice("4.Exit the program");
         SimplePrinter.printNotice("5.Chat ");
+        SimplePrinter.printNotice("6.Info");
 
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "Options");
         if (userInput == null || userInput.isEmpty()) {
-            SimplePrinter.printNotice("Please enter a valid option");
-            call(channel, data);
+            SimplePrinter.printWarning("Please enter a valid option");
+            call(channel, null);
             return;
         }
 
@@ -60,7 +58,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                 pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL, null);
                 break;
             case 3:
-                joinRoom(channel, data);
+                joinRoom(channel);
                 break;
             case 4:
                 channel.close();
@@ -69,23 +67,27 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
                 SimplePrinter.printNotice("Please enter your content in such format\n@[ClientToName] [Content]");
                 SimpleClient.chatRoom.start(ClientEventCode.CODE_SHOW_OPTIONS);
                 break;
+            case 6:
+                SimplePrinter.printPrompt("username:\t%s\nscore:\t%d\n".formatted(User.INSTANCE.getNickname(), User.INSTANCE.getScore()));
+                call(channel, null);
+                break;
             default:
                 SimplePrinter.printNotice("Invalid option, please choose again:");
-                call(channel, data);
+                call(channel, null);
         }
 
     }
 
-    public void joinRoom(Channel channel, String data) {
+    public void joinRoom(Channel channel) {
         SimplePrinter.printNotice("Please enter the room id you want to join (enter [back|b] return options list)");
         String roomId = SimpleWriter.write();
         if (roomId == null) {
             SimplePrinter.printNotice("Please enter a valid room id");
-            joinRoom(channel, data);
+            joinRoom(channel);
             return;
         }
         if (roomId.equalsIgnoreCase("BACK") || roomId.equalsIgnoreCase("b")) {
-            call(channel, data);
+            call(channel, null);
             return;
         }
 
@@ -97,7 +99,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         }
         if (userOption < 1) {
             SimplePrinter.printNotice("Please enter a valid room id");
-            joinRoom(channel, data);
+            joinRoom(channel);
         }
         pushToServer(channel, ServerEventCode.CODE_ROOM_JOIN, String.valueOf(userOption));
     }

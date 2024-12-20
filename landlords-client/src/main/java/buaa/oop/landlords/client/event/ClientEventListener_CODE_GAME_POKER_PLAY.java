@@ -47,26 +47,15 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         List<Poker> lastPokers = JsonUtil.fromJson((String) roominfo.get("lastSellPokers"), new TypeReference<List<Poker>>() {
         });
         String lastSellClientNickname = (String) roominfo.get("lastSellClientName");
-        Integer lastSellClientId = (Integer) roominfo.get("lastSellClientId");
+        Integer lastSellClientId = (Integer) roominfo.getOrDefault("lastSellClientId", User.INSTANCE.getId());
         PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
-        List<PokerSell> sells = PokerUtil.validSells(lastPokerSell, pokers);
 
         ClientRole role = JsonUtil.fromJson((String) roominfo.get("role"), ClientRole.class);
         String lastSellClientType = role == null ? null : role.name();
 
-//        for (Map<String, Object> clientEnd : clientInfo) {
-//            if (Objects.equals((Integer) clientEnd.get("clientId"), lastSellClientId)) {
-//                lastSellClientType = (String) clientEnd.get("role");
-//                if( lastSellClientType != "null" ){
-//                    lastSellClientType = JsonUtil.fromJson((String)clientEnd.get("role"), ClientRole.class).name();
-//                }
-//                break;
-//            }
-//        }
-
         printInfo(roominfo, pokers, lastSellClientNickname, lastSellClientType);
 
-        if (sells.isEmpty() && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()) {
+        if (lastSellClientId != User.INSTANCE.getId() && PokerUtil.validSells(lastPokerSell, pokers).isEmpty()) {
             SimplePrinter.printNotice("You don't have winning combination.");
             pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
             return;
@@ -86,8 +75,8 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
         }
 
         if (userInput.equalsIgnoreCase("pass") || userInput.equalsIgnoreCase("p")) {
-            if ((Integer) roominfo.get("lastSellClientId") == User.INSTANCE.getId()) {
-                SimplePrinter.printNotice("You played the previous card, so you can't pass again.");
+            if (lastSellClientId == User.INSTANCE.getId()) {
+                SimplePrinter.printNotice("It's your turn now, so you can't pass.");
                 pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT, data);
             } else {
                 pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
@@ -142,7 +131,7 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
                 return;
             }
 
-            if (lastPokerSell.getSellType() != SellType.ILLEGAL && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()) {
+            if (lastPokerSell.getSellType() != SellType.ILLEGAL && lastSellClientId != User.INSTANCE.getId()) {
 
                 if ((lastPokerSell.getSellType() != currentPokerSell.getSellType() || lastPokerSell.getPokers().size() != currentPokerSell.getPokers().size()) && currentPokerSell.getSellType() != SellType.BOMB && currentPokerSell.getSellType() != SellType.KING_BOMB) {
                     SimplePrinter.printNotice(String.format("Your combination is %s (%d), but the previous combination is %s (%d). Mismatch!", currentPokerSell.getSellType(), currentPokerSell.getPokers().size(), lastPokerSell.getSellType(), lastPokerSell.getPokers().size()));

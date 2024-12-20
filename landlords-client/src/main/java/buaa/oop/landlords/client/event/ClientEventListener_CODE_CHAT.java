@@ -34,9 +34,9 @@ public class ClientEventListener_CODE_CHAT extends ClientEventListener{
             SimplePrinter.printChatMsg(ALL, WHITE, formattedTime, clientFrom, content);
         }else{
             if(clientTo.equals(User.INSTANCE.getNickname())){
-                SimplePrinter.printChatMsg(TO, PINK, formattedTime, clientFrom, content);
-            }else{
                 SimplePrinter.printChatMsg(FROM, PINK, formattedTime, clientFrom, content);
+            }else{
+                SimplePrinter.printChatMsg(TO, PINK, formattedTime, clientFrom, content);
             }
         }
     }

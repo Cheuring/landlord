@@ -12,7 +12,6 @@ public class SimplePrinter {
     public static final String GREEN = "\u001B[32m";
     public static final String YELLOW = "\u001B[33m";
     public static final String BLUE = "\u001B[34m";
-    public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
     public static final String WHITE = "\u001B[37m";
     public static final String PINK = "\u001B[95m";
@@ -26,14 +25,16 @@ public class SimplePrinter {
     }
 
     public static void printPrompt(String msg) {
-        System.out.print(PURPLE + msg + RESET);
+        System.out.print(BLUE + msg + RESET);
     }
 
     public static void printWarning(String msg) {
         System.out.println(RED + msg + RESET);
     }
 
-    public static void printChatMsg(String format ,String color,String... msg) {System.out.printf(color + format + RESET , (Object[]) msg);}
+    public static void printChatMsg(String format ,String color,String... msg) {
+        System.out.printf(color + format + RESET , (Object[]) msg);
+    }
     public static void printPokers(List<Poker> pokers)
     {
         System.out.println(YELLOW + PokerUtil.printPokers(pokers) + RESET);
