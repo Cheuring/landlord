@@ -80,8 +80,13 @@ public class ChatRoom {
                     continue;
                 }
 
+                String userTo = userInput.substring(1, idx);
+                if(User.INSTANCE.getNickname().equals(userTo)) {
+                    SimplePrinter.printNotice("You can't send message to yourself");
+                    continue;
+                }
                 String result = MapUtil.newInstance()
-                        .put("ClientTo", userInput.substring(1, idx))
+                        .put("ClientTo", userTo)
                         .put("Content", userInput.substring(idx + 1))
                         .json();
 

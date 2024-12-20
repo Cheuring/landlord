@@ -18,9 +18,9 @@ import static buaa.oop.landlords.client.event.ClientEventListener_CODE_CLIENT_NI
  *如果是出牌回合：ServerEventListenerEventListener_CODE_GAME_POKER_PLAY
  */
 public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEventListener{
-    private static String[] choose = new String[]{"UP", "DOWN"};
+    private static final String[] choose = new String[]{"UP", "DOWN"};
 
-    private static String format = "\n[%-4s] %-" + NICKNAME_MAX_LENGTH + "s  surplus %-2s ";
+    private static final String format = "\n[%-4s] %-" + NICKNAME_MAX_LENGTH + "s  surplus %-2s ";
     @Override
     /**
      * @param data includes last player's pokers used and his id,all players info, current player's id and nickname
@@ -40,13 +40,13 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
             }
         }
         SimplePrinter.printNotice("");
-        if(sellClientId== User.getINSTANCE().getId()){
+        if(sellClientId== User.INSTANCE.getId()){
             get(ClientEventCode.CODE_GAME_POKER_PLAY).call(channel, data);
         }
         else{
             List<Poker>myPokers=JsonUtil.fromJson((String) roominfo.get("pokers"),new TypeReference<List<Poker>>() {});
             SimplePrinter.printPokers(myPokers);
-            SimplePrinter.printNotice("It is " + roominfo.get("sellClientNickname") + "  \'s turn. Please wait for him to play his cards.");
+            SimplePrinter.printNotice("It is " + roominfo.get("sellClientNickname") + "  's turn. Please wait for him to play his cards.");
         }
 
     }

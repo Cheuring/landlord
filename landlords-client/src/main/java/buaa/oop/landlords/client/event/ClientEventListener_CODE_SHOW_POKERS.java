@@ -25,12 +25,12 @@ public class ClientEventListener_CODE_SHOW_POKERS extends ClientEventListener{
         Map<String, Object>showPokers= MapUtil.parse(data);
         List<Poker> pokers = JsonUtil.fromJson((String)showPokers.get("pokers"), new TypeReference<List<Poker>>(){});
 
-        SimplePrinter.printNotice((String)showPokers.get("lastSellClientName")+ "["+JsonUtil.fromJson((String)showPokers.get("role"), ClientRole.class).name()+"]"+"used ");
+        SimplePrinter.printNotice(showPokers.get("lastSellClientName") + "["+JsonUtil.fromJson((String)showPokers.get("role"), ClientRole.class).name()+"]"+"used ");
         SimplePrinter.printPokers(pokers);
 
         if (showPokers.containsKey("nextPlayerId")) {
-            if (User.getINSTANCE().getId() != (int) showPokers.get("nextPlayerId")) {
-                SimplePrinter.printNotice("It's " + (String) showPokers.get("nextPlayerNickname") + "'s turn.");
+            if (User.INSTANCE.getId() != (int) showPokers.get("nextPlayerId")) {
+                SimplePrinter.printNotice("It's " + showPokers.get("nextPlayerNickname") + "'s turn.");
             }
         }
     }

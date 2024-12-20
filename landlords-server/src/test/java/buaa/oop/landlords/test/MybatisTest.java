@@ -64,7 +64,7 @@ public class MybatisTest {
     @Test
     @Order(4)
     public void testSelectByName(){
-        User notExit = userMapper.selectUserByName("NO");
+        User notExit = userMapper.selectUserByName("tt");
         Assertions.assertNull(notExit, "User should not exist");
 
         User user = userMapper.selectUserByName("TT");
@@ -76,9 +76,12 @@ public class MybatisTest {
     @Order(5)
     public void testDeleteUser() {
         User user = new User();
-        user.setName("TT");
-
+        user.setName("tt");
         int result = userMapper.deleteUser(user);
+        Assertions.assertEquals(0, result, "User should not exist");
+
+        user.setName("TT");
+        result = userMapper.deleteUser(user);
         Assertions.assertEquals(1, result, "User should be deleted");
     }
 }

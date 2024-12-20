@@ -12,9 +12,7 @@ import buaa.oop.landlords.server.ServerContainer;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  *下一个状态为：ClientEventListener_CODE_GAME_LANDLORD_ELECT
@@ -49,6 +47,8 @@ public class ServerEventListener_CODE_GAME_STARTING extends ServerEventListener{
                     .put("nextClientNickname", startPlayer.getNickname())
                     .put("pokers", client.getPokers())
                     .put("highestScore", 0)
+                    .put("up", ServerContainer.getClient(client.getPre()).getUser())
+                    .put("down", ServerContainer.getClient(client.getNext()).getUser())
                     .json();
 
             ChannelFuture future = ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_STARTING, result);

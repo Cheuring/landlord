@@ -2,7 +2,6 @@ package buaa.oop.landlords.common.print;
 
 import buaa.oop.landlords.common.entities.Poker;
 
-import java.util.Date;
 import java.util.List;
 import buaa.oop.landlords.common.utils.PokerUtil;
 
@@ -15,6 +14,8 @@ public class SimplePrinter {
     public static final String BLUE = "\u001B[34m";
     public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+    public static final String PINK = "\u001B[95m";
 
     public static void ServerLog(String msg) {
         System.out.println(GREEN + String.format("%n[Server] %s%n", msg) + RESET);

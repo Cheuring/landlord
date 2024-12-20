@@ -18,7 +18,7 @@ public class ClientEventListener_CODE_ROOM_JOIN_SUCCESS extends ClientEventListe
         Map<String, Object> map = MapUtil.parse(data);
 
         int joinClientId = (int) map.get("clientId");
-        if (User.getINSTANCE().getId() == joinClientId) {
+        if (User.INSTANCE.getId() == joinClientId) {
             SimplePrinter.printNotice("You have joined room：" + map.get("roomId") + ". There are " + map.get("roomClientCount") + " players in the room now.");
             SimplePrinter.printNotice("Please wait for other players to join. The game would start at three players!");
         } else {

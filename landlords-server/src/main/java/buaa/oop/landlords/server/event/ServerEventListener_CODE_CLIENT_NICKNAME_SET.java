@@ -22,7 +22,7 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET extends ServerEventLis
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, null, "The nickname is already in use");
         } else {
             log.info("Client {} | {} do set nickname to {}", client.getId(), client.getNickname(), data);
-            client.setNickName(data);
+            client.setNickname(data);
             ServerContainer.addClient(client);
             ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
         }

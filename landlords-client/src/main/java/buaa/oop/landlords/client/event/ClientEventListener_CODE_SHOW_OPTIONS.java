@@ -5,16 +5,19 @@ import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
+import buaa.oop.landlords.common.print.SimpleWriter;
+import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
-import buaa.oop.landlords.common.print.*;
+
+import java.util.Map;
 
 
 /**
  * 根据输入进入
- *   1.ServerEventListener_CODE_ROOM_CREATE
- *   2.ServerEventListener_CODE_ROOM_GETALL
- *   3.ServerEventListener_CODE_ROOM_JOIN
- *   4.ServerEventListener_CODE_CLIENT_OFFLINE
+ * 1.ServerEventListener_CODE_ROOM_CREATE
+ * 2.ServerEventListener_CODE_ROOM_GETALL
+ * 3.ServerEventListener_CODE_ROOM_JOIN
+ * 4.ServerEventListener_CODE_CLIENT_OFFLINE
  */
 public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
 
@@ -23,8 +26,12 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
      * @param data is always null or no use
      */
     public void call(Channel channel, String data) {
+        Map<String, Object> map = MapUtil.parse(data);
+        if (map != null && map.containsKey("score")) {
+            User.INSTANCE.setScore((Integer) map.get("score"));
+            User.INSTANCE.setNickname((String) map.get("username"));
+        }
 
-//        System.exit(0);
         SimplePrinter.printNotice("Please select the tab you are entering");
         SimplePrinter.printNotice("1.Create Room");
         SimplePrinter.printNotice("2.Get All Rooms");
@@ -33,27 +40,27 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("5.Chat ");
 
         String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "Options");
-        if(userInput == null || userInput.isEmpty()){
+        if (userInput == null || userInput.isEmpty()) {
             SimplePrinter.printNotice("Please enter a valid option");
-            call(channel,data);
+            call(channel, data);
             return;
         }
 
         int userOption;
         try {
-            userOption= Integer.parseInt(userInput);
+            userOption = Integer.parseInt(userInput);
         } catch (NumberFormatException e) {
-            userOption=-1;
+            userOption = -1;
         }
-        switch(userOption){
+        switch (userOption) {
             case 1:
-                pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE,null);
+                pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE, null);
                 break;
             case 2:
-                pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL,null);
+                pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL, null);
                 break;
             case 3:
-                joinRoom(channel,data);
+                joinRoom(channel, data);
                 break;
             case 4:
                 channel.close();
@@ -68,30 +75,31 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         }
 
     }
-    public void joinRoom(Channel channel,String data){
+
+    public void joinRoom(Channel channel, String data) {
         SimplePrinter.printNotice("Please enter the room id you want to join (enter [back|b] return options list)");
-        String roomId= SimpleWriter.write();
-        if(roomId==null){
+        String roomId = SimpleWriter.write();
+        if (roomId == null) {
             SimplePrinter.printNotice("Please enter a valid room id");
-            joinRoom(channel,data);
+            joinRoom(channel, data);
             return;
         }
-        if(roomId.equalsIgnoreCase("BACK") || roomId.equalsIgnoreCase("b")){
-            call(channel,data);
+        if (roomId.equalsIgnoreCase("BACK") || roomId.equalsIgnoreCase("b")) {
+            call(channel, data);
             return;
         }
 
         int userOption;
         try {
-            userOption= Integer.parseInt(roomId);
+            userOption = Integer.parseInt(roomId);
         } catch (NumberFormatException e) {
-            userOption=-1;
+            userOption = -1;
         }
-        if(userOption<1){
+        if (userOption < 1) {
             SimplePrinter.printNotice("Please enter a valid room id");
-            joinRoom(channel,data);
+            joinRoom(channel, data);
         }
-        pushToServer(channel,ServerEventCode.CODE_ROOM_JOIN, String.valueOf(userOption));
+        pushToServer(channel, ServerEventCode.CODE_ROOM_JOIN, String.valueOf(userOption));
     }
 
 }

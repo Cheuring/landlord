@@ -9,6 +9,6 @@ import io.netty.channel.Channel;
 public class ClientEventListener_CODE_CHAT_FAIL extends ClientEventListener{
     @Override
     public void call(Channel channel, String data) {
-        SimplePrinter.printWarning("Client not exist");
+        SimplePrinter.printWarning("Client not online");
     }
 }

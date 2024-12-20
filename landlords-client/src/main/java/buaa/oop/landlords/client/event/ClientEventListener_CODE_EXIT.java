@@ -19,7 +19,7 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
         Integer exitClientId = (Integer) map.get("exitClientId");
 
         String role = (String)map.get("exitClientNickname");
-        if (exitClientId == User.getINSTANCE().getId()) {
+        if (exitClientId == User.INSTANCE.getId()) {
             role = "You";
         }
         SimplePrinter.printNotice(String.format("\n%s left the room. Room disbanded!\n", role));

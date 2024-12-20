@@ -18,10 +18,18 @@ public class ServerEventListener_CODE_CHAT extends ServerEventListener{
         String clientToName = (String) map.get("ClientTo");
         map.put("ClientFrom", clientEnd.getNickname());
 
-        if(!ServerContainer.containsClient(clientToName)) {
-            ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT_FAIL, null);
+        if(clientToName.equalsIgnoreCase("ALL")) {
+            ServerContainer.pushAll(ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));
+            return;
         }
 
+
+        if(!ServerContainer.containsClient(clientToName)) {
+            ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT_FAIL, null);
+            return;
+        }
+
+        ChannelUtil.pushToClient(clientEnd.getChannel(), ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));
         ChannelUtil.pushToClient(ServerContainer.getClient(clientToName).getChannel(), ClientEventCode.CODE_CHAT, JsonUtil.toJson(map));
     }
 }

@@ -25,9 +25,7 @@ public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener
                     .put("roomClientCount", room.getClientEndList().size())
                     .json();
 
-            ServerContainer.ROOM_MAP.remove(room.getId());
             if(room.getStatus() == RoomStatus.STARTING){
-
                 for(ClientEnd other: room.getClientEndList()){
                     ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_EXIT, result);
                 }
@@ -36,9 +34,13 @@ public class ServerEventListener_CODE_CLIENT_OFFLINE extends ServerEventListener
                     ChannelUtil.pushToClient(other.getChannel(), ClientEventCode.CODE_ROOM_EXIT, result);
                 }
             }
+            if(room.getClientEndList().isEmpty()){
+                ServerContainer.ROOM_MAP.remove(room.getId());
+            }
         }
 
         ServerContainer.CLIENT_END_MAP.remove(client.getId());
+        ServerContainer.CLIENT_NAME_TO_ID.remove(client.getNickname());
         log.info("Client {} | {} offline", client.getId(), client.getNickname());
     }
 }

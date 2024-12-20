@@ -29,6 +29,7 @@ public class ServerEventListener_CODE_CLIENT_EXIT extends ServerEventListener{
                 return;
             }
             String result = MapUtil.newInstance()
+                    .put("status", datas.get("status"))
                     .put("roomId", room.getId())
                     .put("exitClientId", event.getId())
                     .put("exitClientNickname", event.getNickname())

@@ -29,7 +29,7 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener {
             List<Map<String, Object>> scores = JsonUtil.fromJson((String) map.get("scores"), new TypeReference<List<Map<String, Object>>>() {
             });
             for (Map<String, Object> score : scores) {
-                if (!Objects.equals(score.get("clientId"), User.getINSTANCE().getId())) {
+                if (!Objects.equals(score.get("clientId"), User.INSTANCE.getId())) {
                     SimplePrinter.printNotice(score.get("nickName").toString() + "'s rest poker is:");
                     List<Poker> p = JsonUtil.fromJson((String) score.get("pokers"), new TypeReference<List<Poker>>() {
                     });
@@ -41,7 +41,7 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener {
             for (Map<String, Object> score : scores) {
                 String scoreInc = score.get("scoreInc").toString();
                 String scoreTotal = score.get("score").toString();
-                if (User.getINSTANCE().getId() != (int) score.get("clientId")) {
+                if (User.INSTANCE.getId() != (int) score.get("clientId")) {
                     SimplePrinter.printNotice(score.get("nickName").toString() + "'s score is " + scoreInc + ", total score is " + scoreTotal);
                 } else {
                     SimplePrinter.printNotice("Your score is " + scoreInc + ", total score is " + scoreTotal);
