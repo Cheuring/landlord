@@ -1,9 +1,5 @@
 package buaa.oop.landlords.common.print;
 
-import io.netty.channel.DefaultEventLoop;
-import io.netty.channel.EventLoop;
-import io.netty.util.concurrent.Future;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 

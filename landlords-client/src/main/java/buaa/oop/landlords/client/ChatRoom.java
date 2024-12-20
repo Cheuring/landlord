@@ -71,7 +71,7 @@ public class ChatRoom {
                 int idx;
                 if(userInput.charAt(0) == 'e') {
                     if(code != null){
-                        channel.eventLoop().execute(() -> ClientEventListener.get(code).call(channel, null));
+                        SimpleClient.executorService.execute(() -> ClientEventListener.get(code).call(channel, null));
                     }
                     stop();
                     break;
