@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 
 public class SimpleWriter {
     private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private static final EventLoop eventLoop = new DefaultEventLoop();
 
     public static String write(String nickname, String message) {
         SimplePrinter.printPrompt(String.format("%n[%s@%s]$ ", nickname, message));
@@ -30,15 +29,4 @@ public class SimpleWriter {
         }
     }
 
-    public static Future<String> writeAsync() {
-        return eventLoop.submit(() -> write());
-    }
-
-    public static Future<String> writeAsync(String nickname, String message) {
-        return eventLoop.submit(() -> write(nickname, message));
-    }
-
-    public static void shutdown() {
-        eventLoop.shutdownGracefully();
-    }
 }

@@ -40,9 +40,6 @@ public class ClientEventListener_CODE_CLIENT_NICKNAME_SET extends ClientEventLis
         if (nickname == null) {
             return false;
         }
-//            if (nickname.length() > 16) {
-//                return false;
-//            }
         return nickname.matches("[a-zA-Z0-9_]{4,16}");
     }
 }

@@ -33,50 +33,40 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         SimplePrinter.printNotice("4.Exit the program");
         SimplePrinter.printNotice("5.Chat ");
 
-        Future<String> stringFuture = SimpleWriter.writeAsync(User.INSTANCE.getNickname(), "Options");
-        stringFuture.addListener(future -> {
-            if(!future.isSuccess()){
-                future.cause().printStackTrace();
-                call(channel,data);
-                return;
-            }
+        String userInput = SimpleWriter.write(User.INSTANCE.getNickname(), "Options");
+        if(userInput == null || userInput.isEmpty()){
+            SimplePrinter.printNotice("Please enter a valid option");
+            call(channel,data);
+            return;
+        }
 
-            String userInput = (String) future.getNow();
-            if(userInput == null || userInput.isEmpty()){
-                SimplePrinter.printNotice("Please enter a valid option");
-                call(channel,data);
-                return;
-            }
-
-            int userOption;
-            try {
-                userOption= Integer.parseInt(userInput);
-            } catch (NumberFormatException e) {
-                userOption=-1;
-            }
-            switch(userOption){
-                case 1:
-                    pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE,null);
-                    break;
-                case 2:
-                    pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL,null);
-                    break;
-                case 3:
-                    joinRoom(channel,data);
-                    break;
-                case 4:
-                    channel.close();
-//                    pushToServer(channel,ServerEventCode.CODE_CLIENT_OFFLINE,null);
-                    break;
-                case 5:
-                    SimplePrinter.printNotice("Please enter your content in such format\n@[ClientToName] [Content]");
-                    SimpleClient.chatRoom.start(ClientEventCode.CODE_SHOW_OPTIONS);
-                    break;
-                default:
-                    SimplePrinter.printNotice("Invalid option, please choose again:");
-                    call(channel, data);
-            }
-        });
+        int userOption;
+        try {
+            userOption= Integer.parseInt(userInput);
+        } catch (NumberFormatException e) {
+            userOption=-1;
+        }
+        switch(userOption){
+            case 1:
+                pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE,null);
+                break;
+            case 2:
+                pushToServer(channel, ServerEventCode.CODE_ROOM_GETALL,null);
+                break;
+            case 3:
+                joinRoom(channel,data);
+                break;
+            case 4:
+                channel.close();
+                break;
+            case 5:
+                SimplePrinter.printNotice("Please enter your content in such format\n@[ClientToName] [Content]");
+                SimpleClient.chatRoom.start(ClientEventCode.CODE_SHOW_OPTIONS);
+                break;
+            default:
+                SimplePrinter.printNotice("Invalid option, please choose again:");
+                call(channel, data);
+        }
 
     }
     public void joinRoom(Channel channel,String data){

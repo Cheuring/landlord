@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.handler;
 
+import buaa.oop.landlords.client.SimpleClient;
 import buaa.oop.landlords.client.event.ClientEventListener;
 import buaa.oop.landlords.common.entities.Msg;
 import buaa.oop.landlords.common.enums.ClientEventCode;
@@ -24,7 +25,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
         }
         ClientEventCode code = ClientEventCode.valueOf(msg.getCode());
 
-        ClientEventListener.get(code).call(ctx.channel(), msg.getData());
+        SimpleClient.executorService.submit(() -> {
+            ClientEventListener.get(code).call(ctx.channel(), msg.getData());
+        });
     }
 
     @Override

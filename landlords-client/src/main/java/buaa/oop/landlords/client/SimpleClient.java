@@ -14,11 +14,15 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class SimpleClient {
     public static ChatRoom chatRoom = null;
+    public static ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) {
         Options options = new Options();
@@ -60,7 +64,7 @@ public class SimpleClient {
                 SimplePrinter.ServerLog("Client shutdown");
 
                 group.shutdownGracefully();
-                SimpleWriter.shutdown();
+                executorService.shutdownNow();
                 if(chatRoom != null){
                     chatRoom.shutdown();
                     chatRoom = null;
@@ -89,7 +93,7 @@ public class SimpleClient {
                 chatRoom.shutdown();
                 chatRoom = null;
             }
-            SimpleWriter.shutdown();
+            executorService.shutdownNow();
             group.shutdownGracefully();
         }
     }
