@@ -9,6 +9,7 @@ import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
 import javafx.application.Platform;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import static buaa.oop.landlords.client.event.ClientEventListener_CODE_CLIENT_NI
 /**
  *如果是出牌回合：ServerEventListenerEventListener_CODE_GAME_POKER_PLAY
  */
+@Slf4j
 public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEventListener{
     private static String[] choose = new String[]{"UP", "DOWN"};
 

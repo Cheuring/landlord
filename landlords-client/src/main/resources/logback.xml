@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- Console Appender -->
-<!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
-<!--        <encoder>-->
-<!--            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
+     Console Appender
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
     <appender name="LOG_FILE" class="ch.qos.logback.core.FileAppender">
@@ -18,13 +18,13 @@
 
     <!-- Root Logger -->
     <root level="WARN">
-<!--        <appender-ref ref="CONSOLE" />-->
+        <appender-ref ref="CONSOLE" />
         <appender-ref ref="LOG_FILE" />
     </root>
 
     <!-- Logger for com.cheuring package -->
     <logger name="buaa.oop.landlords" level="DEBUG" additivity="false">
-<!--        <appender-ref ref="CONSOLE"/>-->
+        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="LOG_FILE"/>
     </logger>
 

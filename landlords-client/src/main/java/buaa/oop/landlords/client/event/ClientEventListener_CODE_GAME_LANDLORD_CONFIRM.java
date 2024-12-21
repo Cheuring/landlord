@@ -7,7 +7,9 @@ import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.util.Duration;
 
 import java.util.List;
 import java.util.Map;

@@ -333,10 +333,8 @@ public class PokerUtil {
 
     public static List<Poker> getPoker(int[] indexes, List<Poker> pokers) {
         List<Poker> resultPokers = new ArrayList<>(indexes.length);
-        for (int index : indexes) {
-            System.out.println(index);
+        for (int index : indexes)
             resultPokers.add(pokers.get(index));
-        }
         sortPokers(resultPokers);
         return resultPokers;
     }

@@ -8,9 +8,12 @@ import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.channel.Channel;
+import javafx.application.Platform;
 
 import java.util.List;
 import java.util.Map;
+
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
 
 /**
  *

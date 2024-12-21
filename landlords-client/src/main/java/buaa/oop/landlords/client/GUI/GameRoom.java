@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ import java.util.Map;
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToClient;
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToServer;
 
+@Slf4j
 public class GameRoom extends Application {
     private  Channel channel;
     private int roomId;
@@ -251,19 +253,18 @@ public class GameRoom extends Application {
         lastSellClientId = (Integer) roominfo.get("lastSellClientId");
     }
 
-    private static List<Poker> getSelectedCards(int[] index, List<Poker> pokers) {
+    private static List<Poker> getSelectedCards(int[] index, List<Poker> pokers, int on) {
         List<Poker> selectedCards = new ArrayList<>();
         int[] list = new int[20];
         int pos = 0;
         for(int i = 0; i < 20; i++) {
-             if(index[i] == 1)
+             if(index[i] == on && i < pokers.size())
                  list[pos++] = i;
          }
          //此处由于getPoker()方法的原因，只能再开个数组
          int[] ans = new int[pos];
          for (int i = 0; i < pos; i++) {
              ans[i] = list[i];
-             System.out.println(ans[i]);
          }
          selectedCards = PokerUtil.getPoker(ans, pokers);
          return selectedCards;
@@ -286,7 +287,6 @@ public class GameRoom extends Application {
             cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             int finalI = i;
             cardButton.setOnAction(e -> {
-                System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
                     cardButton.setTranslateY(-10);
@@ -360,7 +360,6 @@ public class GameRoom extends Application {
                 });
             }
         }
-
         actionButtonsBox.getChildren().addAll(buttons);
     }
 
@@ -376,7 +375,8 @@ public class GameRoom extends Application {
             actionButtonsBox.getChildren().addAll(playButton, passButton);
 
         playButton.setOnAction(e -> {
-            List<Poker> selectedCards = getSelectedCards(indexes, pokers);
+            List<Poker> selectedCards = getSelectedCards(indexes, pokers, 1);
+            List<Poker> remainingCards = getSelectedCards(indexes, pokers, 0);
             if(!selectedCards.isEmpty()) {
                 PokerSell currentPokerSell = PokerUtil.checkPokerSell(selectedCards);
                 PokerSell lastPokerSell = PokerUtil.checkPokerSell(lastPokers);
@@ -413,6 +413,7 @@ public class GameRoom extends Application {
                                 .put("pokerSell", currentPokerSell)
                                 .json();
                         actionButtonsBox.getChildren().clear();
+                        displayPokers(remainingCards);
                         pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                     }
                 }
@@ -422,6 +423,7 @@ public class GameRoom extends Application {
                             .put("pokerSell", currentPokerSell)
                             .json();
                     actionButtonsBox.getChildren().clear();
+                    displayPokers(remainingCards);
                     pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                 }
             }
