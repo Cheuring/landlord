@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUI.GameSettlement;
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.enums.ClientEventCode;
@@ -31,8 +32,9 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
         Platform.runLater(() -> {
             Stage stage = gameRoom.getPrimaryStage();
             GUIUtil.autoCloseAlertHandler(stage);
-            stage.close();
+            new GameSettlement().start(new Stage());
+//            stage.close();
         });
-        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+//        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
     }
 }

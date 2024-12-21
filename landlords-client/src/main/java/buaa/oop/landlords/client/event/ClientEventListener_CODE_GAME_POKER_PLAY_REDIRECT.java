@@ -44,12 +44,11 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY_REDIRECT extends ClientEve
                 }
             }
         }
-
+        Platform.runLater( () -> {
+            gameRoom.displayPokers(pokers);
+        });
         SimplePrinter.printNotice("");
         if(sellClientId== User.getINSTANCE().getId()){
-            Platform.runLater( () -> {
-                gameRoom.displayPokers(pokers);
-            });
             get(ClientEventCode.CODE_GAME_POKER_PLAY).call(channel, data);
         }
         else{

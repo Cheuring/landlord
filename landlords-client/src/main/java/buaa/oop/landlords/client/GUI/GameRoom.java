@@ -51,6 +51,7 @@ public class GameRoom extends Application {
     private static HBox actionButtonsBox = new HBox(20);
     private static VBox player1Cards = new VBox(-50);
     private static VBox player3Cards = new VBox(-50);
+
     private static HBox player2Cards = new HBox(-50);
     //indexes数组用于记录第i张牌是否被按下
     private static int[] indexes = new int[20];
@@ -70,6 +71,18 @@ public class GameRoom extends Application {
     private static Label player1Score = new Label();
     private static Label player2Score = new Label();
     private static Label player3Score = new Label();
+
+    public static HBox getPlayer1LastPokers() {
+        return player1LastPokers;
+    }
+
+    public static HBox getPlayer2LastPokers() {
+        return player2LastPokers;
+    }
+
+    public static HBox getPlayer3LastPokers() {
+        return player3LastPokers;
+    }
 
     @Getter
     private static Stage primaryStage;
@@ -160,7 +173,7 @@ public class GameRoom extends Application {
         mainLayout.setRight(player3);
 
         // 设置场景
-        Scene scene = new Scene(mainLayout, 1200, 600);
+        Scene scene = new Scene(mainLayout, 1200, 700);
         primaryStage.setScene(scene);
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();

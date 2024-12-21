@@ -27,8 +27,7 @@ public class ServerEventListener_CODE_CLIENT_EXIT extends ServerEventListener{
             Room room = ServerContainer.getRoom(event.getRoomId());
             if (room == null) {
                 return;
-            }
-            String result = MapUtil.newInstance()
+            }String result = MapUtil.newInstance()
                     .put("status", datas.get("status"))
                     .put("roomId", room.getId())
                     .put("exitClientId", event.getId())
@@ -37,6 +36,7 @@ public class ServerEventListener_CODE_CLIENT_EXIT extends ServerEventListener{
                     .put("winnerType",datas.get("winnerType"))
                     .put("scores",datas.get("scores"))
                     .json();
+
             for (ClientEnd client : room.getClientEndList()) {
                 client.setRoomId(0);
                 ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_OVER, result);

@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client;
 
+import buaa.oop.landlords.client.GUI.GameSettlement;
 import buaa.oop.landlords.client.GUI.Loading;
 import buaa.oop.landlords.client.GUI.Login;
 import buaa.oop.landlords.client.handler.ClientHandler;

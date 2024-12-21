@@ -4,6 +4,7 @@ package buaa.oop.landlords.client;
 import buaa.oop.landlords.client.GUI.FailPopup;
 import buaa.oop.landlords.client.GUI.HintPopup;
 import buaa.oop.landlords.client.enums.Assets;
+import buaa.oop.landlords.common.entities.Poker;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -12,9 +13,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
-
+import javafx.scene.layout.HBox;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
 
 public class GUIUtil {
     //显示错误提示信息
@@ -28,6 +32,12 @@ public class GUIUtil {
             HintPopup.showPopup(msgSource,msg,time);
         });
     }
+    public static void renderScene(List<Poker> playerPokers, ImageView imageView, HBox hBox) {
+        Platform.runLater(()->{
+            gameRoom.updatePlayerArea(playerPokers,imageView,hBox);
+        });
+    }
+
 
     private static Alert closeAlert = null;
     private static Image pokerImages[][] = new Image[4][13];
@@ -94,10 +104,10 @@ public class GUIUtil {
         ImageView res;
         if(type != -1){
             res = new ImageView(pokerImages[type][idx]);
-        }else{
+        }
+        else {
             res = new ImageView(pokerImagesRest[idx]);
         }
-
         res.setFitWidth(80);
         res.setFitHeight(120);
         return res;
