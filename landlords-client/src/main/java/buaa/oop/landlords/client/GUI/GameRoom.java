@@ -3,6 +3,7 @@ package buaa.oop.landlords.client.GUI;
 import buaa.oop.landlords.client.ClientContainer;
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.client.enums.Assets;
 import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.entities.PokerSell;
@@ -34,7 +35,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,6 @@ import java.util.Map;
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToClient;
 import static buaa.oop.landlords.common.utils.ChannelUtil.pushToServer;
 
-@Slf4j
 public class GameRoom extends Application {
     private  Channel channel;
     private int roomId;
@@ -56,8 +55,9 @@ public class GameRoom extends Application {
     //indexes数组用于记录第i张牌是否被按下
     private static int[] indexes = new int[20];
 
-    private static VBox player1LastPokers = new VBox(-50);
-    private static VBox p3LastPokers = new VBox(-50);
+    private static HBox player1LastPokers = new HBox(-50);
+    private static HBox player2LastPokers = new HBox(-50);
+    private static HBox player3LastPokers = new HBox(-50);
 
     private static Label player1Name = new Label();
     private static Label player2Name = new Label();
@@ -124,7 +124,9 @@ public class GameRoom extends Application {
         player1Role.setText("");
         player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards);
 
-        VBox p1LastPokers = new VBox(10);
+        HBox player1=new HBox(10);
+        player1LastPokers.setAlignment(Pos.CENTER);
+        player1.getChildren().addAll(player1Box,player1LastPokers);
 
         // 玩家3的卡牌区（右侧玩家）
         VBox player3Box = new VBox(10);
@@ -132,29 +134,33 @@ public class GameRoom extends Application {
         player3Role.setText("");
         player3Name.setText("玩家3");
         player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards);
+        HBox player3=new HBox(10);
+        player3LastPokers.setAlignment(Pos.CENTER);
+        player3.getChildren().addAll(player3Box,player3LastPokers);
 
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
         player2Box.setAlignment(Pos.CENTER);
         player2Role.setText("");
         player2Cards.setAlignment(Pos.CENTER);
-        player2Box.getChildren().addAll(player2Role, player2Name, player2Score, player2Cards);
+        player2LastPokers.setAlignment(Pos.CENTER);
+        player2Box.getChildren().addAll(player2LastPokers,player2Role, player2Name, player2Score, player2Cards);
 
         // 左右玩家布局
         BorderPane sidePlayersLayout = new BorderPane();
-        sidePlayersLayout.setLeft(player1Box);
-        sidePlayersLayout.setRight(player3Box);
+        sidePlayersLayout.setLeft(player1);
+        sidePlayersLayout.setRight(player3);
 
         // 主布局（回字结构）
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(topLayout);
         mainLayout.setCenter(actionButtonsBox);
         mainLayout.setBottom(player2Box);
-        mainLayout.setLeft(player1Box);
-        mainLayout.setRight(player3Box);
+        mainLayout.setLeft(player1);
+        mainLayout.setRight(player3);
 
         // 设置场景
-        Scene scene = new Scene(mainLayout, 800, 600);
+        Scene scene = new Scene(mainLayout, 1200, 600);
         primaryStage.setScene(scene);
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();
@@ -170,9 +176,6 @@ public class GameRoom extends Application {
         player3Cards.getChildren().clear();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     public static void setRoomStatus(String title) {
         gameStatusLabel.setText(title);
@@ -265,6 +268,7 @@ public class GameRoom extends Application {
          int[] ans = new int[pos];
          for (int i = 0; i < pos; i++) {
              ans[i] = list[i];
+             System.out.println(ans[i]);
          }
          selectedCards = PokerUtil.getPoker(ans, pokers);
          return selectedCards;
@@ -287,6 +291,7 @@ public class GameRoom extends Application {
             cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             int finalI = i;
             cardButton.setOnAction(e -> {
+                System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
                     cardButton.setTranslateY(-10);
@@ -331,6 +336,7 @@ public class GameRoom extends Application {
                         .json();
             }
             actionButtonsBox.getChildren().clear();
+             updatePlayerArea(null,GUIUtil.getAssetImage(Assets.SCORE_ZERO),player2LastPokers);
             pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_LANDLORD_ELECT, result);
         });
 
@@ -360,6 +366,7 @@ public class GameRoom extends Application {
                 });
             }
         }
+
         actionButtonsBox.getChildren().addAll(buttons);
     }
 
@@ -414,6 +421,7 @@ public class GameRoom extends Application {
                                 .json();
                         actionButtonsBox.getChildren().clear();
                         displayPokers(remainingCards);
+                        updatePlayerArea(selectedCards,null,player2LastPokers);
                         pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                     }
                 }
@@ -424,6 +432,7 @@ public class GameRoom extends Application {
                             .json();
                     actionButtonsBox.getChildren().clear();
                     displayPokers(remainingCards);
+                    updatePlayerArea(selectedCards,null,player2LastPokers);
                     pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY, result);
                 }
             }
@@ -438,7 +447,28 @@ public class GameRoom extends Application {
 
         passButton.setOnAction(e -> {
             actionButtonsBox.getChildren().clear();
+            updatePlayerArea(null,GUIUtil.getAssetImage(Assets.SHOW_PASS),player2LastPokers);
             pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
         });
     }
+    public static void updatePlayerArea(List<Poker> playerPokers, ImageView imageView,HBox hBox) {
+        if(playerPokers == null || playerPokers.isEmpty()) {
+            hBox.getChildren().clear();
+            hBox.setAlignment(Pos.CENTER);
+            hBox.getChildren().add(imageView);
+        }else{
+            hBox.getChildren().clear();
+            for(int i = 0; i < 20; i++)
+                indexes[i] = 0;
+            int cnt =playerPokers.size();
+            for(int i = 0; i < cnt; i++) {
+                Poker poker = playerPokers.get(i);
+                int idx = poker.getLevel().getIdx();
+                int value = poker.getType().getValue();
+                ImageView imageview = GUIUtil.getPokerImage(idx, value);
+                hBox.getChildren().add(imageview);
+            }
+        }
+    }
+
 }

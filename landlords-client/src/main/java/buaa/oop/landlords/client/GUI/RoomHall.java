@@ -6,12 +6,16 @@ import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.utils.JsonUtil;
 import buaa.oop.landlords.common.utils.MapUtil;
 import io.netty.channel.Channel;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
@@ -19,6 +23,8 @@ import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import jdk.jshell.ImportSnippet;
 
 import java.util.*;
 
@@ -66,6 +72,7 @@ public class RoomHall extends Application {
                 Button roomButton = new Button("房间 " + roomId);
                 roomButton.setPrefWidth(180);
                 roomButton.setPrefHeight(60);
+                roomButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16;");
                 roomButton.setOnAction(e -> {
                     pushToServer(channel,ServerEventCode.CODE_ROOM_JOIN,roomId);
                 });
@@ -98,22 +105,17 @@ public class RoomHall extends Application {
             roomLayout.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5;");
 
             // 空房间按钮
-            Button emptyRoomButton = new Button("房间 " + (i + 1));
+            Button emptyRoomButton = new Button("空房间" );
             emptyRoomButton.setPrefWidth(180);
             emptyRoomButton.setPrefHeight(60);
-
-            // 创建房间按钮
-            Button createRoomButton = new Button("+");
-            createRoomButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16;");
-            createRoomButton.setOnMouseEntered(e -> {
-                createRoomButton.setText("创建房间");
+            emptyRoomButton.setStyle("-fx-background-color: grey; -fx-text-fill: white; -fx-font-size: 16;");
+            emptyRoomButton.setOnMouseEntered(e -> {
+                emptyRoomButton.setText("创建房间");
             });
-            createRoomButton.setOnMouseExited(e -> {
-                createRoomButton.setText("+");
-            });
-            createRoomButton.setOnAction(e -> pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE,null));
 
-            roomLayout.getChildren().addAll(emptyRoomButton, createRoomButton);
+            emptyRoomButton.setOnAction(e -> pushToServer(channel, ServerEventCode.CODE_ROOM_CREATE,null));
+
+            roomLayout.getChildren().addAll(emptyRoomButton);
 
             roomDisplayArea.add(roomLayout, col, row);
 
@@ -144,15 +146,27 @@ public class RoomHall extends Application {
         updateRoomDisplay(roomDisplayArea);
 
         HBox hbox = new HBox();
-        hbox.setSpacing(10); // 控件间距
+       // hbox.setSpacing(10);
         hbox.setAlignment(Pos.CENTER_LEFT);
 
         Region leftRegion = new Region();
         HBox.setHgrow(leftRegion, Priority.ALWAYS);
         leftRegion.setMinWidth(0);
 
+        //彩蛋区域
+        VBox hiddenLeftBox = new VBox();
+        hiddenLeftBox.setPadding(new Insets(10));
+        Image hiddenEgg=new Image("/images/eggs1.gif");
+        ImageView hiddenEggView = new ImageView(hiddenEgg);
+        hiddenEggView.setFitHeight(500);
+        hiddenEggView.setPreserveRatio(true);
+        hiddenLeftBox.getChildren().add(hiddenEggView);
+        hiddenLeftBox.setMinWidth(0);
+        hiddenLeftBox.setMaxWidth(0);
+
+        //聊天区域
         VBox chatBox = new VBox();
-        chatBox.setSpacing(10);
+        //chatBox.setSpacing(10);
         chatBox.setPadding(new Insets(10));
         chatBox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5;");
         chatArea.setStyle("-fx-background-color: white; -fx-padding: 10;");
@@ -192,17 +206,14 @@ public class RoomHall extends Application {
         rightBottomBox.getChildren().addAll(nameLabel, nameArea, scoreLabel, scoreArea);
 
         VBox rightTopBox = new VBox();
-        WebView webView = new WebView();
-        WebEngine webEngine = webView.getEngine();
-        webView.setPrefSize(150, 230);
-        String htmlContent = "<div class=\"tenor-gif-embed\" data-postid=\"16231326\" data-share-method=\"host\" " +
-                "data-aspect-ratio=\"1.04235\" data-width=\"100%\">" +
-                "<a href=\"https://tenor.com/view/hatsune-miku-anime-vocaloid-lamazep-dance-gif-16231326\">" +
-                "Hatsune Miku Anime Sticker</a>from " +
-                "<a href=\"https://tenor.com/search/hatsune+miku-stickers\">Hatsune Miku Stickers</a></div>" +
-                "<script type=\"text/javascript\" async src=\"https://tenor.com/embed.js\"></script>";
-        webEngine.loadContent(htmlContent);
-        rightTopBox.getChildren().add(webView);
+        Image gifImage = new Image("/images/landlordPhoto.gif");
+        ImageView imageView = new ImageView(gifImage);
+
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(230);
+        imageView.setPreserveRatio(true);
+
+        rightTopBox.getChildren().add(imageView);
 
         HBox rightBox = new HBox();
         rightBox.setSpacing(10);
@@ -211,17 +222,17 @@ public class RoomHall extends Application {
         rightBox.getChildren().addAll(rightBottomBox, rightTopBox);
 
         VBox right = new VBox();
-        right.setSpacing(10);
+       // right.setSpacing(10);
         right.getChildren().addAll(chatBox, rightBox);
 
         HBox mainBox = new HBox();
-        mainBox.setSpacing(10);
+       // mainBox.setSpacing(10);
         mainBox.getChildren().addAll(leftRegion, scrollPane, right);
+        mainBox.getChildren().add(0, hiddenLeftBox);
         mainLayout.setCenter(mainBox);
 
         Scene scene = new Scene(mainLayout, 900, 600);
         primaryStage.setScene(scene);
-
     }
 
     private static void sendMessage() {
