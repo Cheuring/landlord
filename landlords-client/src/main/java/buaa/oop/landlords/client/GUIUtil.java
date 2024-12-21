@@ -94,9 +94,10 @@ public class GUIUtil {
         ImageView res;
         if(type != -1){
             res = new ImageView(pokerImages[type][idx]);
+        }else{
+            res = new ImageView(pokerImagesRest[idx]);
         }
 
-        res = new ImageView(pokerImagesRest[idx]);
         res.setFitWidth(80);
         res.setFitHeight(120);
         return res;
