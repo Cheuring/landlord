@@ -60,7 +60,7 @@ public class GUIUtil {
         pokerImagesRest[2].setFitHeight(120);
 
         // 加载其他资源
-        for(int i = 1; i<=7; ++i){
+        for(int i = 1; i<=12; ++i){
             assets.add(new ImageView(GUIUtil.class.getResource("/images/%d.png".formatted(i)).toExternalForm()));
         }
     }

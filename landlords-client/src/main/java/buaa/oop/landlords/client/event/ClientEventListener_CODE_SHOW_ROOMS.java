@@ -25,19 +25,19 @@ public class ClientEventListener_CODE_SHOW_ROOMS extends ClientEventListener {
         List<Map<String, Object>> roomList = JsonUtil.fromJson(data, new TypeReference<List<Map<String, Object>>>() {
         });
        Platform.runLater(()->{RoomHall.setRoomList(roomList);});
-        if (roomList != null && !roomList.isEmpty()) {
-            String format = "#\t%s\t|\t%-" + 16 + "s\t|\t%-8s\t|\t%-14s|#\n";
-
-            System.out.printf(format, "ID", "OWNER", "STATUS", "CLIENTCOUNT");
-            for (Map<String, Object> room : roomList) {
-                System.out.printf(format, room.get("roomId"), room.get("roomOwner"), JsonUtil.fromJson((String) room.get("roomStatus"), String.class), room.get("roomClientCount"));
-            }
-            SimplePrinter.printNotice("");
-//            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
-        } else {
-            SimplePrinter.printNotice("No available room. Please create a room!");
-//            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
-        }
+//        if (roomList != null && !roomList.isEmpty()) {
+//            String format = "#\t%s\t|\t%-" + 16 + "s\t|\t%-8s\t|\t%-14s|#\n";
+//
+//            System.out.printf(format, "ID", "OWNER", "STATUS", "CLIENTCOUNT");
+//            for (Map<String, Object> room : roomList) {
+//                System.out.printf(format, room.get("roomId"), room.get("roomOwner"), JsonUtil.fromJson((String) room.get("roomStatus"), String.class), room.get("roomClientCount"));
+//            }
+//            SimplePrinter.printNotice("");
+////            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+//        } else {
+//            SimplePrinter.printNotice("No available room. Please create a room!");
+////            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+//        }
 
     }
 }

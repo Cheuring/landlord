@@ -126,10 +126,7 @@ public class Login extends Application {
         if (nickname == null) {
             return false;
         }
-        if (!nickname.matches("[a-zA-Z0-9_]{4,16}")) {
-            return false;
-        }
-        return true;
+        return nickname.matches("[a-zA-Z0-9_]{4,16}");
     }
 
     public static String getNickname() {
