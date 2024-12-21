@@ -120,6 +120,11 @@ public class ServerEventListener_CODE_GAME_POKER_PLAY extends  ServerEventListen
                         .put("pokers", client.getPokers());
                 clientScores.add(score.map());
             }
+
+            for(ClientEnd client: room.getClientEndList()){
+                client.setTotalScore(client.getTotalScore() + client.getScore());
+            }
+
             isSuccessful = 1;
         }catch (Exception e){
             log.error("Failed to update score", e);

@@ -38,8 +38,8 @@ public class ServerEventListener_CODE_CLIENT_EXIT extends ServerEventListener{
                     .put("scores",datas.get("scores"))
                     .json();
             for (ClientEnd client : room.getClientEndList()) {
-                    ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_OVER, result);
-                 //   client.init();
+                client.setRoomId(0);
+                ChannelUtil.pushToClient(client.getChannel(), ClientEventCode.CODE_GAME_OVER, result);
             }
 
             ServerContainer.removeRoom(room.getId());
