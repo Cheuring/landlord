@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -29,9 +30,9 @@ public class GUIUtil {
     }
 
     private static Alert closeAlert = null;
-    private static ImageView pokerImages[][] = new ImageView[4][13];
-    private static ImageView pokerImagesRest[] = new ImageView[3];
-    private static ArrayList<ImageView> assets = new ArrayList<>();
+    private static Image pokerImages[][] = new Image[4][13];
+    private static Image pokerImagesRest[] = new Image[3];
+    private static ArrayList<Image> assets = new ArrayList<>();
 
     static {
         Image image = new Image(GUIUtil.class.getResource("/images/pokers.png").toExternalForm());
@@ -40,28 +41,18 @@ public class GUIUtil {
 
         for(int i = 0; i < 4; ++i){
             for(int j = 0; j < 13; ++j){
-                pokerImages[i][j] = new ImageView(image);
-                pokerImages[i][j].setViewport(new javafx.geometry.Rectangle2D(j * tileWidth, i * tileHeight, tileWidth, tileHeight));
-                pokerImages[i][j].setFitWidth(80);
-                pokerImages[i][j].setFitHeight(120);
+                pokerImages[i][j] = new WritableImage(image.getPixelReader(), (int)(j * tileWidth), (int)(i * tileHeight), (int)tileWidth, (int)tileHeight);
             }
         }
 
         // 0: 小王, 1: 大王, 2: 背面
-        for(int i = 0; i < 2; ++i){
-            pokerImagesRest[i] = new ImageView(GUIUtil.class.getResource(String.format("/images/joker_%d.png", i)).toExternalForm());
-            pokerImagesRest[i].setFitWidth(80);
-            pokerImagesRest[i].setFitHeight(120);
-        }
+        pokerImagesRest[0] = new Image(GUIUtil.class.getResource("/images/joker_0.png").toExternalForm());
+        pokerImagesRest[1] = new Image(GUIUtil.class.getResource("/images/joker_1.png").toExternalForm());
+        pokerImagesRest[2] = new WritableImage(image.getPixelReader(), (int)(2 * tileWidth), (int)(4 * tileHeight), (int)tileWidth, (int)tileHeight);
 
-        pokerImagesRest[2] = new ImageView(image);
-        pokerImagesRest[2].setViewport(new javafx.geometry.Rectangle2D(2 * tileWidth, 4 * tileHeight, tileWidth, tileHeight));
-        pokerImagesRest[2].setFitWidth(80);
-        pokerImagesRest[2].setFitHeight(120);
-
-        // 加载其他资源
-        for(int i = 1; i<=12; ++i){
-            assets.add(new ImageView(GUIUtil.class.getResource("/images/%d.png".formatted(i)).toExternalForm()));
+        // Load other assets
+        for (int i = 1; i <= 12; ++i) {
+            assets.add(new Image(GUIUtil.class.getResource("/images/" + i + ".png").toExternalForm()));
         }
     }
 
@@ -100,18 +91,25 @@ public class GUIUtil {
     }
 
     public static ImageView getPokerImage(int idx, int type) {
+        ImageView res;
         if(type != -1){
-            return pokerImages[type][idx];
+            res = new ImageView(pokerImages[type][idx]);
         }
 
-        return pokerImagesRest[idx];
+        res = new ImageView(pokerImagesRest[idx]);
+        res.setFitWidth(80);
+        res.setFitHeight(120);
+        return res;
     }
 
     public static ImageView getPokerBackImage() {
-        return pokerImagesRest[2];
+        ImageView imageView = new ImageView(pokerImagesRest[2]);
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(120);
+        return imageView;
     }
 
     public static ImageView getAssetImage(Assets asset){
-        return assets.get(asset.getIdx());
+        return new ImageView(assets.get(asset.getIdx()));
     }
 }
