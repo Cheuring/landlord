@@ -64,7 +64,6 @@ public class SimpleClient {
                 SimplePrinter.ServerLog("Client shutdown");
 
                 group.shutdownGracefully();
-                SimpleWriter.shutdown();
             }));
 
             new Bootstrap()
@@ -84,12 +83,10 @@ public class SimpleClient {
                     .channel().closeFuture().addListener((ChannelFutureListener) future -> {
 
                 group.shutdownGracefully();
-                SimpleWriter.shutdown();
             });
             success = true;
         } catch (Exception e) {
             log.debug("Client error: {}", e.getMessage());
-            SimpleWriter.shutdown();
             group.shutdownGracefully();
         }
         return success;

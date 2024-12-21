@@ -51,7 +51,7 @@ public enum PokerLevel {
         }
     }
 
-    private PokerLevel(int level, String name, Character[] alias, int idx) {
+    PokerLevel(int level, String name, Character[] alias, int idx) {
         this.level = level;
         this.name = name;
         this.alias = alias;
