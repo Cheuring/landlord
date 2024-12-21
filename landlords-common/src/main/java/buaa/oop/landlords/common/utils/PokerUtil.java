@@ -11,8 +11,6 @@ import java.util.*;
 public class PokerUtil {
     private static final List<Poker> basePokers = new ArrayList<>(54);
 
-    private static final int[] spPokers = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
-
     private static final Comparator<Poker> pokerComparator = (o1, o2) -> o1.getLevel().getLevel() - o2.getLevel().getLevel();
 
     static {
@@ -60,38 +58,6 @@ public class PokerUtil {
         return pokersList;
     }
 
-    public static void shuffle(int[] array) {
-        Random random = new Random();
-        for (int i = array.length - 1; i > 0; i--) {
-            int j = random.nextInt(i + 1);
-            int temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-    }
-
-    public static List<List<Poker>> spDistributePokers() {
-        shuffle(spPokers);
-        PokerType[] pokerTypes = PokerType.values();
-        List<Poker> pokers = new ArrayList<>(54);
-        List<List<Poker>> pokersList = new ArrayList<List<Poker>>();
-        List<Poker> pokers1 = new ArrayList<>(17);
-        pokers1.addAll(pokers.subList(0, 17));
-        List<Poker> pokers2 = new ArrayList<>(17);
-        pokers2.addAll(pokers.subList(17, 34));
-        List<Poker> pokers3 = new ArrayList<>(17);
-        pokers3.addAll(pokers.subList(34, 51));
-        List<Poker> pokers4 = new ArrayList<>(3);
-        pokers4.addAll(pokers.subList(51, 54));
-        pokersList.add(pokers1);
-        pokersList.add(pokers2);
-        pokersList.add(pokers3);
-        pokersList.add(pokers4);
-        for (List<Poker> poker : pokersList) {
-            sortPokers(poker);
-        }
-        return pokersList;
-    }
     /**
      * 排序
      * @param pokers 牌

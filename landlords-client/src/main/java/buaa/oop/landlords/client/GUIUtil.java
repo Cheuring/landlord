@@ -3,6 +3,7 @@ package buaa.oop.landlords.client;
 
 import buaa.oop.landlords.client.GUI.FailPopup;
 import buaa.oop.landlords.client.GUI.HintPopup;
+import buaa.oop.landlords.client.enums.Assets;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class GUIUtil {
@@ -29,7 +31,7 @@ public class GUIUtil {
     private static Alert closeAlert = null;
     private static ImageView pokerImages[][] = new ImageView[4][13];
     private static ImageView pokerImagesRest[] = new ImageView[3];
-
+    private static ArrayList<ImageView> assets = new ArrayList<>();
 
     static {
         Image image = new Image(GUIUtil.class.getResource("/images/pokers.png").toExternalForm());
@@ -45,6 +47,7 @@ public class GUIUtil {
             }
         }
 
+        // 0: 小王, 1: 大王, 2: 背面
         for(int i = 0; i < 2; ++i){
             pokerImagesRest[i] = new ImageView(GUIUtil.class.getResource(String.format("/images/joker_%d.png", i)).toExternalForm());
             pokerImagesRest[i].setFitWidth(80);
@@ -55,6 +58,11 @@ public class GUIUtil {
         pokerImagesRest[2].setViewport(new javafx.geometry.Rectangle2D(2 * tileWidth, 4 * tileHeight, tileWidth, tileHeight));
         pokerImagesRest[2].setFitWidth(80);
         pokerImagesRest[2].setFitHeight(120);
+
+        // 加载其他资源
+        for(int i = 1; i<=7; ++i){
+            assets.add(new ImageView(GUIUtil.class.getResource("/images/%d.png".formatted(i)).toExternalForm()));
+        }
     }
 
     public static void cancelHandler(Stage primaryStage) {
@@ -101,5 +109,9 @@ public class GUIUtil {
 
     public static ImageView getPokerBackImage() {
         return pokerImagesRest[2];
+    }
+
+    public static ImageView getAssetImage(Assets asset){
+        return assets.get(asset.getIdx());
     }
 }

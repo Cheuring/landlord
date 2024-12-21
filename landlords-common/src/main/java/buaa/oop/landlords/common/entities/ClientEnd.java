@@ -16,7 +16,7 @@ public class ClientEnd {
     public class User {
         private String name;
         private int score;
-    };
+    }
 
     private int id;
 

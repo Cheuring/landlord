@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, Msg msg) {
         if(msg.getInfo() != null && !msg.getInfo().isEmpty()){
             System.out.println(msg.getInfo());
         }
@@ -28,7 +28,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if(evt instanceof IdleStateEvent event){
             if(event.state() == IdleState.WRITER_IDLE){
                 ChannelUtil.pushToServer(ctx.channel(), ServerEventCode.CODE_CLIENT_HEART_BEAT, "heartbeat");
@@ -37,7 +37,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         SimplePrinter.printNotice("Connection lost, please restart the client");
         System.exit(1);
     }
