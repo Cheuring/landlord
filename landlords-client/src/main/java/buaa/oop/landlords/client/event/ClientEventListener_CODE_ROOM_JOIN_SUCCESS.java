@@ -42,6 +42,7 @@ public class ClientEventListener_CODE_ROOM_JOIN_SUCCESS extends ClientEventListe
                 gameRoom=new GameRoom();
                 gameRoom.init(channel,(int)map.get("roomId"));
                 gameRoom.setPlayerName(user.getNickname(), 2);
+                gameRoom.setPlayerName("host", 1);
                 gameRoom.start(new Stage());
             });
         }

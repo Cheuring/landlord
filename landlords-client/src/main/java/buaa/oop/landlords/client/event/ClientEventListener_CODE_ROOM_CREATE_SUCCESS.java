@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Map;
 
+import static buaa.oop.landlords.client.ClientContainer.gameRoom;
+
 /**
  * 参数为新创建的room
  * 无下一个状态
@@ -40,6 +42,7 @@ public class ClientEventListener_CODE_ROOM_CREATE_SUCCESS extends ClientEventLis
                 GameRoom gameRoom=new GameRoom();
                 gameRoom.init(channel,roomId);
                 gameRoom.setPlayerName(user.getNickname(), 2);
+                gameRoom.setPlayerName("玩家1", 1);
                 gameRoom.start(new Stage());
             });
         }

@@ -1,6 +1,7 @@
 package buaa.oop.landlords.client.event;
 
 import buaa.oop.landlords.client.GUI.GameRoom;
+import buaa.oop.landlords.client.entities.User;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ClientEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
@@ -31,13 +32,19 @@ public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
      */
     public void call(Channel channel, String data) {
         Map<String, Object> map = MapUtil.parse(data);
+        Map<String, Object> upData = MapUtil.parse((String)map.get("up"));
+        Map<String, Object> downData = MapUtil.parse((String)map.get("down"));
+        User user = User.getINSTANCE();
 
         SimplePrinter.printNotice("Game starting!");
         List<Poker> pokers = JsonUtil.fromJson((String) map.get("pokers"),new TypeReference<List<Poker>>(){});
         Platform.runLater(() -> {
             GameRoom.setRoomStatus("游戏状态: 选择地主");
-            GameRoom.setPlayerName((String)map.get("preClientNickname"), 1);
-            GameRoom.setPlayerName((String)map.get("nextClientNickname"), 3);
+            GameRoom.setPlayerName((String)upData.get("name"), 1);
+            GameRoom.setPlayerName((String)downData.get("name"), 3);
+            GameRoom.setPoint(String.valueOf(upData.get("score")), 1);
+            GameRoom.setPoint(String.valueOf(upData.get("score")), 3);
+            GameRoom.setPoint(String.valueOf(user.getScore()), 2);
             GameRoom.displayPokers(pokers);
         });
 //        GameRoom.setRoomStatus("游戏状态: 选择地主");

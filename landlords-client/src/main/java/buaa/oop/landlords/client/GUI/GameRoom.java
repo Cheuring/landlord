@@ -46,6 +46,7 @@ public class GameRoom extends Application {
     private  Channel channel;
     private int roomId;
     private static Label gameStatusLabel = new Label();
+    private static HBox landlordCards = new HBox(-50);
     private static HBox actionButtonsBox = new HBox(20);
     private static VBox player1Cards = new VBox(-50);
     private static VBox player3Cards = new VBox(-50);
@@ -63,6 +64,10 @@ public class GameRoom extends Application {
     private static Label player1Role = new Label();
     private static Label player2Role = new Label();
     private static Label player3Role = new Label();
+
+    private static Label player1Score = new Label();
+    private static Label player2Score = new Label();
+    private static Label player3Score = new Label();
 
     @Getter
     private static Stage primaryStage;
@@ -86,9 +91,8 @@ public class GameRoom extends Application {
         roomInfoBox.setAlignment(Pos.TOP_CENTER);
         Label roomInfoLabel = new Label("房间号: "+Integer.toString(roomId));
         gameStatusLabel.setText("游戏状态: 等待其他玩家加入");
-        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
-//        Label gameStatusLabel = new Label("游戏状态: 等待其他玩家准备");
-//        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel);
+        landlordCards.setAlignment(Pos.CENTER);
+        roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel, landlordCards);
 
         // 退出按钮
         Button exitButton = new Button("返回大厅");
@@ -103,7 +107,7 @@ public class GameRoom extends Application {
 
         // 顶部布局，包含房间信息和退出按钮
         HBox topLayout = new HBox();
-        topLayout.setAlignment(Pos.CENTER);
+        topLayout.setAlignment(Pos.TOP_CENTER);
         topLayout.setPadding(new Insets(10));
         topLayout.getChildren().addAll(roomInfoBox, exitButton);
         HBox.setHgrow(roomInfoBox, Priority.ALWAYS);
@@ -116,8 +120,7 @@ public class GameRoom extends Application {
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
         player1Role.setText("");
-        player1Name.setText("玩家1");
-        player1Box.getChildren().addAll(player1Role, player1Name, player1Cards);
+        player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards);
 
         VBox p1LastPokers = new VBox(10);
 
@@ -126,14 +129,14 @@ public class GameRoom extends Application {
         player3Box.setAlignment(Pos.CENTER);
         player3Role.setText("");
         player3Name.setText("玩家3");
-        player3Box.getChildren().addAll(player3Role, player3Name, player3Cards);
+        player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards);
 
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
         player2Box.setAlignment(Pos.CENTER);
         player2Role.setText("");
         player2Cards.setAlignment(Pos.CENTER);
-        player2Box.getChildren().addAll(player2Role, player2Name, player2Cards);
+        player2Box.getChildren().addAll(player2Role, player2Name, player2Score, player2Cards);
 
         // 左右玩家布局
         BorderPane sidePlayersLayout = new BorderPane();
@@ -158,6 +161,7 @@ public class GameRoom extends Application {
     public void init(Channel channel, int romid) {
         this.channel = channel;
         this.roomId = romid;
+        landlordCards.getChildren().clear();
         actionButtonsBox.getChildren().clear();
         player1Cards.getChildren().clear();
         player2Cards.getChildren().clear();
@@ -170,6 +174,32 @@ public class GameRoom extends Application {
 
     public static void setRoomStatus(String title) {
         gameStatusLabel.setText(title);
+    }
+
+    public static void setLandlordCards(List<Poker> pokers) {
+        int cnt = pokers.size();
+        for(int i = 0; i < cnt; i++) {
+            Poker poker = pokers.get(i);
+            int idx = poker.getLevel().getIdx();
+            int value = poker.getType().getValue();
+            ImageView imageView = GUIUtil.getPokerImage(idx, value);
+            landlordCards.getChildren().add(imageView);
+        }
+    }
+
+    public static void setPoint(String point, int i) {
+        switch (i) {
+            case 1:
+                player1Score.setText("Score: " + point);
+                break;
+            case 2:
+                player2Score.setText("Score: " + point);
+                break;
+            case 3:
+                player3Score.setText("Score: " + point);
+                break;
+            default:
+        }
     }
 
     public static void setPlayerName(String name,int i) {
@@ -256,16 +286,13 @@ public class GameRoom extends Application {
             cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
             int finalI = i;
             cardButton.setOnAction(e -> {
-                // todo:在按下按键时让按钮颜色反转
                 System.out.println("1");
                 if(indexes[finalI] == 0) {
                     indexes[finalI] = 1;
-                    cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: red;");
                     cardButton.setTranslateY(-10);
                 }
                 else {
                     indexes[finalI] = 0;
-                    cardButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
                     cardButton.setTranslateY(0);
                 }
             });
