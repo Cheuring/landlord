@@ -1,5 +1,6 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUI.GameRoom;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.enums.ServerEventCode;
 import buaa.oop.landlords.common.print.SimplePrinter;
@@ -50,6 +51,8 @@ public class ClientEventListener_CODE_GAME_LANDLORD_CONFIRM extends ClientEventL
                    gameRoom.setPlayerRole("peasant", i);
            }
            gameRoom.setLandlordCards(additionalPokers);
+           gameRoom.clearLastPokers();
+           GameRoom.setRoomStatus("游戏状态: 游戏开始");
         });
 
         pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_REDIRECT);

@@ -43,11 +43,12 @@ public class ClientEventListener_CODE_GAME_STARTING extends ClientEventListener{
             GameRoom.setPlayerName((String)upData.get("name"), 1);
             GameRoom.setPlayerName((String)downData.get("name"), 3);
             GameRoom.setPoint(String.valueOf(upData.get("score")), 1);
-            GameRoom.setPoint(String.valueOf(upData.get("score")), 3);
+            GameRoom.setPoint(String.valueOf(downData.get("score")), 3);
             GameRoom.setPoint(String.valueOf(user.getScore()), 2);
             GameRoom.displayPokers(pokers);
+            GameRoom.updatePokers(17,1);
+            GameRoom.updatePokers(17,3);
         });
-//        GameRoom.setRoomStatus("游戏状态: 选择地主");
         SimplePrinter.printNotice("");
         SimplePrinter.printNotice("Your cards are:");
         SimplePrinter.printPokers(pokers);

@@ -49,11 +49,14 @@ public class GameRoom extends Application {
     private static Label gameStatusLabel = new Label();
     private static HBox landlordCards = new HBox(-50);
     private static HBox actionButtonsBox = new HBox(20);
-    private static VBox player1Cards = new VBox(-50);
-    private static VBox player3Cards = new VBox(-50);
+    private static VBox player1Cards = new VBox(-110);
+    private static VBox player3Cards = new VBox(-110);
 
     private static HBox player2Cards = new HBox(-50);
-    //indexes数组用于记录第i张牌是否被按下
+
+    private static Label player1CardsCount = new Label();
+    private static Label player3CardsCount = new Label();
+
     private static int[] indexes = new int[20];
 
     private static HBox player1LastPokers = new HBox(-50);
@@ -135,21 +138,21 @@ public class GameRoom extends Application {
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
         player1Role.setText("");
-        player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards);
+        player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards, player1CardsCount);
 
         HBox player1=new HBox(10);
         player1LastPokers.setAlignment(Pos.CENTER);
-        player1.getChildren().addAll(player1Box,player1LastPokers);
+        player1.getChildren().addAll(player1Box, player1LastPokers);
 
         // 玩家3的卡牌区（右侧玩家）
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
         player3Role.setText("");
         player3Name.setText("玩家3");
-        player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards);
+        player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards, player3CardsCount);
         HBox player3=new HBox(10);
         player3LastPokers.setAlignment(Pos.CENTER);
-        player3.getChildren().addAll(player3Box,player3LastPokers);
+        player3.getChildren().addAll(player3LastPokers, player3Box);
 
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
@@ -187,8 +190,8 @@ public class GameRoom extends Application {
         player1Cards.getChildren().clear();
         player2Cards.getChildren().clear();
         player3Cards.getChildren().clear();
+        clearLastPokers();
     }
-
 
     public static void setRoomStatus(String title) {
         gameStatusLabel.setText(title);
@@ -246,6 +249,23 @@ public class GameRoom extends Application {
         }
     }
 
+    public static HBox getPlayerLastPokers(int i) {
+        switch (i) {
+            case 1:
+                return player1LastPokers;
+            case 2:
+                return player2LastPokers;
+            default:
+                return player3LastPokers;
+        }
+    }
+
+    public static void clearLastPokers() {
+        player1LastPokers.getChildren().clear();
+        player2LastPokers.getChildren().clear();
+        player3LastPokers.getChildren().clear();
+    }
+
     public static void setPlayerRole(String role,int i) {
         switch (i) {
             case 1:
@@ -277,7 +297,6 @@ public class GameRoom extends Application {
              if(index[i] == on && i < pokers.size())
                  list[pos++] = i;
          }
-         //此处由于getPoker()方法的原因，只能再开个数组
          int[] ans = new int[pos];
          for (int i = 0; i < pos; i++) {
              ans[i] = list[i];
@@ -320,14 +339,15 @@ public class GameRoom extends Application {
 
     //更新他人手牌
     public static void updatePokers(int size, int player) {
-        ImageView imageView = GUIUtil.getPokerBackImage();
         if(player == 1) {
-            for(int i = 0; i < size; i++)
-                player1Cards.getChildren().add(imageView);
+            ImageView imageView = GUIUtil.getPokerBackImage();
+            player1CardsCount.setText(String.valueOf(size));
+            player1Cards.getChildren().add(imageView);
         }
         else {
-            for(int i = 0; i < size; i++)
-                player1Cards.getChildren().add(imageView);
+            ImageView imageView = GUIUtil.getPokerBackImage();
+            player3CardsCount.setText(String.valueOf(size));
+            player3Cards.getChildren().add(imageView);
         }
     }
 
@@ -460,10 +480,11 @@ public class GameRoom extends Application {
 
         passButton.setOnAction(e -> {
             actionButtonsBox.getChildren().clear();
-            updatePlayerArea(null,GUIUtil.getAssetImage(Assets.SHOW_PASS),player2LastPokers);
+            updatePlayerArea(null,GUIUtil.getAssetImage(Assets.SHOW_PASS), player2LastPokers);
             pushToServer(ClientContainer.channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
         });
     }
+
     public static void updatePlayerArea(List<Poker> playerPokers, ImageView imageView,HBox hBox) {
         if(playerPokers == null || playerPokers.isEmpty()) {
             hBox.getChildren().clear();
@@ -473,7 +494,7 @@ public class GameRoom extends Application {
             hBox.getChildren().clear();
             for(int i = 0; i < 20; i++)
                 indexes[i] = 0;
-            int cnt =playerPokers.size();
+            int cnt = playerPokers.size();
             for(int i = 0; i < cnt; i++) {
                 Poker poker = playerPokers.get(i);
                 int idx = poker.getLevel().getIdx();
@@ -483,5 +504,4 @@ public class GameRoom extends Application {
             }
         }
     }
-
 }

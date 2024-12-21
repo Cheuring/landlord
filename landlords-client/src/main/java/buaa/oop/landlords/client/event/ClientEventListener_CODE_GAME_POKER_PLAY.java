@@ -1,6 +1,8 @@
 package buaa.oop.landlords.client.event;
 
+import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.client.enums.Assets;
 import buaa.oop.landlords.common.entities.Poker;
 import buaa.oop.landlords.common.entities.PokerSell;
 import buaa.oop.landlords.common.enums.*;
@@ -71,6 +73,9 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
 
         if (sells.isEmpty() && (Integer) roominfo.get("lastSellClientId") != User.INSTANCE.getId()) {
             SimplePrinter.printNotice("You don't have winning combination.");
+            Platform.runLater(() -> {
+               gameRoom.updatePlayerArea(null, GUIUtil.getAssetImage(Assets.SHOW_PASS), gameRoom.getPlayerLastPokers(2));
+            });
             pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
             return;
         }
