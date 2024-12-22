@@ -27,10 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -175,10 +172,23 @@ public class GameRoom extends Application {
         mainLayout.setLeft(player1);
         mainLayout.setRight(player3);
 
-        // 设置场景
-        Scene scene = new Scene(mainLayout, 1200, 700);
+        Image backgroundImage = new Image("/images/background1.jpg");
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setFitWidth(1200);
+        backgroundImageView.setFitHeight(700);
+        backgroundImageView.setPreserveRatio(false);
+        backgroundImageView.setOpacity(0.5);
+        StackPane root = new StackPane();
+        root.getChildren().addAll(backgroundImageView, mainLayout);
+
+        Scene scene = new Scene(root, 1200, 700);
+
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> backgroundImageView.setFitWidth((double) newVal));
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> backgroundImageView.setFitHeight((double) newVal));
+
         primaryStage.setScene(scene);
         GUIUtil.cancelHandler(primaryStage);
+
         primaryStage.show();
     }
 
