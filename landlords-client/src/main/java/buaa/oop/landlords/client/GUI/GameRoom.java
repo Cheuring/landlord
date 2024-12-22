@@ -67,9 +67,9 @@ public class GameRoom extends Application {
     private static Label player2Name = new Label();
     private static Label player3Name = new Label();
 
-    private static Label player1Role = new Label();
-    private static Label player2Role = new Label();
-    private static Label player3Role = new Label();
+    private static ImageView player1Role = new ImageView();
+    private static ImageView player2Role = new ImageView();
+    private static ImageView player3Role = new ImageView();
 
     private static Label player1Score = new Label();
     private static Label player2Score = new Label();
@@ -137,7 +137,6 @@ public class GameRoom extends Application {
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
-        player1Role.setText("");
         player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards, player1CardsCount);
 
         HBox player1=new HBox(10);
@@ -147,7 +146,6 @@ public class GameRoom extends Application {
         // 玩家3的卡牌区（右侧玩家）
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
-        player3Role.setText("");
         player3Name.setText("玩家3");
         player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards, player3CardsCount);
         HBox player3=new HBox(10);
@@ -157,7 +155,6 @@ public class GameRoom extends Application {
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
         player2Box.setAlignment(Pos.CENTER);
-        player2Role.setText("");
         player2Cards.setAlignment(Pos.CENTER);
         player2LastPokers.setAlignment(Pos.CENTER);
         player2Box.getChildren().addAll(player2LastPokers,player2Role, player2Name, player2Score, player2Cards);
@@ -269,13 +266,22 @@ public class GameRoom extends Application {
     public static void setPlayerRole(String role,int i) {
         switch (i) {
             case 1:
-                player1Role.setText(role);
+                if(role.equals("landlord"))
+                    player1Role.setImage(GUIUtil.getAssetImage(Assets.LANDLORDS).getImage());
+                else
+                    player1Role.setImage(GUIUtil.getAssetImage(Assets.PEASANT).getImage());
                 break;
             case 2:
-                player2Role.setText(role);
+                if(role.equals("landlord"))
+                    player2Role.setImage(GUIUtil.getAssetImage(Assets.LANDLORDS).getImage());
+                else
+                    player2Role.setImage(GUIUtil.getAssetImage(Assets.PEASANT).getImage());
                 break;
             case 3:
-                player3Role.setText(role);
+                if(role.equals("landlord"))
+                    player3Role.setImage(GUIUtil.getAssetImage(Assets.LANDLORDS).getImage());
+                else
+                    player3Role.setImage(GUIUtil.getAssetImage(Assets.PEASANT).getImage());
                 break;
         }
     }
@@ -406,8 +412,10 @@ public class GameRoom extends Application {
     public static void playButtonOn() {
         actionButtonsBox.getChildren().clear();
         Button playButton = new Button("出牌");
+        playButton.setGraphic(GUIUtil.getAssetImage(Assets.BTN_PLAY_CARD));
         playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         Button passButton = new Button("过牌");
+        passButton.setGraphic(GUIUtil.getAssetImage(Assets.BTN_PASS));
         passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
         if (lastSellClientId == null || lastSellClientId == User.INSTANCE.getId())
             actionButtonsBox.getChildren().addAll(playButton);
