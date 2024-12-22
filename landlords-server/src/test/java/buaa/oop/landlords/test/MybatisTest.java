@@ -19,9 +19,8 @@ public class MybatisTest {
 
     @BeforeEach
     public void init() throws IOException {
-//        String resource = "mybatis-config.xml";
-//        InputStream inputStream = Resources.getResourceAsStream(resource);
-        InputStream inputStream = MybatisTest.class.getClassLoader().getResourceAsStream("mybatis-config.xml");
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
         session = new SqlSessionFactoryBuilder()
                 .build(inputStream)
                 .openSession();
