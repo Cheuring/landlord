@@ -34,6 +34,6 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
             GUIUtil.autoCloseAlertHandler(stage);
             stage.close();
         });
-        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+        if (!map.containsKey("scores")) {get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);}
     }
 }
