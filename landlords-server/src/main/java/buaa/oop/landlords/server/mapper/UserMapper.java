@@ -1,6 +1,7 @@
 package buaa.oop.landlords.server.mapper;
 
 import buaa.oop.landlords.server.pojo.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface UserMapper {
 
     User selectUserByName(String name);
 
-    int updateUserScore(int id, int score);
+    int updateUserScore(@Param("name") String name, @Param("score") int score);
 }

@@ -24,6 +24,6 @@
     </delete>
 
     <update id="updateUserScore">
-        UPDATE user SET score = score + #{score} WHERE id = #{id}
+        UPDATE user SET score = score + #{score} WHERE name = #{name}
     </update>
 </mapper>
