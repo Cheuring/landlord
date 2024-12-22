@@ -19,8 +19,9 @@ public class MybatisTest {
 
     @BeforeEach
     public void init() throws IOException {
-        String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
+//        String resource = "mybatis-config.xml";
+//        InputStream inputStream = Resources.getResourceAsStream(resource);
+        InputStream inputStream = MybatisTest.class.getClassLoader().getResourceAsStream("mybatis-config.xml");
         session = new SqlSessionFactoryBuilder()
                 .build(inputStream)
                 .openSession();
@@ -43,7 +44,7 @@ public class MybatisTest {
     @Order(2)
     public void testInsertUser() {
         User user = new User();
-        user.setName("TT");
+        user.setName("oop");
         user.setPassword(MD5Util.encrypt("123456"));
 
         int result = userMapper.insertUser(user);
