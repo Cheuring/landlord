@@ -4,6 +4,7 @@ import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.SimpleClient;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -31,12 +32,14 @@ public class Loading extends Application {
 
         // 创建加载界面
         Label statusLabel = new Label("正在连接服务器...");
+        statusLabel.setAlignment(Pos.TOP_CENTER);
+        statusLabel.setStyle("-fx-font-weight:bold; -fx-text-fill: BLACK; -fx-font-size: 18;");
         ProgressBar progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(300);
 
         StackPane root = new StackPane();
         root.getChildren().addAll(progressBar, statusLabel);
-        StackPane.setAlignment(statusLabel, javafx.geometry.Pos.TOP_CENTER);
+        StackPane.setAlignment(statusLabel, javafx.geometry.Pos.CENTER);
         StackPane.setAlignment(progressBar, javafx.geometry.Pos.BOTTOM_CENTER);
 
         Scene scene = new Scene(root, 400, 200);
@@ -67,13 +70,13 @@ public class Loading extends Application {
                         primaryStage.close();  // 关闭加载界面
                     } else {
                         statusLabel.setText("连接失败！");
-                        renderScene("我去","连接失败");
+                        renderScene("网络故障","连接失败");
                     }
                 });
             } catch (Exception e) {
                 log.error("连接失败", e);
                 Platform.runLater(() -> statusLabel.setText("连接失败"));
-                renderScene("我去","连接失败");
+                renderScene("网络故障","连接失败");
             }
         }).start();
     }

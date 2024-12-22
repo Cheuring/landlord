@@ -180,7 +180,7 @@ public class RoomHall extends Application {
         });
         Button sendButton = new Button("发送");
         sendButton.setOnAction(e -> sendMessage());
-        Label formatHint = new Label("Please enter your content in such format:\n@[ClientToName] [Content]");
+        Label formatHint = new Label("Format:@[ClientToName] [Content]");
         formatHint.setStyle("-fx-font-size: 12; -fx-text-fill: gray; -fx-padding: 5;");
         chatBox.getChildren().addAll(chatArea, inputField, sendButton, formatHint);
 

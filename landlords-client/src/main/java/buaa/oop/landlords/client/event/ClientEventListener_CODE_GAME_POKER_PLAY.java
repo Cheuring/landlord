@@ -75,8 +75,13 @@ public class ClientEventListener_CODE_GAME_POKER_PLAY extends ClientEventListene
             SimplePrinter.printNotice("You don't have winning combination.");
             Platform.runLater(() -> {
                gameRoom.updatePlayerArea(null, GUIUtil.getAssetImage(Assets.SHOW_PASS), gameRoom.getPlayerLastPokers(2));
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
             });
-            pushToServer(channel, ServerEventCode.CODE_GAME_POKER_PLAY_PASS, data);
             return;
         }
 

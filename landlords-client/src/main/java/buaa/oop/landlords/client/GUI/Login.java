@@ -29,7 +29,7 @@ public class Login extends Application {
     @Override
     public void start(Stage Stage) {
         primaryStage = Stage;
-        usernameField.setPromptText("请输入用户名");
+        usernameField.setPromptText("请输入用户名(4-16个字母与数字)");
         usernameField.setStyle("-fx-font-size: 14px; -fx-prompt-text-fill: #888888;");
         usernameField.setPrefWidth(250);
 
@@ -116,7 +116,7 @@ public class Login extends Application {
         scene.setFill(Color.WHITE);
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("登录");
+        primaryStage.setTitle("用户注册/登录");
         primaryStage.setResizable(false);
         GUIUtil.cancelHandler(primaryStage);
         primaryStage.show();

@@ -139,6 +139,7 @@ public class GameRoom extends Application {
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
+        player1Role.setStyle("-fx-pref-tile-width: 60px; -fx-pref-tile-height: 40px;");
         player1Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
         player1Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
         player1CardsCount.setStyle("-fx-font-weight:bold; -fx-text-fill: CYAN; -fx-font-size: 20;");
@@ -152,6 +153,7 @@ public class GameRoom extends Application {
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
         player3Name.setText("玩家3");
+        player3Role.setStyle("-fx-pref-tile-width: 60px; -fx-pref-tile-height: 40px;");
         player3Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
         player3Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
         player3CardsCount.setStyle("-fx-font-weight:bold; -fx-text-fill: CYAN; -fx-font-size: 20;");
@@ -165,6 +167,7 @@ public class GameRoom extends Application {
         player2Box.setAlignment(Pos.CENTER);
         player2Cards.setAlignment(Pos.CENTER);
         player2LastPokers.setAlignment(Pos.CENTER);
+        player2Role.setStyle("-fx-pref-tile-width: 60px; -fx-pref-tile-height: 40px;");
         player2Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
         player2Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
         player2Box.getChildren().addAll(player2Role, player2Name, player2Score);
