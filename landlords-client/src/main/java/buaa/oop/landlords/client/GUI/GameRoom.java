@@ -157,7 +157,10 @@ public class GameRoom extends Application {
         player2Box.setAlignment(Pos.CENTER);
         player2Cards.setAlignment(Pos.CENTER);
         player2LastPokers.setAlignment(Pos.CENTER);
-        player2Box.getChildren().addAll(player2LastPokers,player2Role, player2Name, player2Score, player2Cards);
+        player2Box.getChildren().addAll(player2Role, player2Name, player2Score);
+        HBox player2 =new HBox(10);
+        player2.setAlignment(Pos.CENTER);
+        player2.getChildren().addAll(player2Box,player2LastPokers, player2Cards);
 
         // 左右玩家布局
         BorderPane sidePlayersLayout = new BorderPane();
@@ -168,7 +171,7 @@ public class GameRoom extends Application {
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(topLayout);
         mainLayout.setCenter(actionButtonsBox);
-        mainLayout.setBottom(player2Box);
+        mainLayout.setBottom(player2);
         mainLayout.setLeft(player1);
         mainLayout.setRight(player3);
 

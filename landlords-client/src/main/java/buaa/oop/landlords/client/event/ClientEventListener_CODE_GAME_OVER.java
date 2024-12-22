@@ -63,6 +63,9 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener {
                 }
             }
         }
+        Platform.runLater(()->{
+            new GameSettlement().start(new Stage());
+        });
         get(ClientEventCode.CODE_EXIT).call(channel, data);
     }
 }

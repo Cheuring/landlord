@@ -54,7 +54,7 @@ public class Loading extends Application {
                     Platform.runLater(() -> progressBar.setProgress(progress)); // 更新进度条
                 }
 
-                boolean connectionSuccess = SimpleClient.connect("localhost", 32112);
+                boolean connectionSuccess = SimpleClient.connect(host, port);
 
                 Platform.runLater(() -> {
                     if (connectionSuccess) {
@@ -81,7 +81,7 @@ public class Loading extends Application {
 
 
     public static void main(String[] args) {
-        setConnectionDetails("localhost", 32112);
+//        setConnectionDetails("localhost", 32112);
         launch(args);
     }
 }

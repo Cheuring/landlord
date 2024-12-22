@@ -24,35 +24,35 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SimpleClient {
     public static void main(String[] args) {
-//        Options options = new Options();
-//
-//        Option hostOption = new Option("h", "host", true, "server host");
-//        hostOption.setRequired(false);
-//        options.addOption(hostOption);
-//
-//        Option portOption = new Option("p", "port", true, "server port");
-//        portOption.setRequired(false);
-//        options.addOption(portOption);
-//
-//        CommandLineParser parser = new DefaultParser();
-//        HelpFormatter formatter = new HelpFormatter();
-//        CommandLine cmd;
-//
-//        try {
-//            cmd = parser.parse(options, args);
-//        } catch (ParseException e) {
-//            System.out.println(e.getMessage());
-//            formatter.printHelp("java -jar landlord-client", options, true);
-//
-//            System.exit(1);
-//            return;
-//        }
-//
-//        String host = cmd.getOptionValue("host", "8.152.218.39");
-//
-//        int port = Integer.parseInt(cmd.getOptionValue("port", "32112"));
-//
-//        connect(host, port);
+        Options options = new Options();
+
+        Option hostOption = new Option("h", "host", true, "server host");
+        hostOption.setRequired(false);
+        options.addOption(hostOption);
+
+        Option portOption = new Option("p", "port", true, "server port");
+        portOption.setRequired(false);
+        options.addOption(portOption);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("java -jar landlord-client", options, true);
+
+            System.exit(1);
+            return;
+        }
+
+        String host = cmd.getOptionValue("host", "8.152.218.39");
+
+        int port = Integer.parseInt(cmd.getOptionValue("port", "32112"));
+
+        Loading.setConnectionDetails(host, port);
         Application.launch(Loading.class);
     }
 

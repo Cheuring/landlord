@@ -32,9 +32,8 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
         Platform.runLater(() -> {
             Stage stage = gameRoom.getPrimaryStage();
             GUIUtil.autoCloseAlertHandler(stage);
-            new GameSettlement().start(new Stage());
-//            stage.close();
+            stage.close();
         });
-//        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
     }
 }
