@@ -29,15 +29,22 @@ public class ClientEventListener_CODE_SHOW_POKERS extends ClientEventListener{
     public void call(Channel channel, String data) {
         Map<String, Object>showPokers= MapUtil.parse(data);
         List<Poker> pokers = JsonUtil.fromJson((String)showPokers.get("pokers"), new TypeReference<List<Poker>>(){});
+        List<Map<String, Object>> clientInfos = JsonUtil.fromJson((String) showPokers.get("clientInfos"), new TypeReference<List<Map<String, Object>>>() {});
 
         SimplePrinter.printNotice((String)showPokers.get("lastSellClientName")+ "["+JsonUtil.fromJson((String)showPokers.get("role"), ClientRole.class).name()+"]"+"used ");
         SimplePrinter.printPokers(pokers);
         Platform.runLater(() -> {
-            if (showPokers.get("lastSellClientName").equals(gameRoom.getPlayerName(1)))
+            int size = pokers.size();
+            if (showPokers.get("lastSellClientName").equals(gameRoom.getPlayerName(1))){
                 gameRoom.updatePlayerArea(pokers, null, gameRoom.getPlayerLastPokers(1));
-            else if (showPokers.get("lastSellClientName").equals(gameRoom.getPlayerName(3)))
+                gameRoom.updatePokers(gameRoom.getSurplus(1)-size, 1);
+            }
+            else if (showPokers.get("lastSellClientName").equals(gameRoom.getPlayerName(3))) {
                 gameRoom.updatePlayerArea(pokers, null, gameRoom.getPlayerLastPokers(3));
+                gameRoom.updatePokers(gameRoom.getSurplus(3)-size, 3);
+            }
         });
+
         if (showPokers.containsKey("nextPlayerId")) {
             if (User.getINSTANCE().getId() != (int) showPokers.get("nextPlayerId")) {
                 SimplePrinter.printNotice("It's " + (String) showPokers.get("nextPlayerNickname") + "'s turn.");

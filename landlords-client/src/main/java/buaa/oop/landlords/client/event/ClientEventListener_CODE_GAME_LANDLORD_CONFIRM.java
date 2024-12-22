@@ -45,8 +45,12 @@ public class ClientEventListener_CODE_GAME_LANDLORD_CONFIRM extends ClientEventL
 
         Platform.runLater(()->{
            for(int i = 1; i<= 3; i++) {
-               if(landlordNickname.equals(gameRoom.getPlayerName(i)))
+               if(landlordNickname.equals(gameRoom.getPlayerName(i))) {
                    gameRoom.setPlayerRole("landlord", i);
+                   if(i == 1 || i == 3) {
+                       gameRoom.updatePokers(20, i);
+                   }
+               }
                else
                    gameRoom.setPlayerRole("peasant", i);
            }

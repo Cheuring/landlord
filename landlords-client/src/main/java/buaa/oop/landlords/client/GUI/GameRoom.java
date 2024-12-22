@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -51,8 +52,10 @@ public class GameRoom extends Application {
 
     private static HBox player2Cards = new HBox(-50);
 
-    private static Label player1CardsCount = new Label();
-    private static Label player3CardsCount = new Label();
+    private static Label player1CardsCount;
+    private static int player1CardsCnt = 0;
+    private static Label player3CardsCount;
+    private static int player3CardsCnt = 0;
 
     private static int[] indexes = new int[20];
 
@@ -64,13 +67,13 @@ public class GameRoom extends Application {
     private static Label player2Name = new Label();
     private static Label player3Name = new Label();
 
-    private static ImageView player1Role = new ImageView();
-    private static ImageView player2Role = new ImageView();
-    private static ImageView player3Role = new ImageView();
+    private static ImageView player1Role;
+    private static ImageView player2Role;
+    private static ImageView player3Role;
 
-    private static Label player1Score = new Label();
-    private static Label player2Score = new Label();
-    private static Label player3Score = new Label();
+    private static Label player1Score;
+    private static Label player2Score;
+    private static Label player3Score;
 
     public static HBox getPlayer1LastPokers() {
         return player1LastPokers;
@@ -105,7 +108,9 @@ public class GameRoom extends Application {
         VBox roomInfoBox = new VBox(10);
         roomInfoBox.setAlignment(Pos.TOP_CENTER);
         Label roomInfoLabel = new Label("房间号: "+Integer.toString(roomId));
+        roomInfoLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
         gameStatusLabel.setText("游戏状态: 等待其他玩家加入");
+        gameStatusLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 24;");
         landlordCards.setAlignment(Pos.CENTER);
         roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel, landlordCards);
 
@@ -134,6 +139,9 @@ public class GameRoom extends Application {
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
+        player1Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
+        player1Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
+        player1CardsCount.setStyle("-fx-font-weight:bold; -fx-text-fill: CYAN; -fx-font-size: 20;");
         player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards, player1CardsCount);
 
         HBox player1=new HBox(10);
@@ -144,6 +152,9 @@ public class GameRoom extends Application {
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
         player3Name.setText("玩家3");
+        player3Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
+        player3Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
+        player3CardsCount.setStyle("-fx-font-weight:bold; -fx-text-fill: CYAN; -fx-font-size: 20;");
         player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards, player3CardsCount);
         HBox player3=new HBox(10);
         player3LastPokers.setAlignment(Pos.CENTER);
@@ -154,6 +165,8 @@ public class GameRoom extends Application {
         player2Box.setAlignment(Pos.CENTER);
         player2Cards.setAlignment(Pos.CENTER);
         player2LastPokers.setAlignment(Pos.CENTER);
+        player2Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
+        player2Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
         player2Box.getChildren().addAll(player2Role, player2Name, player2Score);
         HBox player22 =new HBox(10);
         player22.setAlignment(Pos.CENTER);
@@ -203,6 +216,14 @@ public class GameRoom extends Application {
         player1Cards.getChildren().clear();
         player2Cards.getChildren().clear();
         player3Cards.getChildren().clear();
+        player1Role = new ImageView();
+        player2Role = new ImageView();
+        player3Role = new ImageView();
+        player1CardsCount = new Label();
+        player3CardsCount = new Label();
+        player1Score = new Label();
+        player2Score = new Label();
+        player3Score = new Label();
         clearLastPokers();
     }
 
@@ -321,7 +342,7 @@ public class GameRoom extends Application {
          }
          int[] ans = new int[pos];
          for (int i = 0; i < pos; i++) {
-             ans[i] = list[i];
+             ans[i] = list[i] + 1;
              System.out.println(ans[i]);
          }
          selectedCards = PokerUtil.getPoker(ans, pokers);
@@ -363,14 +384,23 @@ public class GameRoom extends Application {
     public static void updatePokers(int size, int player) {
         if(player == 1) {
             ImageView imageView = GUIUtil.getPokerBackImage();
-            player1CardsCount.setText(String.valueOf(size));
+            player1CardsCount.setText("剩余手牌：" + String.valueOf(size));
+            player1CardsCnt = size;
             player1Cards.getChildren().add(imageView);
         }
         else {
             ImageView imageView = GUIUtil.getPokerBackImage();
-            player3CardsCount.setText(String.valueOf(size));
+            player3CardsCount.setText("剩余手牌：" + String.valueOf(size));
+            player3CardsCnt = size;
             player3Cards.getChildren().add(imageView);
         }
+    }
+
+    public static int getSurplus(int player) {
+        if (player == 1)
+            return player1CardsCnt;
+        else
+            return player3CardsCnt;
     }
 
     public static void electButtonOn(int point, Integer currentLandlordId) {
@@ -427,12 +457,12 @@ public class GameRoom extends Application {
 
     public static void playButtonOn() {
         actionButtonsBox.getChildren().clear();
-        Button playButton = new Button("出牌");
+        Button playButton = new Button();
         playButton.setGraphic(GUIUtil.getAssetImage(Assets.BTN_PLAY_CARD));
-        playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        Button passButton = new Button("过牌");
+        playButton.setStyle("-fx-background-color: transparent; -fx-text-fill: transparent; -fx-font-size: 16; -fx-background-radius: 10;");
+        Button passButton = new Button();
         passButton.setGraphic(GUIUtil.getAssetImage(Assets.BTN_PASS));
-        passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
+        passButton.setStyle("-fx-background-color: transparent; -fx-text-fill: transparent; -fx-font-size: 16; -fx-background-radius: 10;");
         if (lastSellClientId == null || lastSellClientId == User.INSTANCE.getId())
             actionButtonsBox.getChildren().addAll(playButton);
         else
