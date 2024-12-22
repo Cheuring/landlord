@@ -43,7 +43,7 @@ public class MybatisTest {
     @Order(2)
     public void testInsertUser() {
         User user = new User();
-        user.setName("oop");
+        user.setName("TT");
         user.setPassword(MD5Util.encrypt("123456"));
 
         int result = userMapper.insertUser(user);
