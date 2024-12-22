@@ -55,7 +55,9 @@ public class GameRoom extends Application {
     private static HBox player2Cards = new HBox(-50);
 
     private static Label player1CardsCount = new Label();
+    private static int player1CardsCnt = 0;
     private static Label player3CardsCount = new Label();
+    private static int player3CardsCnt = 0;
 
     private static int[] indexes = new int[20];
 
@@ -67,9 +69,9 @@ public class GameRoom extends Application {
     private static Label player2Name = new Label();
     private static Label player3Name = new Label();
 
-    private static ImageView player1Role = new ImageView();
-    private static ImageView player2Role = new ImageView();
-    private static ImageView player3Role = new ImageView();
+    private static ImageView player1Role;
+    private static ImageView player2Role;
+    private static ImageView player3Role;
 
     private static Label player1Score = new Label();
     private static Label player2Score = new Label();
@@ -190,6 +192,9 @@ public class GameRoom extends Application {
         player1Cards.getChildren().clear();
         player2Cards.getChildren().clear();
         player3Cards.getChildren().clear();
+        player1Role = new ImageView();
+        player2Role = new ImageView();
+        player3Role = new ImageView();
         clearLastPokers();
     }
 
@@ -308,7 +313,7 @@ public class GameRoom extends Application {
          }
          int[] ans = new int[pos];
          for (int i = 0; i < pos; i++) {
-             ans[i] = list[i];
+             ans[i] = list[i] + 1;
              System.out.println(ans[i]);
          }
          selectedCards = PokerUtil.getPoker(ans, pokers);
@@ -350,14 +355,23 @@ public class GameRoom extends Application {
     public static void updatePokers(int size, int player) {
         if(player == 1) {
             ImageView imageView = GUIUtil.getPokerBackImage();
-            player1CardsCount.setText(String.valueOf(size));
+            player1CardsCount.setText("剩余手牌：" + String.valueOf(size));
+            player1CardsCnt = size;
             player1Cards.getChildren().add(imageView);
         }
         else {
             ImageView imageView = GUIUtil.getPokerBackImage();
-            player3CardsCount.setText(String.valueOf(size));
+            player3CardsCount.setText("剩余手牌：" + String.valueOf(size));
+            player3CardsCnt = size;
             player3Cards.getChildren().add(imageView);
         }
+    }
+
+    public static int getSurplus(int player) {
+        if (player == 1)
+            return player1CardsCnt;
+        else
+            return player3CardsCnt;
     }
 
     public static void electButtonOn(int point, Integer currentLandlordId) {
@@ -414,12 +428,12 @@ public class GameRoom extends Application {
 
     public static void playButtonOn() {
         actionButtonsBox.getChildren().clear();
-        Button playButton = new Button("出牌");
+        Button playButton = new Button();
         playButton.setGraphic(GUIUtil.getAssetImage(Assets.BTN_PLAY_CARD));
-        playButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
-        Button passButton = new Button("过牌");
+        playButton.setStyle("-fx-background-color: transparent; -fx-text-fill: transparent; -fx-font-size: 16; -fx-background-radius: 10;");
+        Button passButton = new Button();
         passButton.setGraphic(GUIUtil.getAssetImage(Assets.BTN_PASS));
-        passButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-font-size: 16; -fx-background-radius: 10;");
+        passButton.setStyle("-fx-background-color: transparent; -fx-text-fill: transparent; -fx-font-size: 16; -fx-background-radius: 10;");
         if (lastSellClientId == null || lastSellClientId == User.INSTANCE.getId())
             actionButtonsBox.getChildren().addAll(playButton);
         else
