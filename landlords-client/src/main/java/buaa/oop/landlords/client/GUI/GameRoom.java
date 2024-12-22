@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -51,9 +52,9 @@ public class GameRoom extends Application {
 
     private static HBox player2Cards = new HBox(-50);
 
-    private static Label player1CardsCount = new Label();
+    private static Label player1CardsCount;
     private static int player1CardsCnt = 0;
-    private static Label player3CardsCount = new Label();
+    private static Label player3CardsCount;
     private static int player3CardsCnt = 0;
 
     private static int[] indexes = new int[20];
@@ -70,9 +71,9 @@ public class GameRoom extends Application {
     private static ImageView player2Role;
     private static ImageView player3Role;
 
-    private static Label player1Score = new Label();
-    private static Label player2Score = new Label();
-    private static Label player3Score = new Label();
+    private static Label player1Score;
+    private static Label player2Score;
+    private static Label player3Score;
 
     public static HBox getPlayer1LastPokers() {
         return player1LastPokers;
@@ -107,7 +108,9 @@ public class GameRoom extends Application {
         VBox roomInfoBox = new VBox(10);
         roomInfoBox.setAlignment(Pos.TOP_CENTER);
         Label roomInfoLabel = new Label("房间号: "+Integer.toString(roomId));
+        roomInfoLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
         gameStatusLabel.setText("游戏状态: 等待其他玩家加入");
+        gameStatusLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 24;");
         landlordCards.setAlignment(Pos.CENTER);
         roomInfoBox.getChildren().addAll(roomInfoLabel, gameStatusLabel, landlordCards);
 
@@ -136,6 +139,9 @@ public class GameRoom extends Application {
         // 玩家1的卡牌区（左侧玩家）
         VBox player1Box = new VBox(10);
         player1Box.setAlignment(Pos.CENTER);
+        player1Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
+        player1Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
+        player1CardsCount.setStyle("-fx-font-weight:bold; -fx-text-fill: CYAN; -fx-font-size: 20;");
         player1Box.getChildren().addAll(player1Role, player1Name, player1Score, player1Cards, player1CardsCount);
 
         HBox player1=new HBox(10);
@@ -146,6 +152,9 @@ public class GameRoom extends Application {
         VBox player3Box = new VBox(10);
         player3Box.setAlignment(Pos.CENTER);
         player3Name.setText("玩家3");
+        player3Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
+        player3Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
+        player3CardsCount.setStyle("-fx-font-weight:bold; -fx-text-fill: CYAN; -fx-font-size: 20;");
         player3Box.getChildren().addAll(player3Role, player3Name, player3Score, player3Cards, player3CardsCount);
         HBox player3=new HBox(10);
         player3LastPokers.setAlignment(Pos.CENTER);
@@ -156,6 +165,8 @@ public class GameRoom extends Application {
         player2Box.setAlignment(Pos.CENTER);
         player2Cards.setAlignment(Pos.CENTER);
         player2LastPokers.setAlignment(Pos.CENTER);
+        player2Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
+        player2Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
         player2Box.getChildren().addAll(player2Role, player2Name, player2Score);
         HBox player2 =new HBox(10);
         player2.setAlignment(Pos.CENTER);
@@ -205,6 +216,11 @@ public class GameRoom extends Application {
         player1Role = new ImageView();
         player2Role = new ImageView();
         player3Role = new ImageView();
+        player1CardsCount = new Label();
+        player3CardsCount = new Label();
+        player1Score = new Label();
+        player2Score = new Label();
+        player3Score = new Label();
         clearLastPokers();
     }
 
