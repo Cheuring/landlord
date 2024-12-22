@@ -42,6 +42,7 @@ public class RoomHall extends Application {
     private static GridPane roomDisplayArea = new GridPane();
     private static BorderPane mainLayout = new BorderPane();
     private static ScrollPane scrollPane = new ScrollPane();
+    private static TextArea scoreArea = new TextArea();
 
     private static TextField inputField = new TextField();
     private static int idx;
@@ -197,7 +198,7 @@ public class RoomHall extends Application {
         nameArea.setStyle("-fx-background-color: white; -fx-padding: 5;");
 
         Label scoreLabel = new Label("分数: ");
-        TextArea scoreArea = new TextArea();
+
         scoreArea.appendText(String.valueOf(User.INSTANCE.getScore()));
         scoreArea.setEditable(false);
         scoreArea.setPrefHeight(50);
@@ -282,5 +283,8 @@ public class RoomHall extends Application {
         if(msg.charAt(0) == '@'&&(idx=msg.indexOf(' '))>1){
             return true;
         }return false;
+    }
+    public  static void updataScoreArea(){
+        scoreArea.setText(String.valueOf(User.INSTANCE.getScore()));
     }
 }

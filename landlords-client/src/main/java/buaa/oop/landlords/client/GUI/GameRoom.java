@@ -19,6 +19,9 @@ import buaa.oop.landlords.common.enums.ServerEventCode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -148,6 +151,7 @@ public class GameRoom extends Application {
         HBox player1=new HBox(10);
         player1LastPokers.setAlignment(Pos.CENTER);
         player1.getChildren().addAll(player1Box, player1LastPokers);
+        player1.setMaxHeight(200);
 
         // 玩家3的卡牌区（右侧玩家）
         VBox player3Box = new VBox(10);
@@ -161,6 +165,7 @@ public class GameRoom extends Application {
         HBox player3=new HBox(10);
         player3LastPokers.setAlignment(Pos.CENTER);
         player3.getChildren().addAll(player3LastPokers, player3Box);
+        player3.setMaxHeight(200);
 
         // 玩家2的卡牌区（底部玩家，手牌横向展示）
         VBox player2Box = new VBox(10);
@@ -171,9 +176,13 @@ public class GameRoom extends Application {
         player2Name.setStyle("-fx-font-weight:bold; -fx-font-size: 20;");
         player2Score.setStyle("fx-font-weight:bold; -fx-text-fill: WHITE; -fx-font-size: 20;");
         player2Box.getChildren().addAll(player2Role, player2Name, player2Score);
-        HBox player2 =new HBox(10);
+        HBox player22 =new HBox(10);
+        player22.setAlignment(Pos.CENTER);
+        player22.getChildren().addAll(player2Box, player2Cards);
+        VBox player2=new VBox(10);
         player2.setAlignment(Pos.CENTER);
-        player2.getChildren().addAll(player2Box,player2LastPokers, player2Cards);
+        player2.getChildren().addAll(player2LastPokers,player22);
+
 
         // 左右玩家布局
         BorderPane sidePlayersLayout = new BorderPane();
@@ -187,6 +196,7 @@ public class GameRoom extends Application {
         mainLayout.setBottom(player2);
         mainLayout.setLeft(player1);
         mainLayout.setRight(player3);
+        BorderPane.setAlignment(mainLayout, Pos.CENTER);
 
         Image backgroundImage = new Image("/images/background1.jpg");
         ImageView backgroundImageView = new ImageView(backgroundImage);
@@ -194,13 +204,23 @@ public class GameRoom extends Application {
         backgroundImageView.setFitHeight(700);
         backgroundImageView.setPreserveRatio(false);
         backgroundImageView.setOpacity(0.5);
+
         StackPane root = new StackPane();
         root.getChildren().addAll(backgroundImageView, mainLayout);
+        DoubleProperty scaleFactor = new SimpleDoubleProperty(1.0);
+
+        scaleFactor.bind(Bindings.min(
+                root.widthProperty().divide(1200),
+                root.heightProperty().divide(700)
+        ));
+
+        mainLayout.scaleXProperty().bind(scaleFactor);
+        mainLayout.scaleYProperty().bind(scaleFactor);
+
+        backgroundImageView.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImageView.fitHeightProperty().bind(primaryStage.heightProperty());
 
         Scene scene = new Scene(root, 1200, 700);
-
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> backgroundImageView.setFitWidth((double) newVal));
-        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> backgroundImageView.setFitHeight((double) newVal));
 
         primaryStage.setScene(scene);
         GUIUtil.cancelHandler(primaryStage);

@@ -70,6 +70,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener {
         }
         if(roomHide.compareAndSet(true, false)) {
             Platform.runLater(() -> {
+                RoomHall.updataScoreArea();
                 RoomHall.roomHallDisplay();
             });
         }

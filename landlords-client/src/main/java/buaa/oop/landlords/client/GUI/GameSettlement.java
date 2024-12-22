@@ -43,10 +43,10 @@ public class GameSettlement extends Application {
 
         Label nameLabel = new Label("姓名");
         Label scoreChangeLabels = new Label("分数变化");
-        Label currentScoreLabels = new Label("当前分数");
+//        Label currentScoreLabels = new Label("当前分数");
         gridPane.add(nameLabel, 0, 0);
         gridPane.add(scoreChangeLabels, 1, 0);
-        gridPane.add(currentScoreLabels, 2, 0);
+//        gridPane.add(currentScoreLabels, 2, 0);
 
         int row = 1;  // 起始行数
         for (Map<String, Object> score : scores) {
@@ -54,15 +54,15 @@ public class GameSettlement extends Application {
             int scoreChange = (int) score.get("scoreInc");
             int currentScore = (int) score.get("score");
             if(name.equals(User.getINSTANCE().getNickname())){
-                User.getINSTANCE().setScore(currentScore);
+                User.getINSTANCE().setScore(User.getINSTANCE().getScore()+currentScore);
             }
             Label username = new Label(name);
             Label scoreChangeLabel = new Label(String.valueOf(scoreChange));
-            Label currentScoreLabel = new Label(String.valueOf(currentScore));
+//            Label currentScoreLabel = new Label(String.valueOf(currentScore));
 
             gridPane.add(username, 0, row);
             gridPane.add(scoreChangeLabel, 1, row);
-            gridPane.add(currentScoreLabel, 2, row);
+//            gridPane.add(currentScoreLabel, 2, row);
             row++;
         }
 

@@ -34,6 +34,9 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
             GUIUtil.autoCloseAlertHandler(stage);
             stage.close();
         });
-        get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+        if (!map.containsKey("scores")) {
+            GUIUtil.renderScene("房间丢失","有个可恶的小子溜了",10);
+            get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+        }
     }
 }

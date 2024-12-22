@@ -63,6 +63,8 @@ public class Login extends Application {
                     }
                     System.out.println("用户输入的用户名：" + inputUsername);
                 } else {
+                    flag=true;
+                    usernameField.clear();
                     usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
                 }
             }
@@ -75,7 +77,6 @@ public class Login extends Application {
                         "-fx-padding: 10px 20px; " +
                         "-fx-background-radius: 5px;");
         LoginButton.setOnAction(e -> {
-            //GUIUtil.renderScene("第一次登录耗时较长","请耐心等待",1);
             if(flag) {
                 flag = false;
                 inputUsername = usernameField.getText();
@@ -94,6 +95,8 @@ public class Login extends Application {
                     }
                     System.out.println("用户输入的用户名：" + inputUsername);
                 } else {
+                    usernameField.clear();
+                    flag=true;
                     usernameField.setStyle("-fx-border-color: red; -fx-font-size: 14px;");
                 }
             }
@@ -110,8 +113,6 @@ public class Login extends Application {
         );
         layout.setStyle("-fx-padding: 20px; -fx-alignment: center;");
 
-
-        // 设置场景
         Scene scene = new Scene(layout);
         scene.setFill(Color.WHITE);
 
