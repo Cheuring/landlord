@@ -48,7 +48,7 @@ public class SimpleClient {
             return;
         }
 
-        String host = cmd.getOptionValue("host", "localhost");
+        String host = cmd.getOptionValue("host", "8.152.218.39");
 
         int port = Integer.parseInt(cmd.getOptionValue("port", "32112"));
 
