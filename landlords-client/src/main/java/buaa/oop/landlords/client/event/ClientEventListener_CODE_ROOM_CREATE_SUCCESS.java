@@ -36,10 +36,9 @@ public class ClientEventListener_CODE_ROOM_CREATE_SUCCESS extends ClientEventLis
         SimplePrinter.printNotice("Please wait for other players to join !");
 
         if(ClientEventListener_CODE_SHOW_OPTIONS.getRoomHide().compareAndSet(false,true)){
-
             Platform.runLater(()->{
                 RoomHall.roomHallHide();
-                GameRoom gameRoom=new GameRoom();
+                gameRoom=new GameRoom();
                 gameRoom.init(channel,roomId);
                 gameRoom.setPlayerName(user.getNickname(), 2);
                 gameRoom.setPlayerName("玩家1", 1);

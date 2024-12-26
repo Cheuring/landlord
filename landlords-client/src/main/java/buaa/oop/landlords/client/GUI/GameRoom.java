@@ -406,12 +406,14 @@ public class GameRoom extends Application {
             ImageView imageView = GUIUtil.getPokerBackImage();
             player1CardsCount.setText("剩余手牌：" + String.valueOf(size));
             player1CardsCnt = size;
+            player1Cards.getChildren().clear();
             player1Cards.getChildren().add(imageView);
         }
         else {
             ImageView imageView = GUIUtil.getPokerBackImage();
             player3CardsCount.setText("剩余手牌：" + String.valueOf(size));
             player3CardsCnt = size;
+            player3Cards.getChildren().clear();
             player3Cards.getChildren().add(imageView);
         }
     }

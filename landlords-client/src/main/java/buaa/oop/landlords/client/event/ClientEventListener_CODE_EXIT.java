@@ -29,14 +29,15 @@ public class ClientEventListener_CODE_EXIT extends ClientEventListener{
             role = "You";
         }
         SimplePrinter.printNotice(String.format("\n%s left the room. Room disbanded!\n", role));
-        Platform.runLater(() -> {
-            Stage stage = gameRoom.getPrimaryStage();
-            GUIUtil.autoCloseAlertHandler(stage);
-            stage.close();
-        });
+
         if (!map.containsKey("scores")) {
             GUIUtil.renderScene("房间丢失","有个可恶的小子溜了",10);
             get(ClientEventCode.CODE_SHOW_OPTIONS).call(channel, data);
+            Platform.runLater(() -> {
+                Stage stage = gameRoom.getPrimaryStage();
+                GUIUtil.autoCloseAlertHandler(stage);
+                stage.close();
+            });
         }
     }
 }

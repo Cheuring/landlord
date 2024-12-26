@@ -37,19 +37,17 @@ public class ClientEventListener_CODE_GAME_OVER extends ClientEventListener {
             });
             GameSettlement.setScores(scores);
             for (Map<String, Object> score : scores) {
+                List<Poker> p = JsonUtil.fromJson((String) score.get("pokers"), new TypeReference<List<Poker>>() {
+            });
                 if (!Objects.equals(score.get("clientId"), User.getINSTANCE().getId())) {
                     SimplePrinter.printNotice(score.get("nickName").toString() + "'s rest poker is:");
-                    List<Poker> p = JsonUtil.fromJson((String) score.get("pokers"), new TypeReference<List<Poker>>() {
-                    });
-                    if(Objects.equals(score.get("nickname"), GameRoom.getPlayerName(1))) {
+                    SimplePrinter.printPokers(p);
+                    if(Objects.equals(score.get("nickName"), GameRoom.getPlayerName(1))&&p!=null&&!p.isEmpty()) {
                         GUIUtil.renderScene(p,null,GameRoom.getPlayer1LastPokers());
-                    }else if(Objects.equals(score.get("nickname"), GameRoom.getPlayerName(2))) {
-                        GUIUtil.renderScene(p,null,GameRoom.getPlayer2LastPokers());
-                    }else if(Objects.equals(score.get("nickname"), GameRoom.getPlayerName(3))) {
+                    }else if(Objects.equals(score.get("nickName"), GameRoom.getPlayerName(3))&&p!=null&&!p.isEmpty()) {
                         GUIUtil.renderScene(p,null,GameRoom.getPlayer3LastPokers());
                     }
-                    SimplePrinter.printPokers(p);
-                }
+                }else if(p!=null&&!p.isEmpty())GUIUtil.renderScene(p,null,GameRoom.getPlayer2LastPokers());
 
             }
             SimplePrinter.printNotice("\n");

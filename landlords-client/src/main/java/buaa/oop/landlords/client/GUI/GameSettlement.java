@@ -2,6 +2,7 @@ package buaa.oop.landlords.client.GUI;
 
 import buaa.oop.landlords.client.GUIUtil;
 import buaa.oop.landlords.client.entities.User;
+import buaa.oop.landlords.client.event.ClientEventListener_CODE_SHOW_OPTIONS;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -77,6 +78,7 @@ public class GameSettlement extends Application {
             Stage stage = GameRoom.getPrimaryStage();
             primaryStage.close();
             stage.close();
+            ClientEventListener_CODE_SHOW_OPTIONS.getRoomHide().compareAndSet(true,false);
             RoomHall.roomHallDisplay();
         });
 
